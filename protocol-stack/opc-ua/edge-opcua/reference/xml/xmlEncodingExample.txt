@@ -1,0 +1,213 @@
+This reference is getting encoding xml data of server.
+
+- EdgeServerClient.java
+
+    public static void testCreateXMLNodes() throws Exception {
+        EdgeNamespaceManager.getInstance()
+                .getNamespace(EdgeOpcUaCommon.DEFAULT_NAMESPACE.getValue())
+                .createNodes(new EdgeNodeItem.Builder(EdgeSampleCommon.SERVER_NODE_LINE1.getValue())
+                        .setCreateType(EdgeIdentifier.MILTI_FOLDER_NODE_TYPE)
+                        .setVariableItemSet(EdgeSampleCommon.LINE_NODES).build());
+
+        EdgeNamespaceManager.getInstance()
+                .getNamespace(EdgeOpcUaCommon.DEFAULT_NAMESPACE.getValue()).createXMLVariableNode(
+                        new EdgeNodeItem.Builder(EdgeSampleCommon.KEY_URI_LINE_CNC14.getValue())
+                                .setNodeType(EdgeNodeIdentifier.XmlElement).build());
+    }
+
+
+- EdgeNamespace.java
+
+    public void createXMLVariableNode(EdgeNodeItem item) throws Exception {
+        edgeNode.addXMLNodes(item);
+    }
+
+- EdgeNode.java
+
+    public void addXMLNodes(EdgeNodeItem item) throws Exception {
+        try {
+            logger.info("addXMLNOdes");
+            addXMLVariableNode(rootNode, EdgeSampleCommon.KEY_URI_LINE_CNC14.getValue());
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private UaVariableNode addVariableNode(UaObjectNode pNode, String nodePath, Object[] obj)
+            throws Exception {
+        String name = (String) obj[0];
+        NodeId typeId = (NodeId) obj[1];
+        Variant variant = (Variant) obj[2];
+
+        UaVariableNode node = new UaVariableNode.UaVariableNodeBuilder(nodeManager)
+                .setNodeId(new NodeId(namespaceIndex, nodePath + name))
+                .setAccessLevel(ubyte(AccessLevel.getMask(AccessLevel.READ_WRITE)))
+                .setUserAccessLevel(ubyte(AccessLevel.getMask(AccessLevel.READ_WRITE)))
+                .setBrowseName(new QualifiedName(namespaceIndex, name))
+                .setDisplayName(LocalizedText.english(name)).setDataType(typeId)
+                .setTypeDefinition(Identifiers.BaseDataVariableType).build();
+
+        node.setValue(new DataValue(variant));
+
+        pNode.addReference(new Reference(pNode.getNodeId(), Identifiers.Organizes,
+                node.getNodeId().expanded(), node.getNodeClass(), true));
+
+        logger.debug("Added reference: {} -> {}", pNode.getNodeId(), node.getNodeId());
+
+        nodeManager.put(node.getNodeId(), node);
+
+        return node;
+    }
+    
+    private UaVariableNode addXMLVariable(UaObjectNode pNode, String ns, String name, Integer value)
+    {
+        StringWriter writer = new StringWriter();
+        XmlEncoder encoder = null;
+        try {
+            encoder = new XmlEncoder(writer);
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+        
+        UaVariableNode vNode = new UaVariableNode.UaVariableNodeBuilder(nodeManager)
+                .setNodeId(new NodeId(namespaceIndex, ns))
+                .setAccessLevel(ubyte(AccessLevel.getMask(AccessLevel.READ_WRITE)))
+                .setUserAccessLevel(ubyte(AccessLevel.getMask(AccessLevel.READ_WRITE)))
+                .setBrowseName(new QualifiedName(namespaceIndex, name))
+                .setDisplayName(LocalizedText.english(name)).setDataType(Identifiers.Number)
+                .setTypeDefinition(Identifiers.BaseDataVariableType).build();
+        vNode.setValue(new DataValue(new Variant(value)));
+        pNode.addReference(new Reference(pNode.getNodeId(), Identifiers.HasComponent,
+                vNode.getNodeId().expanded(), pNode.getNodeClass(), true));
+        
+        encoder.encodeNodeId("NodeId", vNode.getNodeId());
+        encoder.encodeEnumeration("NodeClass", vNode.getTypeDefinitionNode().getNodeClass());
+        encoder.encodeQualifiedName("BrowseName", vNode.getBrowseName());
+        encoder.encodeLocalizedText("DisplayName", vNode.getDisplayName());
+        encoder.encodeDataValue("Value", vNode.getValue());
+        encoder.encodeUInt32("WriteMask", vNode.getWriteMask());
+        encoder.encodeUInt32("UserWriteMask", vNode.getUserWriteMask());
+        logger.info("{}", writer);
+        
+        return vNode;
+    }
+    
+    private UaObjectNode addXMLObject(UaObjectNode pNode, String ns, String name)
+    {
+        StringWriter writer = new StringWriter();
+        XmlEncoder encoder = null;
+        try {
+            encoder = new XmlEncoder(writer);
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+        
+        UaObjectNode oNode = new UaObjectNode.UaObjectNodeBuilder(nodeManager)
+                .setNodeId(new NodeId(namespaceIndex, ns))
+                .setBrowseName(new QualifiedName(namespaceIndex, name))
+                .setDisplayName(LocalizedText.english(name))
+                .setTypeDefinition(Identifiers.BaseObjectType).build();
+        pNode.addReference(new Reference(pNode.getNodeId(), Identifiers.HasComponent,
+                oNode.getNodeId().expanded(), oNode.getNodeClass(), true));
+        
+        encoder.encodeNodeId("NodeId", oNode.getNodeId());
+        encoder.encodeEnumeration("NodeClass", oNode.getTypeDefinitionNode().getNodeClass());
+        encoder.encodeQualifiedName("BrowseName", oNode.getBrowseName());
+        encoder.encodeLocalizedText("DisplayName", oNode.getDisplayName());
+        encoder.encodeUInt32("WriteMask", oNode.getWriteMask());
+        encoder.encodeUInt32("UserWriteMask", oNode.getUserWriteMask());
+        
+        return oNode;
+    }
+    
+    
+
+    private void addXMLVariableNode(UaObjectNode pNode, String nodePath)
+            throws XMLStreamException {
+        String name = "XML_EXAMPLE";
+        NodeId typeId = (NodeId) Identifiers.XmlElement;
+        StringWriter writer = new StringWriter();
+        XmlEncoder encoder = new XmlEncoder(writer);
+
+        UaFolderNode fNode = new UaFolderNode(nodeManager,
+                new NodeId(namespaceIndex, name),
+                new QualifiedName(namespaceIndex, "cnc_rddynamic2"),
+                new LocalizedText("en", "cnc_rddynamic2"));
+        
+        pNode.addReference(new Reference(pNode.getNodeId(), Identifiers.Organizes,
+                fNode.getNodeId().expanded(), fNode.getNodeClass(), true));
+        
+        
+        
+        encoder.encodeNodeId("NodeId", fNode.getNodeId());
+        encoder.encodeQualifiedName("BrowseName", fNode.getBrowseName());
+        encoder.encodeLocalizedText("DisplayName", fNode.getDisplayName());
+        logger.info("{}", writer);
+        
+        
+        UaObjectNode oNode = new UaObjectNode.UaObjectNodeBuilder(nodeManager)
+                .setNodeId(new NodeId(namespaceIndex, "rddynamic"))
+                .setBrowseName(new QualifiedName(namespaceIndex, "rddynamic"))
+                .setDisplayName(LocalizedText.english("rddynamic"))
+                .setTypeDefinition(Identifiers.BaseObjectType).build();
+        fNode.addReference(new Reference(fNode.getNodeId(), Identifiers.HasComponent,
+                oNode.getNodeId().expanded(), fNode.getNodeClass(), true));
+        
+        writer = new StringWriter();
+        encoder = new XmlEncoder(writer);
+        encoder.encodeNodeId("NodeId", oNode.getNodeId());
+        encoder.encodeEnumeration("NodeClass", oNode.getTypeDefinitionNode().getNodeClass());
+        encoder.encodeQualifiedName("BrowseName", oNode.getBrowseName());
+        encoder.encodeLocalizedText("DisplayName", oNode.getDisplayName());
+        encoder.encodeUInt32("WriteMask", oNode.getWriteMask());
+        encoder.encodeUInt32("UserWriteMask", oNode.getUserWriteMask());
+        logger.info("{}", writer);
+        
+        
+        addXMLVariable(oNode, "actf", "actf", 21062);
+        addXMLVariable(oNode, "acts", "acts", 17997);
+        addXMLVariable(oNode, "alarm", "alarm", 0);
+        addXMLVariable(oNode, "axis", "axis", -1);
+        addXMLVariable(oNode, "dummy", "dummy", -12851);
+        
+        
+        UaObjectNode oNode_2 = addXMLObject(oNode, "faxis1", "faxis1");
+        name = "faxis1";
+        addXMLVariable(oNode_2, name +"absolute", "absolute", -9649);
+        addXMLVariable(oNode_2, name +"distance", "distance", 0);
+        addXMLVariable(oNode_2, name +"machine", "machine", 309254);
+        addXMLVariable(oNode_2, name +"relative", "relative", 1939751);
+     
+        
+        UaObjectNode oNode_3 = addXMLObject(oNode, name, "faxis2");
+        name = "faxis2";
+        addXMLVariable(oNode_3, name +"absolute", "absolute", 46699);
+        addXMLVariable(oNode_3, name + "distance", "distance", 0);
+        addXMLVariable(oNode_3, name +"machine", "machine", -194834);
+        addXMLVariable(oNode_3, name +"relative", "relative", -567001);
+        
+        UaObjectNode oNode_4 = addXMLObject(oNode, name, "faxis3");
+        name = "faxis3";
+        addXMLVariable(oNode_4, name +"absolute", "absolute", 42386);
+        addXMLVariable(oNode_4, name +"distance", "distance", 3614);
+        addXMLVariable(oNode_4, name +"machine", "machine", -118008);
+        addXMLVariable(oNode_4, name +"relative", "relative", 134466);
+        
+        UaObjectNode oNode_5 = addXMLObject(oNode, name, "faxis4");
+        name = "faxis4";
+        addXMLVariable(oNode_5, name +"absolute", "absolute", 0);
+        addXMLVariable(oNode_5, name + "distance", "distance", 0);
+        addXMLVariable(oNode_5, name + "machine", "machine", 0);
+        addXMLVariable(oNode_5, name + "relative", "relative", 0);
+        
+        UaObjectNode oNode_6 = addXMLObject(oNode, name, "faxis5");
+        name = "faxis5";
+        addXMLVariable(oNode_6, name, "absolute", 0);
+        addXMLVariable(oNode_6, name, "distance", 0);
+        addXMLVariable(oNode_6, name, "machine", 0);
+        addXMLVariable(oNode_6, name, "relative", 0);
+        
+        addXMLVariable(oNode, "prgmnum", "prgmnum", 0);
+        addXMLVariable(oNode, "prgnum", "prgnum", 0);
+        addXMLVariable(oNode, "seqnum", "seqnum", 0);
+    }

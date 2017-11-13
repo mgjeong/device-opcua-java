@@ -1,0 +1,13 @@
+The following open source projects are referenced by this Device Service:
+
+Spring Boot (Apache 2.0) - https://projects.spring.io/spring-boot/
+https://github.com/spring-projects/spring-boot/blob/master/LICENSE.txt
+
+Spring Cloud (Apache 2.0) - http://projects.spring.io/spring-cloud/
+https://github.com/spring-cloud/spring-cloud-release/blob/master/LICENSE.txt
+
+Spring Framework (Apache 2.0) - http://projects.spring.io/spring-framework/
+https://github.com/spring-projects/spring-framework
+
+GSON (Apache 2.0) - https://github.com/google/gson
+https://github.com/google/gson/blob/master/LICENSE
