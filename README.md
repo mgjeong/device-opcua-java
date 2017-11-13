@@ -19,7 +19,7 @@
 
 2. cd ./device-service/samsung-edgex-opcua
 
-3. './build.sh'
+3. `./build.sh`
 
 4. docker build -t samsung-edgex-opcua .
 <br></br>
