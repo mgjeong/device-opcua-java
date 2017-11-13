@@ -15,7 +15,9 @@
    ![build_3_1](./images/build_3_1.png)
 
 3. You can execute opcua-client/opcua-server sample with
+   
    `java -jar target/opcua-server-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
+   
    `java -jar target/opcua-client-0.0.1-SNAPSHOT-jar-with-dependencies.jar` in each command window
 
    ![build_3_2](./images/build_3_2.png)
