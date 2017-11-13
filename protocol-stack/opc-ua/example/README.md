@@ -2,20 +2,21 @@
 
 ## Reference
 
-- Run ./build.sh. You can get OPC-UA Server/Client jar file in taret folder.
+- Run `./build.sh.`
+  You can get OPC-UA Server/Client jar file in taret folder.
 <br></br>
 ## Build
 ### How to build sample application in command line
 
 1. Environment : Ubuntu 16.04 (64bit)
 
-2. In *protocol-stack/opc-ua/example*, run ./build.sh in command line
+2. In *protocol-stack/opc-ua/example*, run `./build.sh` in command line
 
    ![build_3_1](./images/build_3_1.png)
 
 3. You can execute opcua-client/opcua-server sample with
-   'java -jar target/opcua-server-0.0.1-SNAPSHOT-jar-with-dependencies.jar'
-   'java -jar target/opcua-client-0.0.1-SNAPSHOT-jar-with-dependencies.jar' in each command window
+   `java -jar target/opcua-server-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
+   `java -jar target/opcua-client-0.0.1-SNAPSHOT-jar-with-dependencies.jar` in each command window
 
    ![build_3_2](./images/build_3_2.png)
 
