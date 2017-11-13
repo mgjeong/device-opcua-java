@@ -46,7 +46,7 @@
 ## Test
 
 ### 1. Execute *OPC-UA Server* <br>
-   command : java -jar target/opcua-server-0.0.1-SNAPSHOT-jar-with-dependencies.jar 
+   command : `java -jar target/opcua-server-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
    
    ![server_1](./images/server_1.PNG)
 
