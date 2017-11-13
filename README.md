@@ -22,3 +22,6 @@
 3. ./build.sh
 
 4. docker build -t samsung-edgex-opcua .
+
+
+### OPC-UA library(Stand-alone) build [here](./opc-ua/edge-opcua/README.md)
