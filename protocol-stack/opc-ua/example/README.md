@@ -61,7 +61,7 @@
    *help* : print menu
 <br>
 ### 2. Execute *OPC-UA Client* <br>
-   command : java -jar target/opcua-client-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+   command : `java -jar target/opcua-client-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
 
    ![client_1](./images/client_1.PNG)
 
