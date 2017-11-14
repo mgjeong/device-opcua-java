@@ -75,11 +75,15 @@ public class EdgeEmulator {
      * @fn void startServer(EdgeEndpoint ep)
      * @brief start emul server
      * @param ep
+     * @param filename
+     *            file name which want to read
      * @throws Exception
      * @return void
      */
-    public void startServer(EdgeEndpointInfo ep) throws Exception {
-        file = new File("ticdata2000.txt");
+    public void startServer(EdgeEndpointInfo ep, String fileName) throws Exception {
+        if (fileName.isEmpty() == false) {
+            file = new File(fileName);
+        }
         epInfo = ep;
         startServer();
     }
