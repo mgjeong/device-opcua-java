@@ -77,7 +77,7 @@ public class OPCUADriver {
     private static final String endpointUri = EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue();
     private static EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(endpointUri).build();
     private EdgeEmulator opcUaAdapter;
-    private boolean emfMode = false;
+    private boolean emfMode = true;
     
     @Autowired
     ProfileStore profiles;

@@ -39,8 +39,8 @@ public class EMFAdapter {
 	private static Publisher pub = null;
 
 	private EMFAdapter() {
-//		pub = Publisher.getInstance();
-//		pub.startPublisher(mPort);
+		pub = Publisher.getInstance();
+		pub.startPublisher(mPort);
 	}
 
 	public static EMFAdapter getInstance() {
@@ -188,7 +188,7 @@ public class EMFAdapter {
 		}	
 
 		try {
-//			pub.publishEvent(getEvent(data));
+			pub.publishEvent(getEvent(data));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
