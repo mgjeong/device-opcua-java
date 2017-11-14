@@ -1,16 +1,10 @@
 #!/bin/sh
 echo "Start edge opcua build"
 edge_opcua_home=$(pwd)
-cd ../extlib/
-ext_lib=$(pwd)
-cd $edge_opcua_home
 cd ../../mapper/mavenProjects
 mapper_home=$(pwd)
 cd $edge_opcua_home
 
-#build milo
-cd $ext_lib
-./build.sh
 
 #start install mapper
 cd $mapper_home
