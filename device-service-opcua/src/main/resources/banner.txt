@@ -1,4 +1,4 @@
 /*******************************************************************************
  * Copyright 2017, Dell, Inc.  All Rights Reserved.
  ******************************************************************************/
-This is the samsung-edgex-opcua micro service                   
+This is the device-service-opcua micro service                   

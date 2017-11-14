@@ -5,15 +5,15 @@
 	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
 	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
 	the specific language governing permissions and limitations under the License. 
-	@microservice: samsung-edgex-opcua @author: Tyler Cox, Dell @version: 1.0.0 -->
+	@microservice: device-service-opcua @author: Tyler Cox, Dell @version: 1.0.0 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.edgexfoundry.samsung.opcua</groupId>
-	<artifactId>samsung-edgex-opcua</artifactId>
+	<groupId>org.device.opcua</groupId>
+	<artifactId>device-service-opcua</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>samsung-edgex-opcua</name>
-	<description>EdgeX Foundry samsung-edgex-opcua</description>
+	<name>device-service-opcua</name>
+	<description>OPC-UA device service</description>
 
 	<properties>
 		<core-domain.version>0.2.0-SNAPSHOT</core-domain.version>
@@ -134,7 +134,7 @@
 	</dependencyManagement>
 
 	<build>
-		<finalName>samsung-edgex-opcua</finalName>
+		<finalName>device-service-opcua</finalName>
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
