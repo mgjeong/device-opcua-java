@@ -15,13 +15,11 @@
    Install Guide : https://maven.apache.org/install.html
 <br></br>
 ## How to build OPC-UA Device Service
-1. git clone *git@github.sec.samsung.net:RS7-EdgeComputing/device-opcua.git*
+1. cd ./device-service/opcua-service
 
-2. cd ./device-service/samsung-edgex-opcua
+2. ./build.sh
 
-3. ./build.sh
-
-4. docker build -t samsung-edgex-opcua .
+3. docker build -t samsung-edgex-opcua .
 <br></br>
 
 #### OPC-UA library(Stand-alone) build [here](./protocol-stack/opc-ua/edge-opcua/README.md)
