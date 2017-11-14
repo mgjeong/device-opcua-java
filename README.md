@@ -15,7 +15,7 @@
    Install Guide : https://maven.apache.org/install.html
 <br></br>
 ## How to build OPC-UA Device Service
-1. cd ./device-service/opcua-service
+1. cd ./device-service-opcua
 
 2. ./build.sh
 
