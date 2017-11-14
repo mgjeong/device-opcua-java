@@ -26,7 +26,7 @@
 		<spring.cloud.version>Brixton.SR5</spring.cloud.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-<!-- 		<emf.version>0.0.1-SNAPSHOT</emf.version> -->
+   	<emf.version>0.0.1-SNAPSHOT</emf.version>
 		<java.version>1.8</java.version>
 	</properties>
 
@@ -114,11 +114,11 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
-	<!-- 	<dependency>
+	<dependency>
 			<groupId>org.edgexfoundry.emf</groupId>
 			<artifactId>edgex-emf</artifactId>
 			<version>${emf.version}</version>
-		</dependency> -->
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
