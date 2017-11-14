@@ -33,8 +33,8 @@
 	<context:property-placeholder
 		location="classpath:*.properties" />
 
-	<bean class="org.edgexfoundry.samsung.opcua.HeartBeat" />
-	<context:component-scan base-package="org.edgexfoundry.samsung.opcua" />
+	<bean class="org.edgexfoundry.device.opcua.HeartBeat" />
+	<context:component-scan base-package="org.edgexfoundry.device.opcua" />
 	<context:component-scan base-package="org.edgexfoundry" />
 
 </beans> 
