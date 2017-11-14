@@ -1,10 +1,9 @@
 #!/bin/sh
 PROJECT_ROOT=$(pwd)
 echo $PROJECT_ROOT
-cd ../../dependencys
+cd ../dependencys
 DEP_ROOT=$(pwd)
 cd ../
-REPO_ROOT=$(pwd)
 cd protocol-stack/opc-ua/edge-opcua/
 OPCUA_ROOT=$(pwd)
 
