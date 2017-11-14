@@ -74,9 +74,8 @@ public class OPCUADriver {
 
     private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(OPCUADriver.class);
     private static final String endpointUri = EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue();
-    private static EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(endpointUri).build();
     private EdgeEmulator opcUaAdapter;
-    private boolean emfMode = true;
+    private boolean emfMode = false;
     
     @Autowired
     ProfileStore profiles;
@@ -388,7 +387,7 @@ public class OPCUADriver {
                 .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
                 .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).build();
         EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
-        opcUaAdapter.startServer(ep);
+        opcUaAdapter.startServer(ep, "");
     }
 
     public String getEndpointUrifromAddressable(Addressable addressable) {

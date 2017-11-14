@@ -37,7 +37,8 @@ public class EMFAdapter {
 	private static EMFAdapter singleton = null;
 	private static final int mPort = 5562;
 	private static Publisher pub = null;
-
+	private String fileName = "ticdata2000.txt";
+	
 	private EMFAdapter() {
 		pub = Publisher.getInstance();
 		pub.startPublisher(mPort);
@@ -74,7 +75,7 @@ public class EMFAdapter {
 		EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
 		try {
 			OpcUaAdapter = new EdgeEmulator();
-			OpcUaAdapter.startServer(ep);
+			OpcUaAdapter.startServer(ep, fileName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
