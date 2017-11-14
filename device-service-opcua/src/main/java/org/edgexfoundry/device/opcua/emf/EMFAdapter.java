@@ -21,9 +21,6 @@ import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeStatusCode;
 import org.edge.protocol.opcua.example.EdgeEmulator;
 import org.edgexfoundry.device.opcua.DataDefaultValue;
-import org.edgexfoundry.device.opcua.coredata.EventGenerator;
-import org.edgexfoundry.device.opcua.metadata.MetaDataType;
-import org.edgexfoundry.device.opcua.opcua.OPCUADriver;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.core.Reading;
 import org.edgexfoundry.domain.meta.Addressable;
@@ -37,7 +34,7 @@ public class EMFAdapter {
 	private static EMFAdapter singleton = null;
 	private static final int mPort = 5562;
 	private static Publisher pub = null;
-	private String fileName = "ticdata2000.txt";
+	private String fileName = "rawSampleData.txt";
 	
 	private EMFAdapter() {
 		pub = Publisher.getInstance();
