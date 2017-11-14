@@ -15,7 +15,7 @@
    Install Guide : https://maven.apache.org/install.html
 <br></br>
 ## How to build OPC-UA Device Service
-1. git clone *git@github.sec.samsung.net/RS7-EdgeComputing/device-opcua*
+1. git clone *git@github.sec.samsung.net:RS7-EdgeComputing/device-opcua.git*
 
 2. cd ./device-service/samsung-edgex-opcua
 
