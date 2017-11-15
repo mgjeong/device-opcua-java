@@ -20,10 +20,18 @@
 
 package org.edge.protocol.opcua.session;
 
+import java.util.ArrayList;
+
+import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
+import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
+import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
 import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EdgeSessionManager {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
   private final EdgeBaseSessionMap sessionMap = new EdgeSessionMap();
   private static EdgeSessionManager session = null;
   private static Object lock = new Object();
@@ -112,6 +120,29 @@ public class EdgeSessionManager {
     return null;
   }
 
+
+  /**
+   * @fn ArrayList<EdgeEndpointInfo> getEndpoints(String endpointUri) throws Exception
+   * @brief get endpoint list from server
+   * @param [in] endpointUri target endpoint uri (e.g. opc.tcp://localhost:12686/edge-opc-server)
+   * @return The list of EdgeEndpoint
+   */
+  public ArrayList<EdgeEndpointInfo> getEndpoints(String endpointUri) throws Exception {
+    EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(endpointUri).get();
+    ArrayList<EdgeEndpointInfo> endpointList = new ArrayList<EdgeEndpointInfo>();
+    for (int i = 0; i < endpoints.length; i++) {
+      logger.info("endpoint={}, {}, {}", endpoints[i].getEndpointUrl(),
+          endpoints[i].getSecurityLevel(), endpoints[i].getSecurityPolicyUri());
+      logger.info("    > {}, {}, {}", endpoints[i].getSecurityMode(),
+          endpoints[i].getTransportProfileUri(), endpoints[i].getTypeId());
+      endpointList.add(new EdgeEndpointInfo.Builder(endpoints[i].getEndpointUrl())
+          .setConfig(new EdgeEndpointConfig.Builder()
+              .setSecurityPolicyUri(endpoints[i].getSecurityPolicyUri()).build())
+          .build());
+    }
+    return endpointList;
+  }
+  
   private static class EdgeSessionMap extends EdgeAbstractSessionMap {
     // implement edge session map class
   }

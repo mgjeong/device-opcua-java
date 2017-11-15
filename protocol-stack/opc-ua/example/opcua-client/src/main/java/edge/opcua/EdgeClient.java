@@ -64,6 +64,8 @@ public class EdgeClient {
   private static final String ANSI_PURPLE = "\u001B[35m";
 
   private static String endpointUri = EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue();
+  private static String defaultSecureType =
+      "http://opcfoundation.org/UA/SecurityPolicy#Basic128Rsa15";
   private static EdgeEndpointInfo epInfo;
   private static List<String> methodProviders = null;
   private static List<String> attributeProviders = null;
@@ -87,7 +89,7 @@ public class EdgeClient {
         try {
           autoFlag = true;
           init();
-          startClient();
+          startClient(defaultSecureType);
           startFlag = true;
         } catch (Exception e) {
           e.printStackTrace();
@@ -97,10 +99,11 @@ public class EdgeClient {
     startCommand();
   }
 
-  public static void startClient() throws Exception {
+  public static void startClient(String securePolicyType) throws Exception {
     EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
         .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
-        .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).build();
+        .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue())
+        .setSecurityPolicyUri(securePolicyType).build();
     EdgeEndpointInfo ep =
         new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
     EdgeNodeInfo endpoint = new EdgeNodeInfo.Builder().build();
@@ -263,12 +266,25 @@ public class EdgeClient {
     ProtocolManager.getProtocolManagerInstance().send(msg);
   }
 
+  public static void testGetEndpoint() throws Exception {
+    EdgeEndpointConfig config =
+        new EdgeEndpointConfig.Builder().setApplicationName("digitalpetri opc-ua client")
+            .setApplicationUri("urn:digitalpetri:opcua:client").build();
+    EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(config).build();
+    EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
+    EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_GET_ENDPOINTS)
+        .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
+    ProtocolManager.getProtocolManagerInstance().send(msg);
+  }
+
   @SuppressWarnings("resource")
   public static void startCommand() throws Exception {
     String operator = "";
     Scanner scanner = new Scanner(System.in);
 
     printMenu();
+    init();
+
     while (true) {
       System.out.print("[INPUT COMMAND] : ");
       operator = scanner.next();
@@ -282,8 +298,7 @@ public class EdgeClient {
         endpointUri = ipAddress;
         epInfo = new EdgeEndpointInfo.Builder(endpointUri).build();
 
-        init();
-        startClient();
+        testGetEndpoint();
         quitThread.start();
         startFlag = true;
       } else if (operator.equals("quit")) {
@@ -359,14 +374,7 @@ public class EdgeClient {
       } else if (operator.equals("auto")) {
         autoThread.start();
       } else if (operator.equals("endpoint")) {
-        EdgeEndpointConfig config =
-            new EdgeEndpointConfig.Builder().setApplicationName("digitalpetri opc-ua client")
-                .setApplicationUri("urn:digitalpetri:opcua:client").build();
-        EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(config).build();
-        EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
-        EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_GET_ENDPOINTS)
-            .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
-        ProtocolManager.getProtocolManagerInstance().send(msg);
+        testGetEndpoint();
       } else if (operator.equals("read_gp")) {
         testReadGroup();
       } else if (operator.equals("write_gp")) {
@@ -430,10 +438,23 @@ public class EdgeClient {
     @Override
     public void onFoundEndpoint(EdgeDevice device) {
       logger.info("[Event] onFoundEndpoint");
+      boolean rsaFlag = false;
       for (EdgeEndpointInfo ep : device.getEndpoints()) {
         logger.info(" > uri={}, SecurePolicy={}, Address={}, Port={}, ServerName={}",
             ep.getEndpointUri(), ep.getConfig().getSecurityPolicyUri(), device.getAddress(),
             device.getPort(), device.getServerName());
+        if (ep.getConfig().getSecurityPolicyUri().equalsIgnoreCase(defaultSecureType)) {
+          rsaFlag = true;
+        }
+      }
+
+      if (rsaFlag == true) {
+        try {
+          startClient(defaultSecureType);
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     }
 

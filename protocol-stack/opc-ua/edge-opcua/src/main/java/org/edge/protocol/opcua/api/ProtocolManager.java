@@ -641,37 +641,35 @@ public class ProtocolManager implements MessageInterface {
   }
 
   private EdgeDevice parseEndpointUri(String endpointUri) throws Exception {
-    EdgeOpcUaClient client = EdgeSessionManager.getInstance().getSession(endpointUri);
-    if (client != null) {
-      if (discoveryCallback != null) {
-        logger.info("onFoundEndpoint = {}", endpointUri);
+    if (discoveryCallback != null) {
+      logger.info("onFoundEndpoint = {}", endpointUri);
 
-        int index = 0;
-        String[] deviceSet = new String[LIMIT_SIZE];
-        String[] dataArr = endpointUri.split("//", 2);
-        for (String str : dataArr) {
-          if (str.equalsIgnoreCase("opc.tcp:"))
-            continue;
-          String[] pathSet = str.split("/", 2);
-          for (String path : pathSet) {
-            if (index == LIMIT_SIZE) {
-              deviceSet[index] = path;
-            }
-            logger.info("str = {}", path);
-            String[] addressSet = path.split(":");
-            for (String address : addressSet) {
-              if (index == LIMIT_SIZE - 1) {
-                index++;
-                break;
-              }
-              deviceSet[index] = address;
+      int index = 0;
+      String[] deviceSet = new String[LIMIT_SIZE];
+      String[] dataArr = endpointUri.split("//", 2);
+      for (String str : dataArr) {
+        if (str.equalsIgnoreCase("opc.tcp:"))
+          continue;
+        String[] pathSet = str.split("/", 2);
+        for (String path : pathSet) {
+          if (index == LIMIT_SIZE) {
+            deviceSet[index] = path;
+          }
+          logger.info("str = {}", path);
+          String[] addressSet = path.split(":");
+          for (String address : addressSet) {
+            if (index == LIMIT_SIZE - 1) {
               index++;
+              break;
             }
+            deviceSet[index] = address;
+            index++;
           }
         }
-        return new EdgeDevice.Builder(deviceSet[0], Integer.parseInt(deviceSet[1].toString()))
-            .setServerName(deviceSet[2]).setEndpoints(client.getEndpoints(endpointUri)).build();
       }
+      return new EdgeDevice.Builder(deviceSet[0], Integer.parseInt(deviceSet[1].toString()))
+          .setServerName(deviceSet[2]).setEndpoints(EdgeSessionManager
+            .getInstance().getEndpoints(endpointUri)).build();
     }
     return null;
   }

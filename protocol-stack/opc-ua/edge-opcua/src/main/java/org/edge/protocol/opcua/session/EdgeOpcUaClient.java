@@ -123,28 +123,6 @@ public class EdgeOpcUaClient implements EdgeBaseClient {
     return client;
   }
 
-  /**
-   * @fn ArrayList<EdgeEndpointInfo> getEndpoints(String endpointUri) throws Exception
-   * @brief get endpoint list from server
-   * @param [in] endpointUri target endpoint uri (e.g. opc.tcp://localhost:12686/edge-opc-server)
-   * @return The list of EdgeEndpoint
-   */
-  public ArrayList<EdgeEndpointInfo> getEndpoints(String endpointUri) throws Exception {
-    EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(endpointUri).get();
-    ArrayList<EdgeEndpointInfo> endpointList = new ArrayList<EdgeEndpointInfo>();
-    for (int i = 0; i < endpoints.length; i++) {
-      logger.info("endpoint={}, {}, {}", endpoints[i].getEndpointUrl(),
-          endpoints[i].getSecurityLevel(), endpoints[i].getSecurityPolicyUri());
-      logger.info("    > {}, {}, {}", endpoints[i].getSecurityMode(),
-          endpoints[i].getTransportProfileUri(), endpoints[i].getTypeId());
-      endpointList.add(new EdgeEndpointInfo.Builder(endpoints[i].getEndpointUrl())
-          .setConfig(new EdgeEndpointConfig.Builder()
-              .setSecurityPolicyUri(endpoints[i].getSecurityPolicyUri()).build())
-          .build());
-    }
-    return endpointList;
-  }
-
   private OpcUaClient configure(EdgeEndpointInfo ep) throws Exception {
     EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(ep.getEndpointUri()).get();
 
