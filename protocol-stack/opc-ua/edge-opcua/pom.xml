@@ -5,6 +5,13 @@
 	<artifactId>opcua-adapter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<description>this is for test maven app</description>
+	<repositories>
+	<repository>
+		<id>oss-sonatype</id>
+		<name>oss-sonatype</name>
+		<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+	</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -98,34 +105,34 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>milo</groupId>
+			<groupId>org.eclipse.milo</groupId>
 			<artifactId>sdk-client</artifactId>
-			<version>0.1.4-SNAPSHOT</version>
+			<version>${milo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>milo</groupId>
+			<groupId>org.eclipse.milo</groupId>
 			<artifactId>sdk-server</artifactId>
-			<version>0.1.4-SNAPSHOT</version>
+			<version>${milo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>milo</groupId>
+			<groupId>org.eclipse.milo</groupId>
 			<artifactId>sdk-core</artifactId>
-			<version>0.1.4-SNAPSHOT</version>
+			<version>${milo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>milo</groupId>
+			<groupId>org.eclipse.milo</groupId>
 			<artifactId>stack-client</artifactId>
-			<version>0.1.4-SNAPSHOT</version>
+			<version>${milo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>milo</groupId>
+			<groupId>org.eclipse.milo</groupId>
 			<artifactId>stack-server</artifactId>
-			<version>0.1.4-SNAPSHOT</version>
+			<version>${milo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>milo</groupId>
+			<groupId>org.eclipse.milo</groupId>
 			<artifactId>stack-core</artifactId>
-			<version>0.1.4-SNAPSHOT</version>
+			<version>${milo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>mapper</groupId>
@@ -136,5 +143,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<milo.version>0.1.4</milo.version>
 	</properties>
 </project>
