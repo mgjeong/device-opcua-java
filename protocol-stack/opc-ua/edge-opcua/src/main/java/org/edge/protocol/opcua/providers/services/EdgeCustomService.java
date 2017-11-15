@@ -129,7 +129,8 @@ public class EdgeCustomService implements EdgeAttributeService {
           vNode.getDataType().getNow(nodeId));
 
       EdgeEndpointInfo epInfo =
-          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+              .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
       EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
           .setMessageType(EdgeMessageType.GENERAL_RESPONSE)
           .setResponses(newArrayList(new EdgeResponse.Builder(ep, msg.getRequest().getRequestId())
@@ -163,11 +164,11 @@ public class EdgeCustomService implements EdgeAttributeService {
     return EdgeSessionManager.getInstance().getSession(msg.getEdgeEndpointInfo().getEndpointUri())
         .getClientInstance()
 
-//        TODO UA-milo commit
-//        .write(newArrayList(writeValue), UInteger.valueOf(msg.getRequest().getReturnDiagnostic()))
+        // TODO UA-milo commit
+        // .write(newArrayList(writeValue),
+        // UInteger.valueOf(msg.getRequest().getReturnDiagnostic()))
 
-        .write(newArrayList(writeValue))
-        .thenApply(value -> {
+        .write(newArrayList(writeValue)).thenApply(value -> {
           StatusCode status = value.getResults()[0];
           if (checkStatusGood(status) == false) {
             String errorStatusCode = EdgeStatusCode.UNKNOWN_STATUS_CODE;
@@ -210,7 +211,8 @@ public class EdgeCustomService implements EdgeAttributeService {
     writeData(msg).thenAccept(values -> {
       Optional.ofNullable(values).ifPresent(value -> {
         EdgeEndpointInfo epInfo =
-            new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+            new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+                .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
         EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
             .setMessageType(EdgeMessageType.GENERAL_RESPONSE)
             .setResponses(newArrayList(new EdgeResponse.Builder(msg.getRequest().getEdgeNodeInfo(),
@@ -396,9 +398,9 @@ public class EdgeCustomService implements EdgeAttributeService {
     CompletableFuture<Map<String, Object>> future =
         EdgeSessionManager.getInstance().getSession(msg.getEdgeEndpointInfo().getEndpointUri())
 
-//        TODO UA-milo commit
-//            .getClientInstance().read(maxAge, timestamp, newArrayList(readValueId),
-//                                UInteger.valueOf(msg.getRequest().getReturnDiagnostic()))
+            // TODO UA-milo commit
+            // .getClientInstance().read(maxAge, timestamp, newArrayList(readValueId),
+            // UInteger.valueOf(msg.getRequest().getReturnDiagnostic()))
 
             .getClientInstance().read(maxAge, timestamp, newArrayList(readValueId))
             .thenApply(values -> {

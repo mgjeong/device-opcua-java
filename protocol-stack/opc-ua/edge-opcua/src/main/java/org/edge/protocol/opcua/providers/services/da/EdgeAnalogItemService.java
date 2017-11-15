@@ -136,7 +136,8 @@ public class EdgeAnalogItemService extends EdgeDataItemService {
 
     if (ret != null && ret.isNotNull()) {
       EdgeEndpointInfo epInfo =
-          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+              .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
       EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
           .setMessageType(EdgeMessageType.GENERAL_RESPONSE)
           .setResponses(newArrayList(new EdgeResponse.Builder(ep, msg.getRequest().getRequestId())
@@ -310,7 +311,8 @@ public class EdgeAnalogItemService extends EdgeDataItemService {
     writeAsyncValue(getNodeInstance(), msg).thenAccept(status -> {
       Optional.ofNullable(status).ifPresent(value -> {
         EdgeEndpointInfo epInfo =
-            new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+            new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+                .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
         EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
             .setMessageType(EdgeMessageType.GENERAL_RESPONSE)
             .setResponses(newArrayList(new EdgeResponse.Builder(msg.getRequest().getEdgeNodeInfo(),
@@ -352,7 +354,8 @@ public class EdgeAnalogItemService extends EdgeDataItemService {
       readAsyncValue(getNodeInstance(), msg).thenAccept(values -> {
         Optional.ofNullable(values).ifPresent(value -> {
           EdgeEndpointInfo epInfo =
-              new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+              new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+                  .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
           EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
               .setMessageType(EdgeMessageType.GENERAL_RESPONSE)
               .setResponses(
@@ -367,7 +370,8 @@ public class EdgeAnalogItemService extends EdgeDataItemService {
       readAsyncDefinition(getNodeInstance(), msg).thenAccept(values -> {
         Optional.ofNullable(values).ifPresent(value -> {
           EdgeEndpointInfo epInfo =
-              new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+              new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+                  .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
           EdgeMessage inputData =
               new EdgeMessage.Builder(epInfo).setMessageType(EdgeMessageType.GENERAL_RESPONSE)
                   .setResponses(
@@ -385,7 +389,8 @@ public class EdgeAnalogItemService extends EdgeDataItemService {
         Optional.ofNullable(property).ifPresent(value -> {
           convertProperty(property, ID).thenAccept(info -> {
             EdgeEndpointInfo epInfo =
-                new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+                new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+                    .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
             EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
                 .setMessageType(EdgeMessageType.GENERAL_RESPONSE)
                 .setResponses(
@@ -400,7 +405,8 @@ public class EdgeAnalogItemService extends EdgeDataItemService {
       readAsyncValuePrecision(getNodeInstance(), msg).thenAccept(values -> {
         Optional.ofNullable(values).ifPresent(value -> {
           EdgeEndpointInfo epInfo =
-              new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+              new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+                  .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
           EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
               .setMessageType(EdgeMessageType.GENERAL_RESPONSE)
               .setResponses(

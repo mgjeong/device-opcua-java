@@ -129,7 +129,8 @@ public class EdgeGroupService implements EdgeAttributeService {
       }
 
       EdgeEndpointInfo epInfo =
-          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+              .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
       EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
           .setMessageType(EdgeMessageType.GENERAL_RESPONSE).setResponses(responses).build();
       ProtocolManager.getProtocolManagerInstance().getRecvDispatcher().putQ(inputData);
@@ -227,7 +228,8 @@ public class EdgeGroupService implements EdgeAttributeService {
         }
 
         EdgeEndpointInfo epInfo =
-            new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+            new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+                .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
         EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
             .setMessageType(EdgeMessageType.GENERAL_RESPONSE).setResponses(responses).build();
         ProtocolManager.getProtocolManagerInstance().getRecvDispatcher().putQ(inputData);

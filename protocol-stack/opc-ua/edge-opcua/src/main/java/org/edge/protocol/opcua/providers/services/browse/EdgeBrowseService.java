@@ -605,7 +605,8 @@ public class EdgeBrowseService {
 
   private void callResponseMessage(EdgeMessage msg, List<EdgeBrowseResult> browseRet, int msgIdx) {
     EdgeEndpointInfo epInfo =
-        new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+        new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+            .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
     EdgeMessage inputData = new EdgeMessage.Builder(epInfo).setBrowseResult(browseRet)
         .setResponses(newArrayList(
             new EdgeResponse.Builder(getEndpoint(msg, msgIdx), getRequestId(msg, msgIdx)).build()))

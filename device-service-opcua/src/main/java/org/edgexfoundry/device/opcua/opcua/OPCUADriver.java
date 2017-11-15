@@ -159,7 +159,8 @@ public class OPCUADriver {
             message = new EdgeVersatility.Builder("OFF").build();
         }
 
-        EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setFuture(future).build();
+        EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addressable))
+        		.setFuture(future).build();
         EdgeMessage msg = null;
         if (operation.toLowerCase().equals(EdgeCommandType.CMD_READ.getValue())) {
         	msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_READ)
