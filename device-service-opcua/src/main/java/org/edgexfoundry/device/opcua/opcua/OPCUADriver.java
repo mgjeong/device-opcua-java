@@ -73,7 +73,7 @@ import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 public class OPCUADriver {
 
     private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(OPCUADriver.class);
-    private static final String endpointUri = EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue();
+    private String endpointUri = null;
     private EdgeEmulator opcUaAdapter;
     private boolean emfMode = false;
     
@@ -372,7 +372,7 @@ public class OPCUADriver {
                 DataDefaultValue.ADDRESSABLE_PORT);
 
         // 3. get EdgeEndpoint URI
-        String endpointUri = getEndpointUrifromAddressable(addressable);
+        endpointUri = getEndpointUrifromAddressable(addressable);
 
         // 4. set configure
         EdgeConfigure configure = new EdgeConfigure.Builder().setRecvCallback(receiver)
