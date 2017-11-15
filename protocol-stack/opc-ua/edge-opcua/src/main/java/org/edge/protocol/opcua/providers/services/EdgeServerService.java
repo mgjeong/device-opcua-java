@@ -101,7 +101,8 @@ public class EdgeServerService implements EdgeAttributeService {
           vNode.getValue().get());
 
       EdgeEndpointInfo epInfo =
-          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+              .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
       EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
           .setResponses(newArrayList(new EdgeResponse.Builder(ep, msg.getRequest().getRequestId())
               .setMessage(new EdgeVersatility.Builder(vNode.getValue().get()).build()).build()))
@@ -181,7 +182,8 @@ public class EdgeServerService implements EdgeAttributeService {
           msg.getEdgeEndpointInfo().getEndpointUri());
 
       EdgeEndpointInfo epInfo =
-          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+              .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
       EdgeMessage inputData =
           new EdgeMessage.Builder(epInfo)
               .setResponses(
