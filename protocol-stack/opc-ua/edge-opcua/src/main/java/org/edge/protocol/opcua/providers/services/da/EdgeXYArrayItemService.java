@@ -129,7 +129,8 @@ public class EdgeXYArrayItemService extends EdgeArrayItemService {
 
     if (ret != null && ret.isNotNull()) {
       EdgeEndpointInfo epInfo =
-          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+          new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+              .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
       EdgeMessage inputData = new EdgeMessage.Builder(epInfo)
           .setMessageType(EdgeMessageType.GENERAL_RESPONSE)
           .setResponses(newArrayList(new EdgeResponse.Builder(ep, msg.getRequest().getRequestId())
@@ -296,7 +297,8 @@ public class EdgeXYArrayItemService extends EdgeArrayItemService {
 
   private void addResponse(Object value, EdgeNodeInfo nodeInfo, EdgeMessage msg) {
     EdgeEndpointInfo epInfo =
-        new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri()).build();
+        new EdgeEndpointInfo.Builder(msg.getEdgeEndpointInfo().getEndpointUri())
+            .setFuture(msg.getEdgeEndpointInfo().getFuture()).build();
     EdgeMessage inputData =
         new EdgeMessage.Builder(epInfo).setMessageType(EdgeMessageType.GENERAL_RESPONSE)
             .setResponses(
