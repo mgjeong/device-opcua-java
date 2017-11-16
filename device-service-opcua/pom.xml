@@ -16,18 +16,20 @@
 	<description>OPC-UA device service</description>
 
 	<properties>
-		<core-domain.version>0.2.0-SNAPSHOT</core-domain.version>
-		<core-data-client.version>0.2.0-SNAPSHOT</core-data-client.version>
-		<core-metadata-client.version>0.2.0-SNAPSHOT</core-metadata-client.version>
-		<core-exception.version>0.2.0-SNAPSHOT</core-exception.version>
-		<core-command.version>0.2.0-SNAPSHOT</core-command.version>
+		<core-domain.version>0.2.0</core-domain.version>
+		<core-data-client.version>0.2.0</core-data-client.version>
+		<core-metadata-client.version>0.2.0</core-metadata-client.version>
+		<core-exception.version>0.2.0</core-exception.version>
+		<core-command.version>0.2.0</core-command.version>
 		<opcua-adapter.version>0.0.1-SNAPSHOT</opcua-adapter.version>
-		<support-logging-client.version>0.2.0-SNAPSHOT</support-logging-client.version>
+		<support-logging-client.version>0.2.0</support-logging-client.version>
 		<spring.cloud.version>Brixton.SR5</spring.cloud.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
    	<emf.version>0.0.1-SNAPSHOT</emf.version>
 		<java.version>1.8</java.version>
+		<nexusproxy>https://nexus.edgexfoundry.org</nexusproxy>
+		<repobasepath>content/repositories</repobasepath>
 	</properties>
 
 	<parent>
@@ -132,6 +134,14 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+  <repositories>
+  	<repository>
+  		<id>releases</id>
+  		<name>EdgeX Releases Repository</name>
+  		<url>${nexusproxy}/${repobasepath}/releases</url>
+  	</repository>
+  </repositories>
 
 	<build>
 		<finalName>device-service-opcua</finalName>
