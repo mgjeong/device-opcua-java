@@ -1,0 +1,165 @@
+## EdgeX Foundry docker compose file    
+
+version: '2'
+services:
+  volume:
+    image: edgexfoundry/docker-edgex-volume
+    networks:
+      - edgex-network
+    volumes:
+      - /data/db
+      - /edgex/logs
+      - /consul/config
+      - /consul/data
+      - /framework/ha
+
+  consul:
+    image: edgexfoundry/docker-core-consul
+    ports:
+      - "8400"
+      - "8500"
+      - "8600"
+    hostname: edgex-core-consul
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+
+  config-seed:
+    image: edgexfoundry/docker-core-config-seed
+    hostname: edgex-core-config-seed
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+      - consul
+
+  mongo:
+    image: edgexfoundry/docker-edgex-mongo
+    ports:
+      - "27017"
+    hostname: edgex-mongo
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+    command: --smallfiles
+
+  mongo-seed:
+    image: edgexfoundry/docker-edgex-mongo-seed
+    hostname: edgex-mongo-seed
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+      - mongo
+
+  logging:
+    image: edgexfoundry/docker-support-logging
+    ports:
+      - "48061"
+    hostname: edgex-support-logging
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+      - consul
+      - config-seed
+      - mongo
+      - mongo-seed 
+
+  metadata:
+    image: edgexfoundry/docker-core-metadata
+    ports:
+      - "48081"
+    hostname: edgex-core-metadata
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+      - consul
+      - config-seed
+      - mongo
+      - mongo-seed
+      - logging
+
+  data:
+    image: edgexfoundry/docker-core-data
+    ports:
+      - "48080"
+      - "5563"
+    hostname: edgex-core-data
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+      - consul
+      - config-seed
+      - mongo
+      - mongo-seed
+      - logging
+
+  command:
+    image: edgexfoundry/docker-core-command
+    ports:
+      - "48082"
+    hostname: edgex-core-command
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+      - consul
+      - config-seed
+      - mongo
+      - mongo-seed
+      - logging
+      - metadata
+      
+######################### Bosporus S/W ##########################
+  device-service-opcua:
+    image: device-service-opcua
+    ports:
+      - "49997"
+    hostname: device-service-opcua
+    networks:
+      - edgex-network
+    volumes_from:
+      - volume
+    depends_on:
+      - volume
+      - consul
+      - metadata
+
+#  command-test-tool:
+#    image: command-test-tool
+#    container_name: command-test-tool
+#    hostname: command-test-tool
+#    stdin_open: true
+#    networks:
+#      - edgex-network
+#    volumes_from:
+#      - volume
+#    depends_on:
+#      - metadata
+
+
+networks:
+  edgex-network:
+    driver: "bridge"
+... 
