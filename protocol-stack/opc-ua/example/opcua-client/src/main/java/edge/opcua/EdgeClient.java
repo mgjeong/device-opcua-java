@@ -102,7 +102,7 @@ public class EdgeClient {
   public static void startClient(String securePolicyType) throws Exception {
     EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
         .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
-        .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).setViewNodeFlag(false)
+        .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue())
         .setSecurityPolicyUri(securePolicyType).build();
     EdgeEndpointInfo ep =
         new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
