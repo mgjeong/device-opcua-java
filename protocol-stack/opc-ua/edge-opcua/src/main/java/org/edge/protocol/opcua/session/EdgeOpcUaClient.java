@@ -19,7 +19,6 @@
 package org.edge.protocol.opcua.session;
 
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
@@ -27,7 +26,6 @@ import org.eclipse.milo.opcua.sdk.client.SessionActivityListener;
 import org.eclipse.milo.opcua.sdk.client.api.UaSession;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
-import org.eclipse.milo.opcua.stack.core.Stack;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -35,7 +33,6 @@ import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 import org.edge.protocol.opcua.api.ProtocolManager;
 import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
-import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
 import org.edge.protocol.opcua.api.common.EdgeNodeId;
 import org.edge.protocol.opcua.api.common.EdgeNodeIdentifier;
@@ -61,10 +58,12 @@ public class EdgeOpcUaClient implements EdgeBaseClient {
   private final OpcUaClient client;
   private final String endpointUri;
   private String securityUri = null;
+  private boolean viewNodeEnabled = true; 
 
   public EdgeOpcUaClient(EdgeEndpointInfo epInfo) throws Exception {
     this.endpointUri = epInfo.getEndpointUri();
     this.client = configure(epInfo);
+    this.viewNodeEnabled = epInfo.getConfig().getViewNodeFlag();
   }
 
   Thread connectThread = new Thread() {
@@ -202,7 +201,7 @@ public class EdgeOpcUaClient implements EdgeBaseClient {
     EdgeProviderGenerator.getInstance().initializeProvider(
         new NodeId(nodeInfo.getEdgeNodeID().getNameSpace(),
             nodeInfo.getEdgeNodeID().getEdgeNodeIdentifier().value()),
-        null, NodeClass.Object, this);
+        null, NodeClass.Object, this, viewNodeEnabled);
 
     EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).build();
     ProtocolManager.getProtocolManagerInstance().onStatusCallback(ep,
