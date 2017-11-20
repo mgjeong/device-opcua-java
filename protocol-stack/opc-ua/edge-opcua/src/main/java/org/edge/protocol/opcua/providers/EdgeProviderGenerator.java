@@ -335,18 +335,26 @@ public class EdgeProviderGenerator {
    * @prarm [in] browseName browse name
    * @prarm [in] classType available node class type (NodeClass.Variable)
    * @prarm [in] client EdgeOpcUaClient instance to browse
+   * @prarm [in] viewEnabled the flag whether view type is set as the target node of initialize
+   *        provider.
    * @return result
    */
   public EdgeResult initializeProvider(NodeId id, String browseName, NodeClass classType,
-      EdgeOpcUaClient client) {
+      EdgeOpcUaClient client, boolean viewEnabled) {
     EdgeResult ret = null;
     visitedNode.clear();
-    visitedViewNode.clear();
-    viewNodeList.clear();
-    getViewNodeList(id, client);
-    for (NodeId nodeId : viewNodeList) {
-      ret = generateProviderAll(nodeId, browseName, classType, client, 0);
+
+    if (true == viewEnabled) {
+      visitedViewNode.clear();
+      viewNodeList.clear();
+      getViewNodeList(id, client);
+      for (NodeId nodeId : viewNodeList) {
+        ret = generateProviderAll(nodeId, browseName, classType, client, 0);
+      }
+    } else {
+      ret = generateProviderAll(id, browseName, classType, client, 0);
     }
+
     return ret;
   }
 

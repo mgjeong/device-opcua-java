@@ -27,6 +27,7 @@ public class EdgeEndpointConfig {
   private String serverName;
   private String bindAddress;
   private int bindPort;
+  private boolean viweNodeFalg;
 
   public static class Builder {
     private int requestTimeout = 60000;
@@ -37,6 +38,7 @@ public class EdgeEndpointConfig {
     private String serverName = EdgeOpcUaCommon.DEFAULT_SERVER_NAME.getValue();
     private String bindAddress = EdgeOpcUaCommon.WELL_KNOWN_LOCALHOST_ADDRESS.getValue();
     private int bindPort = 12686;
+    private boolean viweNodeFalg = true;
 
     public Builder() {}
 
@@ -118,6 +120,17 @@ public class EdgeEndpointConfig {
     }
 
     /**
+     * @fn Builder setViewNodeFlag(boolean flag)
+     * @brief set configure which initialize provider with only view node
+     * @param [in] flag View Node flag is set
+     * @return this
+     */
+    public Builder setViewNodeFlag(boolean flag) {
+      viweNodeFalg = flag;
+      return this;
+    }
+    
+    /**
      * @fn EdgeEndpointConfig build()
      * @brief create EdgeEndpointConfig instance (builder)
      * @return EdgeEndpointConfig
@@ -140,6 +153,7 @@ public class EdgeEndpointConfig {
     serverName = builder.serverName;
     bindAddress = builder.bindAddress;
     bindPort = builder.bindPort;
+    viweNodeFalg = builder.viweNodeFalg;
   }
 
   /**
@@ -212,5 +226,14 @@ public class EdgeEndpointConfig {
    */
   public int getBindPort() {
     return bindPort;
+  }
+  
+  /**
+   * @fn boolean getViewNodeFlag()
+   * @brief get viweNodeFalg
+   * @return viweNodeFalg
+   */
+  public boolean getViewNodeFlag() {
+    return viweNodeFalg;
   }
 }
