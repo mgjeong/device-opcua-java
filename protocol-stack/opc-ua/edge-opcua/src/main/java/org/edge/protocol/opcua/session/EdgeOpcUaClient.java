@@ -161,10 +161,11 @@ public class EdgeOpcUaClient implements EdgeBaseClient {
 
     if (ep.getConfig() == null) {
       clientConfig = OpcUaClientConfig.builder()
-          .setApplicationName(LocalizedText.english("digitalpetri opc-ua client"))
-          .setApplicationUri("urn:digitalpetri:opcua:client").setEndpoint(endpoint)
-          .setCertificate(loader.getClientCertificate()).setKeyPair(loader.getClientKeyPair())
-          .setRequestTimeout(uint(60000)).build();
+          .setApplicationName(
+              LocalizedText.english(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue()))
+          .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue())
+          .setEndpoint(endpoint).setCertificate(loader.getClientCertificate())
+          .setKeyPair(loader.getClientKeyPair()).setRequestTimeout(uint(60000)).build();
 
     } else {
       clientConfig = OpcUaClientConfig.builder()

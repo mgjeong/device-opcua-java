@@ -298,31 +298,29 @@ public class EdgeDeviceServiceOpcUaTest {
   }
 
   public void startClient() throws Exception {
-    EdgeEndpointConfig endpointConfig =
-        new EdgeEndpointConfig.Builder().setApplicationName("digitalpetri opc-ua client")
-            .setApplicationUri("urn:digitalpetri:opcua:client").build();
+    EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
+        .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
+        .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).build();
     EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
 
     // start Client
     EdgeEndpointInfo epInfo =
         new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
-    EdgeMessage msg =
-        new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_START_CLIENT)
-            .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
+    EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_START_CLIENT)
+        .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
     ProtocolManager.getProtocolManagerInstance().send(msg);
   }
 
   private void startServer() throws Exception {
-    EdgeEndpointConfig endpointConfig =
-        new EdgeEndpointConfig.Builder().setApplicationName("digitalpetri opc-ua client")
-            .setApplicationUri("urn:digitalpetri:opcua:client").build();
+    EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
+        .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
+        .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).build();
     EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
 
     EdgeEndpointInfo epInfo =
         new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
-    EdgeMessage msg =
-        new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_START_SERVER)
-            .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
+    EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_START_SERVER)
+        .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
     ProtocolManager.getProtocolManagerInstance().send(msg);
   }
 
@@ -514,16 +512,14 @@ public class EdgeDeviceServiceOpcUaTest {
 
   private void stopServer() throws Exception {
     EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(endpointUri).build();
-    EdgeMessage msg = new EdgeMessage.Builder(epInfo)
-        .setCommand(EdgeCommandType.CMD_STOP_SERVER)
+    EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_STOP_SERVER)
         .setRequest(new EdgeRequest.Builder(new EdgeNodeInfo.Builder().build()).build()).build();
     ProtocolManager.getProtocolManagerInstance().send(msg);
   }
 
   private void stopClient() throws Exception {
     EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(endpointUri).build();
-    EdgeMessage msg = new EdgeMessage.Builder(epInfo)
-        .setCommand(EdgeCommandType.CMD_STOP_CLIENT)
+    EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_STOP_CLIENT)
         .setRequest(new EdgeRequest.Builder(new EdgeNodeInfo.Builder().build()).build()).build();
     ProtocolManager.getProtocolManagerInstance().send(msg);
   }
