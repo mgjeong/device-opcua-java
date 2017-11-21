@@ -271,8 +271,8 @@ public class EdgeClient {
 
   public static void testGetEndpoint() throws Exception {
     EdgeEndpointConfig config =
-        new EdgeEndpointConfig.Builder().setApplicationName("digitalpetri opc-ua client")
-            .setApplicationUri("urn:digitalpetri:opcua:client").build();
+        new EdgeEndpointConfig.Builder().setApplicationName("Eclipse Milo Example Client")
+            .setApplicationUri("urn:eclipse:milo:examples:client").build();
     EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(config).build();
     EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
     EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_GET_ENDPOINTS)
