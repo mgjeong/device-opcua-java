@@ -169,9 +169,12 @@ public class EdgeClient {
 
   public static void testSub(EdgeNodeIdentifier type) throws Exception {
     if (type == EdgeNodeIdentifier.Edge_Node_Custom_Type) {
+      Scanner scanner = new Scanner(System.in);
+      System.out.print("[select sensor] : ");
+      String sensor = scanner.next();
       EdgeSubRequest sub = new EdgeSubRequest.Builder(EdgeNodeIdentifier.Edge_Create_Sub)
           .setSamplingInterval(1000.0).build();
-      EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc100").build();
+      EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(sensor).build();
 
       EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_SUB)
           .setRequest(new EdgeRequest.Builder(ep).setSubReq(sub).build()).build();
@@ -268,8 +271,8 @@ public class EdgeClient {
 
   public static void testGetEndpoint() throws Exception {
     EdgeEndpointConfig config =
-        new EdgeEndpointConfig.Builder().setApplicationName("digitalpetri opc-ua client")
-            .setApplicationUri("urn:digitalpetri:opcua:client").build();
+        new EdgeEndpointConfig.Builder().setApplicationName("Eclipse Milo Example Client")
+            .setApplicationUri("urn:eclipse:milo:examples:client").build();
     EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(config).build();
     EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
     EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_GET_ENDPOINTS)
@@ -297,7 +300,6 @@ public class EdgeClient {
         String ipAddress = scanner.next();
         endpointUri = ipAddress;
         epInfo = new EdgeEndpointInfo.Builder(endpointUri).build();
-
         testGetEndpoint();
         quitThread.start();
         startFlag = true;
@@ -313,36 +315,24 @@ public class EdgeClient {
         sensor = scanner.next();
         testRead(sensor, EdgeNodeIdentifier.Edge_Node_Custom_Type);
       } else if (operator.equals(EdgeCommandType.CMD_WRITE.getValue())) {
-        String sensor = "";
         System.out.print("[select sensor] : ");
-        sensor = scanner.next();
+        String sensor = scanner.next();
+
+        System.out.print("[input variable to change] : ");
+        Object valueToChange = scanner.next();
 
         System.out.println(ANSI_GREEN + "\n------------------------" + ANSI_RESET);
         System.out.println(ANSI_YELLOW + " Write Req/Res " + ANSI_RESET);
         System.out.println(ANSI_GREEN + "------------------------\n" + ANSI_RESET);
 
-        if (sensor.equals("/1/cnc14")) {
-          EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();
-          EdgeMessage writeMsg = new EdgeMessage.Builder(epInfo)
-              .setCommand(EdgeCommandType.CMD_WRITE).setRequest(new EdgeRequest.Builder(ep)
-                  .setMessage(new EdgeVersatility.Builder("OFF").build()).build())
-              .build();
-          ProtocolManager.getProtocolManagerInstance().send(writeMsg);
-        } else if (sensor.equals("/1/Temperature")) {
-          EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias("/1/Temperature").build();
-          EdgeMessage writeMsg = new EdgeMessage.Builder(epInfo)
-              .setCommand(EdgeCommandType.CMD_WRITE).setRequest(new EdgeRequest.Builder(ep)
-                  .setMessage(new EdgeVersatility.Builder(uint(800)).build()).build())
-              .build();
-          ProtocolManager.getProtocolManagerInstance().send(writeMsg);
-        } else if (sensor.equals("/1/cnc100")) {
-          EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc100").build();
-          EdgeMessage writeMsg = new EdgeMessage.Builder(epInfo)
-              .setCommand(EdgeCommandType.CMD_WRITE).setRequest(new EdgeRequest.Builder(ep)
-                  .setMessage(new EdgeVersatility.Builder(uint(720)).build()).build())
-              .build();
-          ProtocolManager.getProtocolManagerInstance().send(writeMsg);
-        }
+        EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(sensor).build();
+        EdgeMessage writeMsg =
+            new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_WRITE)
+                .setRequest(new EdgeRequest.Builder(ep)
+                    .setMessage(new EdgeVersatility.Builder(valueToChange).build()).build())
+                .build();
+        ProtocolManager.getProtocolManagerInstance().send(writeMsg);
+
       } else if (operator.equals(EdgeCommandType.CMD_SUB.getValue())) {
         System.out.println(ANSI_GREEN + "\n------------------------" + ANSI_RESET);
         System.out.println(ANSI_YELLOW + " Sub Req/Res " + ANSI_RESET);

@@ -35,8 +35,8 @@ public enum EdgeOpcUaCommon {
   // default values 
   DEFAULT_SERVER_NAME(100, "edge-opc-server", "default server name"),
   DEFAULT_SERVER_URI(101, "opc.tcp://localhost:12686/", "default server address and port"),
-  DEFAULT_SERVER_APP_NAME(102, "digitalpetri opc-ua client", ""),
-  DEFAULT_SERVER_APP_URI(103, "urn:digitalpetri:opcua:client", ""),
+  DEFAULT_SERVER_APP_NAME(102, "Eclipse Milo Example Client", ""),
+  DEFAULT_SERVER_APP_URI(103, "urn:eclipse:milo:examples:client", ""),
   DEFAULT_NAMESPACE(104, "edge-namespace", "default display-name for namespace"),
   DEFAULT_ROOT_NODE_INFO(105, "defaultRootNode", "defalult root node information"),
   DEFAULT_PRODUCT_URI(106, "urn:digitalpetri:opcua:sdk", "defalult product uri"),  
