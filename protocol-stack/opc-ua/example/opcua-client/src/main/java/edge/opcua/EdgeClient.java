@@ -141,7 +141,7 @@ public class EdgeClient {
   public static void testBrowse() throws Exception {
     EdgeNodeInfo ep = new EdgeNodeInfo.Builder()
         .setEdgeNodeId(new EdgeNodeId.Builder(EdgeNodeIdentifier.RootFolder).build())
-        .setValueAlias(EdgeSampleCommon.TARGET_LINE_VIEW_NODE.getValue()).build();
+        .setValueAlias(EdgeOpcUaCommon.WELL_KNOWN_DISCOVERY.getValue()).build();
     EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_BROWSE)
         .setBrowseParameter(new EdgeBrowseParameter.Builder().build())
         .setRequest(new EdgeRequest.Builder(ep).build()).build();
@@ -270,9 +270,9 @@ public class EdgeClient {
   }
 
   public static void testGetEndpoint() throws Exception {
-    EdgeEndpointConfig config =
-        new EdgeEndpointConfig.Builder().setApplicationName("Eclipse Milo Example Client")
-            .setApplicationUri("urn:eclipse:milo:examples:client").build();
+    EdgeEndpointConfig config = new EdgeEndpointConfig.Builder()
+        .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
+        .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).build();
     EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(config).build();
     EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
     EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_GET_ENDPOINTS)
