@@ -141,7 +141,7 @@ public class EdgeClient {
   public static void testBrowse() throws Exception {
     EdgeNodeInfo ep = new EdgeNodeInfo.Builder()
         .setEdgeNodeId(new EdgeNodeId.Builder(EdgeNodeIdentifier.RootFolder).build())
-        .setValueAlias(EdgeSampleCommon.TARGET_LINE_VIEW_NODE.getValue()).build();
+        .setValueAlias(EdgeOpcUaCommon.WELL_KNOWN_DISCOVERY.getValue()).build();
     EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_BROWSE)
         .setBrowseParameter(new EdgeBrowseParameter.Builder().build())
         .setRequest(new EdgeRequest.Builder(ep).build()).build();
