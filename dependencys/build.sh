@@ -3,8 +3,8 @@ DEP_ROOT=$(pwd)
 
 #start clone dependencys git repo and maven install
 cd $DEP_ROOT
-git clone git@github.sec.samsung.net:RS7-EdgeComputing/EMF.git
-cd EMF/java/edgex-emf
+git clone git@github.sec.samsung.net:RS7-EdgeComputing/messaging-zmq.git
+cd messaging-zmq/java/edgex-emf
 ./build.sh
 
 #cd $DEP_ROOT
