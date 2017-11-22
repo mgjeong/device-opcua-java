@@ -16,8 +16,7 @@
    
    1) `tar xzvf apache-maven-3.5.2-bin.tar.gz`
    
-   2) Add the bin directory of the created directory apache-maven-3.5.2 to the PATH environment variable
-   
+   2) Add the bin directory of the created directory apache-maven-3.5.2 to the PATH environment variable<br></br>
 ### Add Certificate your envorionments
 1. get certificate file using browser
 
