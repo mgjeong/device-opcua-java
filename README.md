@@ -26,7 +26,7 @@
 
 2. add certificate file to jre using keytool
 
-   1) `keytool –import –noprompt –trustcacerts –alias ALIASNAME -file /PATH/TO/YOUR/DESKTOP/CertificateName.cer -keystore /PATH/TO/YOUR/JDK/jre/lib/security/cacerts -storepass changeit`
+   1) `sudo keytool -importcert -noprompt -trustcacerts -alias ALIASNAME -file /PATH/TO/YOUR/DESKTOP/CertificateName.cer -keystore /PATH/TO/YOUR/JDK/jre/lib/security/cacerts -storepass changeit`
 <br></br>
 ## How to build OPC-UA Device Service
 1. cd ./device-service-opcua
