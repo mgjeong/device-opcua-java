@@ -4,6 +4,7 @@ version: '2'
 services:
   volume:
     image: edgexfoundry/docker-edgex-volume
+    container_name: edgex-files
     networks:
       - edgex-network
     volumes:
@@ -15,6 +16,7 @@ services:
 
   consul:
     image: edgexfoundry/docker-core-consul
+    container_name: edgex-core-consul
     ports:
       - "8400"
       - "8500"
@@ -28,7 +30,9 @@ services:
       - volume
 
   config-seed:
+    #image: docker-core-config-seed
     image: edgexfoundry/docker-core-config-seed
+    container_name: edgex-core-config-seed
     hostname: edgex-core-config-seed
     networks:
       - edgex-network
@@ -40,6 +44,7 @@ services:
 
   mongo:
     image: edgexfoundry/docker-edgex-mongo
+    container_name: edgex-mongo
     ports:
       - "27017"
     hostname: edgex-mongo
@@ -53,6 +58,7 @@ services:
 
   mongo-seed:
     image: edgexfoundry/docker-edgex-mongo-seed
+    container_name: edgex-mongo-seed
     hostname: edgex-mongo-seed
     networks:
       - edgex-network
@@ -66,6 +72,7 @@ services:
     image: edgexfoundry/docker-support-logging
     ports:
       - "48061"
+    container_name: edgex-support-logging
     hostname: edgex-support-logging
     networks:
       - edgex-network
@@ -82,6 +89,7 @@ services:
     image: edgexfoundry/docker-core-metadata
     ports:
       - "48081"
+    container_name: edgex-core-metadata
     hostname: edgex-core-metadata
     networks:
       - edgex-network
@@ -117,6 +125,7 @@ services:
     image: edgexfoundry/docker-core-command
     ports:
       - "48082"
+    container_name: edgex-core-command
     hostname: edgex-core-command
     networks:
       - edgex-network
@@ -136,6 +145,7 @@ services:
     image: device-service-opcua
     ports:
       - "49997"
+    container_name: device-service-opcua
     hostname: device-service-opcua
     networks:
       - edgex-network
