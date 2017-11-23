@@ -20,7 +20,6 @@
 package org.edgexfoundry.device.opcua.opcua;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -29,38 +28,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.edge.protocol.opcua.api.ProtocolManager;
-import org.edge.protocol.opcua.api.ProtocolManager.DiscoveryCallback;
-import org.edge.protocol.opcua.api.ProtocolManager.ReceivedMessageCallback;
-import org.edge.protocol.opcua.api.ProtocolManager.StatusCallback;
-import org.edge.protocol.opcua.api.client.EdgeResponse;
-import org.edge.protocol.opcua.api.common.EdgeBrowseResult;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
-import org.edge.protocol.opcua.api.common.EdgeConfigure;
-import org.edge.protocol.opcua.api.common.EdgeDevice;
 import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
-import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
 import org.edge.protocol.opcua.api.common.EdgeMessage;
 import org.edge.protocol.opcua.api.common.EdgeMessageType;
-import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
-import org.edge.protocol.opcua.api.common.EdgeStatusCode;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
-import org.edge.protocol.opcua.example.EdgeEmulator;
 import org.edgexfoundry.controller.EventClient;
-import org.edgexfoundry.device.opcua.DataDefaultValue;
-import org.edgexfoundry.device.opcua.coredata.EventGenerator;
+import org.edgexfoundry.device.opcua.core.OPCUAAdapter;
+import org.edgexfoundry.device.opcua.core.OPCUAEmlulator;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.device.opcua.data.ObjectStore;
 import org.edgexfoundry.device.opcua.data.ProfileStore;
 import org.edgexfoundry.device.opcua.domain.OPCUAAttribute;
 import org.edgexfoundry.device.opcua.domain.OPCUAObject;
 import org.edgexfoundry.device.opcua.domain.ScanList;
-import org.edgexfoundry.device.opcua.emf.EMFAdapter;
 import org.edgexfoundry.device.opcua.handler.OPCUAHandler;
 import org.edgexfoundry.device.opcua.metadata.DeviceEnroller;
-import org.edgexfoundry.device.opcua.metadata.MetaDataType;
-import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.Protocol;
@@ -73,10 +58,8 @@ import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 public class OPCUADriver {
 
     private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(OPCUADriver.class);
-    private String endpointUri = null;
-    private EdgeEmulator opcUaAdapter;
-    private boolean emfMode = false;
-    
+    private boolean enableEmulator = false;
+	
     @Autowired
     ProfileStore profiles;
 
@@ -206,13 +189,14 @@ public class OPCUADriver {
     public void initialize() {
         // TODO 3: [Optional] Initialize the interface(s) here if necessary,
         // runs once on service startup
+  
         try {
-        	if (emfMode == true) {
-        	    EMFAdapter.getInstance().startAdapter();
+        	
+        	if(enableEmulator == true) {
+        	    OPCUAEmlulator.getInstance(deviceEnroller, objectCache).startOPCUAAdapter();
         	} else {
-        		  opcUaAdapter = new EdgeEmulator();
-              startOPCUAAdapter();	
-        	}
+        	    OPCUAAdapter.getInstance(deviceEnroller, eventClient, objectCache).startOPCUAAdapter();
+        	}        	         		  	
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -224,173 +208,7 @@ public class OPCUADriver {
         // operations
 
     }
-
-    private void receive(EdgeMessage data) {
-        // TODO 7: [Optional] Fill with your own implementation for handling
-        // asynchronous data from the driver layer to the device service
-
-    	for (EdgeResponse res : data.getResponses()) {
-            logger.info(
-                    "[FROM OPCUA Stack] Data received = {} topic={}, endpoint={}, namespace={}, "
-                            + "edgenodeuri={}, methodname={}, edgenodeId={} ",
-                    res.getMessage().getValue(), 
-                    res.getEdgeNodeInfo().getValueAlias(),
-                    data.getEdgeEndpointInfo().getEndpointUri(),
-                    res.getEdgeNodeInfo().getEdgeNodeID().getNameSpace(),
-                    res.getEdgeNodeInfo().getEdgeNodeID().getEdgeNodeUri(), 
-                    res.getEdgeNodeInfo().getMethodName(),
-                    res.getEdgeNodeInfo().getEdgeNodeID().getEdgeNodeIdentifier());
-
-    	}
-
-        Device device = null;
-        String result = "";
-        ResourceOperation operation = null;
-
-        objectCache.put(device, operation, result);
-
-    }
-
-    ReceivedMessageCallback receiver = new ReceivedMessageCallback() {
-        @Override
-        public void onResponseMessages(EdgeMessage data) {
-            // TODO Auto-generated method stub
-            CompletableFuture<EdgeMessage> future = data.getEdgeEndpointInfo().getFuture();
-            if (future != null) {
-                future.complete(data);
-            }
-        }
-
-        @Override
-        public void onMonitoredMessage(EdgeMessage data) {
-            // TODO Auto-generated method stub
-            receive(data);
-
-            for (EdgeResponse res : data.getResponses()) {
-            	Event event = EventGenerator.newEvent(
-            			res.getEdgeNodeInfo().getValueAlias().replaceAll("/", DataDefaultValue.REPLACE_DEVICE_NAME),
-            			res.getMessage().toString());
-
-                try {
-                    logger.debug(event.getDevice() + " : [TO CoreData] Add Event successfully: "
-                            + eventClient.add(event));
-                } catch (Exception e) {
-                    logger.error("Could not add Event to coredata msg: " + e.getMessage());
-                }
-            }
-        }
-
-		@Override
-		public void onErrorMessage(EdgeMessage data) {
-			// TODO Auto-generated method stub
-			logger.info("[Error] onErrorMessage");
-		}
-
-		@Override
-		public void onBrowseMessage(EdgeNodeInfo endpoint, List<EdgeBrowseResult> responses, int requestId) {
-			// TODO Auto-generated method stub
-			
-		}
-    };
-
-    DiscoveryCallback discoveryCallback = new DiscoveryCallback() {
-        @Override
-        public void onFoundEndpoint(EdgeDevice device) {
-            // TODO Auto-generated method stub
-            logger.info("[Event] onFoundEndpoint");
-            for (EdgeEndpointInfo ep : device.getEndpoints()) {
-                logger.info("-> {}, {}", ep.getEndpointUri(),
-                        ep.getConfig().getSecurityPolicyUri());
-            }
-        }
-
-        @Override
-        public void onFoundDevice(EdgeDevice device) {
-            // TODO Auto-generated method stub
-            logger.info("[Event] onFoundDevice is not supported");
-        }
-    };
-
-    StatusCallback statusCallback = new StatusCallback() {
-
-        @Override
-        public void onStart(EdgeEndpointInfo ep, EdgeStatusCode status,
-                List<String> attiributeAliasList, List<String> methodAliasList,
-                List<String> viewAliasList) {
-            // TODO Auto-generated method stub
-            logger.info("onStart({})", ep.getEndpointUri());
-            
-            if (status == EdgeStatusCode.STATUS_CLIENT_STARTED) {
-                try {
-                    deviceEnroller.initialize();
-                    opcUaAdapter.runClientSub();
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }	
-            } else if (status == EdgeStatusCode.STATUS_SERVER_STARTED) {
-            	try {
-              	  // Create Namespace and nodes
-               	  opcUaAdapter.runAutoUpdateServer();
-              	  opcUaAdapter.initServerNodes();
-                  // startClient
-                  opcUaAdapter.startClient(ep);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }	
-            }
-        }
-
-        @Override
-        public void onStop(EdgeEndpointInfo ep, EdgeStatusCode status) {
-            // TODO Auto-generated method stub
-            logger.info("onStop({})", ep.getEndpointUri());
-            deviceEnroller.cleanCoreData();
-            deviceEnroller.cleanMetaData(MetaDataType.ALL);
-        }
-
-        @Override
-        public void onNetworkStatus(EdgeEndpointInfo ep, EdgeStatusCode status) {
-            // TODO Auto-generated method stub
-            logger.info("onNetworkStatus: status {} from {}", status, ep.getEndpointUri());
-            if (EdgeStatusCode.STATUS_DISCONNECTED == status) {
-                deviceEnroller.cleanCoreData();
-                deviceEnroller.cleanMetaData(MetaDataType.DEVICE);
-                deviceEnroller.cleanMetaData(MetaDataType.DEVICE_PROFILE);
-            }
-        }
-    };
-
-    public void startOPCUAAdapter() throws Exception {
-        // 1. run discovery device
-        // TODO
-        // we need to support like discovery-seed micro-service
-
-        // 2. create addressable (by default)
-        Addressable addressable = new Addressable(DataDefaultValue.NAME.getValue(), Protocol.TCP,
-                DataDefaultValue.ADDRESS.getValue(), DataDefaultValue.PATH.getValue(),
-                DataDefaultValue.ADDRESSABLE_PORT);
-
-        // 3. get EdgeEndpoint URI
-        endpointUri = getEndpointUrifromAddressable(addressable);
-
-        // 4. set configure
-        EdgeConfigure configure = new EdgeConfigure.Builder().setRecvCallback(receiver)
-                .setStatusCallback(statusCallback).setDiscoveryCallback(discoveryCallback)
-                .build();
-        
-        ProtocolManager protocolManager = ProtocolManager.getProtocolManagerInstance();
-        protocolManager.configure(configure);
-
-        // startServer
-        EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
-                .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
-                .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).build();
-        EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
-        opcUaAdapter.startServer(ep, "");
-    }
-
+    
     public String getEndpointUrifromAddressable(Addressable addressable) {
         String endpointUri = "";
         if (addressable.getProtocol() == Protocol.TCP) {
