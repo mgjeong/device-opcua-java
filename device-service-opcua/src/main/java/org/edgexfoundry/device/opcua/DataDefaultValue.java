@@ -12,6 +12,7 @@ public enum DataDefaultValue {
     NAME(6, "edge-opc-ua", "Addressable Name Value for OPC-UA"),
     ADDRESS(7, "localhost", "Addressable Address Value for OPC-UA"),
     PATH(8, "edge-opc-server", "Addressable Path Value for OPC-UA"),
+    ADDRESS1(9, "127.0.0.1", "Addressable Address Value for OPC-UA"),
 
     DESCRIPTION_DEVICE(14, "This is Device", "Device Description Value"),
     LABEL_DEVICE(15, "OPCUA", "Device Label Value"),
