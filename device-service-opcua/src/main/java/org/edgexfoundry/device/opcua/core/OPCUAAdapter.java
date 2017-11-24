@@ -99,6 +99,11 @@ public class OPCUAAdapter {
 			for (EdgeResponse res : data.getResponses()) {
 				logger.info("[res] " + res.getMessage().getValue().toString());
 			}
+
+			CompletableFuture<EdgeMessage> future = data.getEdgeEndpointInfo().getFuture();
+			if (future != null) {
+				future.complete(data);
+			}
 		}
 
 		@Override

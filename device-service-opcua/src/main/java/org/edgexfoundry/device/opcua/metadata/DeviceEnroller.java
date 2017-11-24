@@ -69,6 +69,18 @@ public class DeviceEnroller {
     return addressable;
   }
 
+  private Addressable updateAddressableToMetaData() {
+	    if (addressable == null) {
+	      addressable = AddressableGenerator.updateAddressable();
+	      try {
+	        addressableClient.update(addressable);
+	      } catch (Exception e) {
+	        logger.debug("Could not update addressable to metadata msg: " + e.getMessage());
+	      }
+	    }
+	    return addressable;
+	  }
+
   private DeviceProfile addDeviceProfileToMetaData(String deviceInfoKey) {
     DeviceProfile profile = DeviceProfileGenerator.NewtDeviceProfile(deviceInfoKey);
     try {
@@ -173,6 +185,7 @@ public class DeviceEnroller {
   private void configureMetaData() {
     try {
       addAddressableToMetaData();
+      updateAddressableToMetaData();
       attributeProviderKeyList = getAttributeProviderKeyList();
       for (String deviceInfoKey : attributeProviderKeyList) {
         addDeviceProfileToMetaData(deviceInfoKey);
