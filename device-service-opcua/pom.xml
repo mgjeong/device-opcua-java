@@ -27,6 +27,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
    	<emf.version>0.0.1-SNAPSHOT</emf.version>
+   	<edge-json-format.version>0.0.1-SNAPSHOT</edge-json-format.version>
 		<java.version>1.8</java.version>
 		<nexusproxy>https://nexus.edgexfoundry.org</nexusproxy>
 		<repobasepath>content/repositories</repobasepath>
@@ -116,10 +117,15 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
-	<dependency>
+	  <dependency>
 			<groupId>org.edgexfoundry.emf</groupId>
 			<artifactId>edgex-emf</artifactId>
 			<version>${emf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.edge.json.format</groupId>
+			<artifactId>edge-json-format</artifactId>
+			<version>${edge-json-format.version}</version>
 		</dependency>
 	</dependencies>
 
