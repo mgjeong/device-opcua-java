@@ -1,13 +1,13 @@
 #!/bin/sh
 PROJECT_ROOT=$(pwd)
 echo $PROJECT_ROOT
-cd ../dependencys
+cd ../dependencies
 DEP_ROOT=$(pwd)
 cd ../
 cd protocol-stack/opc-ua/edge-opcua/
 OPCUA_ROOT=$(pwd)
 
-#start clone dependencys git repo and maven install
+#start clone dependencies git repo and maven install
 cd $DEP_ROOT
 ./build.sh
 
