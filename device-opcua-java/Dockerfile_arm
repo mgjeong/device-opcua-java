@@ -1,0 +1,10 @@
+FROM java:8
+MAINTAINER bg.chun@samsung.com
+
+# If you don't need QEMU, please comment the below command. Otherwise, please refer to README file to use QEMU
+COPY qemu-arm-static /usr/bin/qemu-arm-static
+
+COPY target/device-opcua-java.jar /home/device-opcua-java.jar
+COPY run.sh run.sh
+EXPOSE 49997
+CMD ["./run.sh"]
