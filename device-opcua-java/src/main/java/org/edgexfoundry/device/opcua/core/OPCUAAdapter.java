@@ -201,7 +201,7 @@ public class OPCUAAdapter {
 				DataDefaultValue.ADDRESSABLE_PORT);
 
 		// 3. get EdgeEndpoint URI
-		endpointUri = getEndpointUrifromAddressable(addressable);
+		endpointUri = OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable);
 
 		EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
 				.setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
@@ -219,8 +219,8 @@ public class OPCUAAdapter {
 	private void testRead() throws Exception {
 		EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();
 
-		EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addressable)).setFuture(null)
-				.build();
+		EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(
+				OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable)).setFuture(null).build();
 		EdgeMessage msg = null;
 
 		msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_READ)
@@ -239,25 +239,12 @@ public class OPCUAAdapter {
 		EdgeSubRequest sub = new EdgeSubRequest.Builder(EdgeNodeIdentifier.Edge_Create_Sub).setSamplingInterval(100.0)
 				.build();
 		EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();
-		EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addressable))
-				.setFuture(null).build();
+		EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(
+				OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable)).setFuture(null).build();
 
 		EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_SUB)
 				.setMessageType(EdgeMessageType.SEND_REQUEST)
 				.setRequest(new EdgeRequest.Builder(ep).setSubReq(sub).build()).build();
 		ProtocolManager.getProtocolManagerInstance().send(msg);
-	}
-
-	private String getEndpointUrifromAddressable(Addressable addressable) {
-		String endpointUri = "";
-		if (addressable.getProtocol() == Protocol.TCP) {
-			endpointUri += String.format("%s", "opc.tcp://");
-		} else {
-			endpointUri += String.format("%s", "http://");
-		}
-
-		endpointUri += String.format("%s:%d/%s", addressable.getAddress(), addressable.getPort(),
-				addressable.getPath());
-		return endpointUri;
 	}
 }

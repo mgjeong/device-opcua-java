@@ -160,7 +160,7 @@ public class OPCUAMessageHandler {
 		}
 	}
 
-	private String getEndpointUrifromAddressable(Addressable addressable) {
+	public String getEndpointUrifromAddressable(Addressable addressable) {
 		String endpointUri = "";
 		if (addressable.getProtocol() == Protocol.TCP) {
 			endpointUri += String.format("%s", "opc.tcp://");
