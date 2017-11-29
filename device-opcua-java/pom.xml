@@ -122,11 +122,11 @@
 			<artifactId>edgex-emf</artifactId>
 			<version>${emf.version}</version>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.command.json.format</groupId>
 			<artifactId>command-json-format</artifactId>
 			<version>${command-json-format.version}</version>
-		</dependency> -->
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
