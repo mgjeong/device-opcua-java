@@ -37,7 +37,7 @@ import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
 import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.device.opcua.core.OPCUAAdapter;
-import org.edgexfoundry.device.opcua.core.OPCUAEmlulator;
+import org.edgexfoundry.device.opcua.core.OPCUAServerAdapter;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.device.opcua.data.ObjectStore;
 import org.edgexfoundry.device.opcua.data.ProfileStore;
@@ -58,7 +58,6 @@ import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 public class OPCUADriver {
 
     private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(OPCUADriver.class);
-    private boolean enableEmulator = false;
 	
     @Autowired
     ProfileStore profiles;
@@ -191,12 +190,8 @@ public class OPCUADriver {
         // runs once on service startup
   
         try {
-        	
-        	if(enableEmulator == true) {
-        	    OPCUAEmlulator.getInstance(deviceEnroller, objectCache).startOPCUAAdapter();
-        	} else {
-        	    OPCUAAdapter.getInstance(deviceEnroller, eventClient, objectCache).startOPCUAAdapter();
-        	}        	         		  	
+        		OPCUAAdapter.getInstance(deviceEnroller, eventClient, objectCache).testStartServer();
+        	  OPCUAAdapter.getInstance(deviceEnroller, eventClient, objectCache).startAdapter();	         		  	
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
