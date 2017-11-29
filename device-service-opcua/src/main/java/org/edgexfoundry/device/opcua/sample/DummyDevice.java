@@ -29,7 +29,7 @@ public class DummyDevice {
 	private DummyProfile dummyProfile = new DummyProfile();
 	private static DummyAddressable dummyAddr = new DummyAddressable();
 
-	static final String DUMMY_SERVICE = "device-service-opcua";
+	static final String DUMMY_SERVICE = "device-opcua-java";
 	static final String DUMMY_NAME = "DummyDevice";
 	static final String DUMMY_DESCRIPTION = "This is dummy device";
 	static final AdminState DUMMY_ADMIN = AdminState.unlocked;

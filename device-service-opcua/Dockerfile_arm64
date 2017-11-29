@@ -4,7 +4,7 @@ MAINTAINER bg.chun@samsung.com
 # If you don't need QEMU, please comment the below command. Otherwise, please refer to README file to use QEMU
 COPY qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
-COPY target/device-service-opcua.jar /home/device-service-opcua.jar
+COPY target/device-opcua-java.jar /home/device-opcua-java.jar
 COPY run.sh run.sh
 EXPOSE 49997
 CMD ["./run.sh"]

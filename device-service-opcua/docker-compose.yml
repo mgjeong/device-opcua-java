@@ -141,12 +141,12 @@ services:
       - metadata
       
 ######################### Bosporus S/W ##########################
-  device-service-opcua:
-    image: device-service-opcua
+  device-opcua-java:
+    image: device-opcua-java
     ports:
       - "49997"
-    container_name: device-service-opcua
-    hostname: device-service-opcua
+    container_name: device-opcua-java
+    hostname: device-opcua-java
     networks:
       - edgex-network
     volumes_from:

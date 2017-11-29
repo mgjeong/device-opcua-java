@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @microservice: device-service-opcua
+ * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
  * @version: 1.0.0
  *******************************************************************************/
@@ -31,6 +31,6 @@ public class HeartBeat {
 
   @Scheduled(fixedRateString = "${heart.beat.time}")
   public void pulse() {
-    logger.info("This is the device-service-opcua device service.");
+    logger.info("This is the device-opcua-java device service.");
   }
 }

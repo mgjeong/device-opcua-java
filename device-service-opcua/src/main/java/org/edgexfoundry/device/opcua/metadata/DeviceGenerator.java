@@ -59,7 +59,7 @@ public class DeviceGenerator {
             return null;
         }
         try {
-            serviceName = "device-service-opcua";
+            serviceName = "device-opcua-java";
             device.setService(deviceServiceClient.deviceServiceForName(serviceName));
         } catch (Exception e) {
             logger.error("Could not get deviceService by name msg: " + e.getMessage());
