@@ -22,40 +22,27 @@ import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeStatusCode;
-import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.device.opcua.DataDefaultValue;
-import org.edgexfoundry.device.opcua.data.ObjectStore;
 import org.edgexfoundry.device.opcua.emf.EMFAdapter;
-import org.edgexfoundry.device.opcua.metadata.DeviceEnroller;
 import org.edgexfoundry.device.opcua.metadata.MetaDataType;
+import org.edgexfoundry.device.opcua.opcua.OPCUADriver.DriverCallback;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.domain.meta.ResourceOperation;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class OPCUAAdapter {
 	private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(OPCUAAdapter.class);
 	private static OPCUAAdapter singleton = null;
 	private String endpointUri = null;
 	private Addressable addressable = null;
+	private DriverCallback driverCallback = null;
 
-	@Autowired
-	private DeviceEnroller deviceEnroller;
+	private OPCUAAdapter(DriverCallback callback) {
+		this.driverCallback = callback;
 
-	@Autowired
-	private EventClient eventClient;
-
-	@Autowired
-	private ObjectStore objectCache;
-
-	private OPCUAAdapter(DeviceEnroller deviceEnroller, EventClient eventClient, ObjectStore objectCache) {
-		this.deviceEnroller = deviceEnroller;
-		this.eventClient = eventClient;
-		this.objectCache = objectCache;
-		
 		// register callback
 		EdgeConfigure configure = new EdgeConfigure.Builder().setRecvCallback(receiverCallback)
 				.setStatusCallback(statusCallback).setDiscoveryCallback(discoveryCallback).build();
@@ -64,11 +51,10 @@ public class OPCUAAdapter {
 		protocolManager.configure(configure);
 	}
 
-	public static OPCUAAdapter getInstance(DeviceEnroller deviceEnroller, EventClient eventClient,
-			ObjectStore objectCache) {
+	public static OPCUAAdapter getInstance(DriverCallback callback) {
 
 		if (singleton == null) {
-			singleton = new OPCUAAdapter(deviceEnroller, eventClient, objectCache);
+			singleton = new OPCUAAdapter(callback);
 		}
 
 		return singleton;
@@ -92,7 +78,7 @@ public class OPCUAAdapter {
 		String result = "";
 		ResourceOperation operation = null;
 
-		objectCache.put(device, operation, result);
+		driverCallback.onReceive(device, operation, result);
 	}
 
 	ReceivedMessageCallback receiverCallback = new ReceivedMessageCallback() {
@@ -158,7 +144,7 @@ public class OPCUAAdapter {
 			if (status == EdgeStatusCode.STATUS_CLIENT_STARTED) {
 				logger.info("onStart(STATUS_CLIENT_STARTED)");
 				try {
-					deviceEnroller.initialize();
+					driverCallback.onInit();
 					testRead();
 					testSub();
 				} catch (Exception e) {
@@ -182,8 +168,8 @@ public class OPCUAAdapter {
 		public void onStop(EdgeEndpointInfo ep, EdgeStatusCode status) {
 			// TODO Auto-generated method stub
 			logger.info("onStop({})", ep.getEndpointUri());
-			deviceEnroller.cleanCoreData();
-			deviceEnroller.cleanMetaData(MetaDataType.ALL);
+			driverCallback.onDeleteCoreData();
+			driverCallback.onDeleteMetaData(MetaDataType.ALL);
 		}
 
 		@Override
@@ -191,9 +177,9 @@ public class OPCUAAdapter {
 			// TODO Auto-generated method stub
 			logger.info("onNetworkStatus: status {} from {}", status, ep.getEndpointUri());
 			if (EdgeStatusCode.STATUS_DISCONNECTED == status) {
-				deviceEnroller.cleanCoreData();
-				deviceEnroller.cleanMetaData(MetaDataType.DEVICE);
-				deviceEnroller.cleanMetaData(MetaDataType.DEVICE_PROFILE);
+				driverCallback.onDeleteCoreData();
+				driverCallback.onDeleteMetaData(MetaDataType.DEVICE);
+				driverCallback.onDeleteMetaData(MetaDataType.DEVICE_PROFILE);
 			}
 		}
 	};
@@ -215,7 +201,7 @@ public class OPCUAAdapter {
 				DataDefaultValue.ADDRESSABLE_PORT);
 
 		// 3. get EdgeEndpoint URI
-		endpointUri = getEndpointUrifromAddressable(addressable);
+		endpointUri = OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable);
 
 		EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
 				.setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
@@ -233,8 +219,8 @@ public class OPCUAAdapter {
 	private void testRead() throws Exception {
 		EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();
 
-		EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addressable)).setFuture(null)
-				.build();
+		EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(
+				OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable)).setFuture(null).build();
 		EdgeMessage msg = null;
 
 		msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_READ)
@@ -253,25 +239,12 @@ public class OPCUAAdapter {
 		EdgeSubRequest sub = new EdgeSubRequest.Builder(EdgeNodeIdentifier.Edge_Create_Sub).setSamplingInterval(100.0)
 				.build();
 		EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();
-		EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addressable))
-				.setFuture(null).build();
+		EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(
+				OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable)).setFuture(null).build();
 
 		EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_SUB)
 				.setMessageType(EdgeMessageType.SEND_REQUEST)
 				.setRequest(new EdgeRequest.Builder(ep).setSubReq(sub).build()).build();
 		ProtocolManager.getProtocolManagerInstance().send(msg);
-	}
-
-	private String getEndpointUrifromAddressable(Addressable addressable) {
-		String endpointUri = "";
-		if (addressable.getProtocol() == Protocol.TCP) {
-			endpointUri += String.format("%s", "opc.tcp://");
-		} else {
-			endpointUri += String.format("%s", "http://");
-		}
-
-		endpointUri += String.format("%s:%d/%s", addressable.getAddress(), addressable.getPort(),
-				addressable.getPath());
-		return endpointUri;
 	}
 }

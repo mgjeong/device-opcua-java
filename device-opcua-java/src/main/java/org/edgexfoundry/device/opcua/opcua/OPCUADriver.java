@@ -27,17 +27,11 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.edge.protocol.opcua.api.ProtocolManager;
-import org.edge.protocol.opcua.api.common.EdgeCommandType;
-import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
-import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
+import org.command.json.format.EdgeElement;
 import org.edge.protocol.opcua.api.common.EdgeMessage;
-import org.edge.protocol.opcua.api.common.EdgeMessageType;
-import org.edge.protocol.opcua.api.common.EdgeRequest;
-import org.edge.protocol.opcua.api.common.EdgeVersatility;
 import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.device.opcua.core.OPCUAAdapter;
-import org.edgexfoundry.device.opcua.core.OPCUAServerAdapter;
+import org.edgexfoundry.device.opcua.core.OPCUAMessageHandler;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.device.opcua.data.ObjectStore;
 import org.edgexfoundry.device.opcua.data.ProfileStore;
@@ -46,6 +40,7 @@ import org.edgexfoundry.device.opcua.domain.OPCUAObject;
 import org.edgexfoundry.device.opcua.domain.ScanList;
 import org.edgexfoundry.device.opcua.handler.OPCUAHandler;
 import org.edgexfoundry.device.opcua.metadata.DeviceEnroller;
+import org.edgexfoundry.device.opcua.metadata.MetaDataType;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.Protocol;
@@ -76,7 +71,7 @@ public class OPCUADriver {
 
     @Autowired
     EventClient eventClient;
-    
+
     public ScanList discover() {
         ScanList scan = new ScanList();
 
@@ -125,62 +120,34 @@ public class OPCUADriver {
         String intface = addressable.getAddress();
         logger.debug("ProcessCommand: " + operation + ", interface: " + intface + ", address: "
                 + address + ", attributes: " + attributes + ", value: " + value);
-        String result = "Default";
+        String result = "none";
 
         // Get command
         CompletableFuture<EdgeMessage> future = new CompletableFuture<>();
         future.whenComplete((message, ex) -> {
         });
 
-        EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder()
-                .setValueAlias(attributes.getProviderKey()).build();
-
-        EdgeVersatility message = null;
-
-        if (operation.toLowerCase().equals(EdgeCommandType.CMD_WRITE.getValue())) {
-            message = new EdgeVersatility.Builder("OFF").build();
-        }
-
-        EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addressable))
-        		.setFuture(future).build();
+        EdgeElement element = null;
         EdgeMessage msg = null;
-        if (operation.toLowerCase().equals(EdgeCommandType.CMD_READ.getValue())) {
-        	msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_READ)
-                    .setMessageType(EdgeMessageType.SEND_REQUEST).setRequest(
-                    		new EdgeRequest.Builder(nodeInfo).setMessage(message).build()).build();
-        } else if (operation.toLowerCase().equals(EdgeCommandType.CMD_WRITE.getValue())) {
-        	msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_WRITE)
-                    .setMessageType(EdgeMessageType.SEND_REQUEST).setRequest(
-                    		new EdgeRequest.Builder(nodeInfo).setMessage(message).build()).build();
-        } else {
-        	logger.debug("operation is not supported : " + operation);
-        	return result;
-        }  	       
-
         try {
-            ProtocolManager.getProtocolManagerInstance().send(msg);
-            if (operation.toLowerCase().equals(EdgeCommandType.CMD_READ.getValue()) ||
-            		operation.toLowerCase().equals(EdgeCommandType.CMD_WRITE.getValue())) {
-                EdgeMessage retEdgeMessage = future.get(10, TimeUnit.SECONDS);
-                if (retEdgeMessage != null) {
-                    result = retEdgeMessage.getResponses().get(0).getMessage().getValue().toString();
-                }
-            }
-        } catch (Throwable t) {
-            future.complete(null);
-        }
-
-        // TODO 1: [Required] OPCUA stack goes here, return the raw value from
-        // TODO costumize here
-        // the device as a string for processing
-        /*
-         * logger.debug("operation is  " + operation); if
-         * (operation.toLowerCase().equals("get")) { Random rand = new Random();
-         * result = Float.toString(rand.nextFloat() * 100); } else { result =
-         * value; }
-         */
-
-        // EdgeServices.ReceiveCommand(attributes.getProviderKey());
+			      msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element, operation, 
+			    		  attributes.getProviderKey(), addressable, future);
+		    } catch (Exception e) {
+			      // TODO Auto-generated catch block
+			      e.printStackTrace();
+		        }
+        
+        try {
+			      OPCUAMessageHandler.getInstance().sendMessage(msg);
+			      EdgeMessage retEdgeMessage = future.get(10, TimeUnit.SECONDS);
+			      if (retEdgeMessage != null) {
+			          result = retEdgeMessage.getResponses().get(0).getMessage().getValue().toString();
+			             }
+		    } catch (Exception e) {
+            // TODO Auto-generated catch block
+			      e.printStackTrace();
+			      future.complete(null);
+			    }       
 
         return result;
     }
@@ -188,10 +155,10 @@ public class OPCUADriver {
     public void initialize() {
         // TODO 3: [Optional] Initialize the interface(s) here if necessary,
         // runs once on service startup
-  
+
         try {
-        		OPCUAAdapter.getInstance(deviceEnroller, eventClient, objectCache).testStartServer();
-        	  OPCUAAdapter.getInstance(deviceEnroller, eventClient, objectCache).startAdapter();	         		  	
+        		OPCUAAdapter.getInstance(callback).testStartServer();
+        	  OPCUAAdapter.getInstance(callback).startAdapter();	         		  	
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -203,7 +170,7 @@ public class OPCUADriver {
         // operations
 
     }
-    
+
     public String getEndpointUrifromAddressable(Addressable addressable) {
         String endpointUri = "";
         if (addressable.getProtocol() == Protocol.TCP) {
@@ -216,4 +183,41 @@ public class OPCUADriver {
                 addressable.getPath());
         return endpointUri;
     }
+
+    DriverCallback callback = new DriverCallback() {
+
+		@Override
+		public void onReceive(Device device, ResourceOperation operation, String result) {
+			// TODO Auto-generated method stub
+			objectCache.put(device, operation, result);
+		}
+
+		@Override
+		public void onDeleteCoreData() {
+			// TODO Auto-generated method stub
+			deviceEnroller.cleanCoreData();
+		}
+
+		@Override
+		public void onDeleteMetaData(MetaDataType type) {
+			// TODO Auto-generated method stub
+			deviceEnroller.cleanMetaData(type);			
+		}
+
+		@Override
+		public void onInit() {
+			// TODO Auto-generated method stub
+			deviceEnroller.initialize();
+		}
+    };
+
+    public interface DriverCallback {
+    	  public void onInit();
+
+        public void onReceive(Device device, ResourceOperation operation, String result);
+
+        public void onDeleteCoreData();
+
+        public void onDeleteMetaData(MetaDataType type);
+      }
 }
