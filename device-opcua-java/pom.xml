@@ -27,7 +27,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<emf.version>0.0.1-SNAPSHOT</emf.version>
-		<command-json-format.version>0.0.1-SNAPSHOT</command-json-format.version>
+		<datamodel-command-java.version>0.0.1-SNAPSHOT</datamodel-command-java.version>
 		<java.version>1.8</java.version>
 		<nexusproxy>https://nexus.edgexfoundry.org</nexusproxy>
 		<repobasepath>content/repositories</repobasepath>
@@ -124,8 +124,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.command.json.format</groupId>
-			<artifactId>command-json-format</artifactId>
-			<version>${command-json-format.version}</version>
+			<artifactId>datamodel-command-java</artifactId>
+			<version>${datamodel-command-java.version}</version>
 		</dependency>
 	</dependencies>
 

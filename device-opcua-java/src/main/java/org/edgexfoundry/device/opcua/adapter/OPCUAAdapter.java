@@ -139,8 +139,16 @@ public class OPCUAAdapter {
 		public void onFoundEndpoint(EdgeDevice device) {
 			// TODO Auto-generated method stub
 			logger.info("[Event] onFoundEndpoint");
+			EdgeEndpointInfo epInfo = null;
 			for (EdgeEndpointInfo ep : device.getEndpoints()) {
+				epInfo = ep;
 				logger.info("-> {}, {}", ep.getEndpointUri(), ep.getConfig().getSecurityPolicyUri());
+			}
+
+			CompletableFuture<EdgeMessage> future = epInfo.getFuture();
+			EdgeMessage data = new EdgeMessage.Builder(epInfo).build();
+			if (future != null) {
+				future.complete(data);
 			}
 		}
 
@@ -234,7 +242,18 @@ public class OPCUAAdapter {
 		ProtocolManager.getProtocolManagerInstance().send(msg);
 	}
 
+	private void testGetEndpoint() throws Exception {
+		logger.info("testGetEndpoint()");
+		EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(
+				OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable)).setFuture(null).build();
+		EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
+		EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_GET_ENDPOINTS)
+				.setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
+		ProtocolManager.getProtocolManagerInstance().send(msg);
+	}
+
 	private void testRead() throws Exception {
+		logger.info("testRead()");
 		EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();
 
 		EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(
@@ -254,6 +273,7 @@ public class OPCUAAdapter {
 	}
 
 	private void testSub() throws Exception {
+		logger.info("testSub()");
 		EdgeSubRequest sub = new EdgeSubRequest.Builder(EdgeNodeIdentifier.Edge_Create_Sub).setSamplingInterval(100.0)
 				.build();
 		EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();

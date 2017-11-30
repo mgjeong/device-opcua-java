@@ -38,12 +38,7 @@ public enum DataDefaultValue {
   PARAMETER(34, "Parameter", "ProfileResource Parameter Value"),
   PARAMETER_OPERATION(35, "operation", "ProfileResource Parameter Value"),
   PARAMETER_VALUE(36, "value", "ProfileResource Parameter Value"),
-  RESOURCE(37, null, "ProfileResource Resource Value"),
-
-  CMD_OPERATION(40, "operation", "command operation"),
-  CMD_INPUTVALUE(41, "input-value", "input value in put command operation"),
-  CMD_RESULT(42, "result", "command result value"),
-  CMD_VALUEDESCRIPTOR(43, "valuedescriptorName", "command valuedescriptor name");
+  RESOURCE(37, null, "ProfileResource Resource Value");
   
   
   public static final int ADDRESSABLE_PORT = 12686;
