@@ -28,7 +28,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.command.json.format.EdgeAttribute;
+import org.command.json.format.EdgeData;
+import org.command.json.format.EdgeElement;
+import org.command.json.format.EdgeFormatIdentifier;
+import org.command.json.format.EdgeJsonFormatter;
+import org.edge.protocol.opcua.api.common.EdgeCommandType;
+import org.edgexfoundry.device.opcua.DataDefaultValue;
 import org.edgexfoundry.device.opcua.data.ObjectStore;
 import org.edgexfoundry.device.opcua.data.ProfileStore;
 import org.edgexfoundry.device.opcua.domain.OPCUAObject;
@@ -53,8 +59,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OPCUAHandler {
 
-  private static final EdgeXLogger logger =
-      EdgeXLoggerFactory.getEdgeXLogger(OPCUAHandler.class);
+  private static final EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(OPCUAHandler.class);
 
   @Autowired
   private OPCUADriver driver;
@@ -125,7 +130,7 @@ public class OPCUAHandler {
     return true;
   }
 
-  public Map<String, String> executeCommand(Device device, String cmd, String arguments) {
+  public List<EdgeElement> executeCommand(Device device, String cmd, String arguments) {
     // set immediate flag to false to read from object cache of last readings
     Boolean immediate = true;
     Transaction transaction = new Transaction();
@@ -147,20 +152,24 @@ public class OPCUAHandler {
     List<Reading> readings = transactions.get(transactionId).getReadings();
     transactions.remove(transactionId);
 
-    return sendTransaction(device.getName(), readings);
+    return processor.sendCoreData(device.getName(), readings,
+        profiles.getObjects().get(device.getName()));
+    // return sendTransaction(device.getName(), readings);
   }
 
-  public Map<String, String> sendTransaction(String deviceName, List<Reading> readings) {
-    Map<String, String> valueDescriptorMap = new HashMap<String,String>();
-    List<ResponseObject> resps = processor.sendCoreData(deviceName, readings,
-        profiles.getObjects().get(deviceName));
-
-    for (ResponseObject obj: resps) {
-      valueDescriptorMap.put(obj.getName(), obj.getValue());
-    }
-
-    return valueDescriptorMap;
-  }
+  /*
+   * TODO When it is decided not to use this function, it is Deleted.
+   * 
+   * public List<EdgeElement> sendTransaction(String deviceName, List<Reading> readings) {
+   * List<EdgeElement> elementList = processor.sendCoreData(deviceName, readings,
+   * profiles.getObjects().get(deviceName));
+   * 
+   * ArrayList<EdgeElement> elementList = new ArrayList<EdgeElement>(); for (ResponseObject obj :
+   * resps) { EdgeElement element = new EdgeElement(new EdgeAttribute("DeviceObject", "string",
+   * obj.getName())); element.getAttributeList().add(new EdgeAttribute("operation", "string",
+   * obj.getOperation())); element.getAttributeList().add(new EdgeAttribute("result", "string",
+   * obj.getValue())); elementList.add(element); } return elementList; }
+   */
 
   private void executeOperations(Device device, String commandName, String arguments,
       Boolean immediate, String transactionId) {
@@ -174,45 +183,54 @@ public class OPCUAHandler {
     // get the operations for this device's object operation method
     List<ResourceOperation> operations =
         getResourceOperations(deviceName, deviceId, transactionId, commandName, method);
+    Map<String, ResourceOperation> operationsMap = new HashMap<String, ResourceOperation>();
+    for (ResourceOperation operation : operations) {
+      operationsMap.put(operation.getOperation(), operation);
+    }
 
-    for (ResourceOperation operation: operations) {
-      String opResource = operation.getResource();
-      if (opResource != null) {
-        if (operation.getOperation().equals("get")) {
-          executeOperations(device, opResource, null, immediate, transactionId);
-        } else {
-          executeOperations(device, opResource, arguments, immediate, transactionId);
-        }
+    // parse arguments
+    List<EdgeElement> elementList = null;
+    if (arguments != null) {
+      EdgeData data = EdgeJsonFormatter.decodeJsonStringToEdgeData(arguments);
+      elementList = data.getEdgeElementList();
+    } else {
+      // get command == read command
+      elementList = new ArrayList<EdgeElement>();
+      elementList.add(new EdgeElement(EdgeCommandType.CMD_READ.getValue()));
+    }
+
+    for (EdgeElement edgeElement : elementList) {
+      ResourceOperation operation = operationsMap.get(edgeElement.getElementTitle());
+      if (operation == null){
         continue;
       }
 
-      if (arguments != null && arguments.toLowerCase().contains(operation.getOperation().toLowerCase()) != true){
-          continue;
-      }
-      
+      /*
+       * TODO Add Resource flexibility
+       * 
+       * String opResource = operation.getResource();
+       * 
+       * if (opResource != null) { if (operation.getOperation().equals("get")) {
+       * executeOperations(device, opResource, null, immediate, transactionId); } else {
+       * executeOperations(device, opResource, arguments, immediate, transactionId); } continue; }
+       */
+
       String objectName = operation.getObject();
-      OPCUAObject object =
-          getOPCUAObject(objects, objectName, transactionId);
+      OPCUAObject object = getOPCUAObject(objects, objectName, transactionId);
 
-//      // TODO Add property flexibility
-//      if (!operation.getProperty().equals("value")) {
-//        throw new ServiceException(new UnsupportedOperationException(
-//            "Only property of value is implemented for this service!"));
-//      }
-
-      String val = null;
-
-      if (method.equals("set")) {
-        val = parseArguments(arguments, operation, device, object, objects);
-      }
+      // // TODO Add property flexibility
+      // if (!operation.getProperty().equals("value")) {
+      // throw new ServiceException(new UnsupportedOperationException(
+      // "Only property of value is implemented for this service!"));
+      // }
 
       // command operation for client processing
       if (requiresQuery(immediate, method, device, operation)) {
         String opId = transactions.get(transactionId).newOpId();
-        final String parameter = val;
-        new Thread(() -> driver.process(operation, device, object, parameter,
-            transactionId, opId)).start();;
+        new Thread(() -> driver.process(operation, device, object, edgeElement, transactionId, opId))
+            .start();;
       }
+
     }
   }
 
@@ -234,14 +252,14 @@ public class OPCUAHandler {
     return false;
   }
 
-  private OPCUAObject getOPCUAObject(Map<String,
-      OPCUAObject> objects, String objectName, String transactionId) {
+  private OPCUAObject getOPCUAObject(Map<String, OPCUAObject> objects, String objectName,
+      String transactionId) {
     OPCUAObject object = objects.get(objectName);
 
     if (object == null) {
       logger.error("Object " + objectName + " not found");
       String opId = transactions.get(transactionId).newOpId();
-      completeTransaction(transactionId,opId,new ArrayList<Reading>());
+      completeTransaction(transactionId, opId, new ArrayList<Reading>());
       throw new NotFoundException("DeviceObject", objectName);
     }
 
@@ -257,7 +275,7 @@ public class OPCUAHandler {
     if (resources == null) {
       logger.error("Command requested for unknown device " + deviceName);
       String opId = transactions.get(transactionId).newOpId();
-      completeTransaction(transactionId,opId,new ArrayList<Reading>());
+      completeTransaction(transactionId, opId, new ArrayList<Reading>());
       throw new NotFoundException("Device", deviceId);
     }
 
@@ -267,7 +285,7 @@ public class OPCUAHandler {
     if (resource == null || resource.get(method) == null) {
       logger.error("Resource " + commandName + " not found");
       String opId = transactions.get(transactionId).newOpId();
-      completeTransaction(transactionId,opId,new ArrayList<Reading>());
+      completeTransaction(transactionId, opId, new ArrayList<Reading>());
       throw new NotFoundException("Command", commandName);
     }
 
@@ -275,91 +293,52 @@ public class OPCUAHandler {
     return resource.get(method);
   }
 
-  private String parseArguments(String arguments, ResourceOperation operation, Device device,
-      OPCUAObject object, Map<String, OPCUAObject> objects) {
-
-    PropertyValue value = object.getProperties().getValue();
-    String val = parseArg(arguments, operation, value, operation.getParameter());
-
-    // if the written value is on a multiplexed handle, read the current value and apply
-    // the mask first
-//    if (!value.mask().equals(BigInteger.ZERO)) {
-//      String result =
-//          driver.processCommand("get", device.getAddressable(), object.getAttributes(), val);
-//      val = transform.maskedValue(value, val, result);
-//      if (operation.getSecondary() != null) {
-//        for (String secondary: operation.getSecondary()) {
-//          if (objects.get(secondary) != null) {
-//            PropertyValue secondaryValue = objects.get(secondary).getProperties().getValue();
-//            String secondVal = parseArg(arguments, operation, secondaryValue, secondary);
-//            val = transform.maskedValue(secondaryValue, secondVal, "0x" + val);
-//          }
-//        }
-//      }
-//    }
-/*
-    while (val.length() < value.size()) {
-      val = "0" + val;
-    }*/
-
-    return val;
-  }
-
-  private String parseArg(String arguments, ResourceOperation operation, PropertyValue value,
-      String object) {
-    // parse the argument string and get the "value" parameter
-	  JsonObject args;
-      String val = "";
-      JsonElement jElem = null;
-      Boolean passed = true;
-
-      if (value != null) {
-          val = value.getDefaultValue();
-      }
-      // check for parameters from the command
-      if (arguments != null) {
-          args = new JsonParser().parse(arguments).getAsJsonObject();
-          for (String obj : object.split(",")) {
-              jElem = args.get(obj);
-              if (jElem == null) {
-                  passed = false;
-              }
-          }
-          if (passed == true) {
-              val = args.toString();
-          }
-          // jElem = args.get(object);
-      }
-
-//    // if the parameter is passed from the command, use it, otherwise treat parameter
-//    // as the default
-//    if (jsonElem == null || jsonElem.toString().equals("null")) {
-//      val = operation.getParameter();
-//      passed = false;
-//    } else {
-//      val = jsonElem.toString().replace("\"", "");
-//    }
-//
-//    // if no value is specified by argument or parameter, take the object default from the profile
-//    if (val == null) {
-//      val = value.getDefaultValue();
-//      passed = false;
-//    }
-//
-//    // if a mapping translation has been specified in the profile, use it
-//    Map<String,String> mappings = operation.getMappings();
-//    if (mappings != null && mappings.containsKey(val)) {
-//      val = mappings.get(val);
-//      passed = false;
-//    }
-//
-//    if (!value.mask().equals(BigInteger.ZERO) && passed) {
-//      val = transform.format(value, val);
-//    }
-
-    return val;
-  }
-
+  /*
+   * TODO When it is decided not to use this function, it is Deleted.
+   * 
+   * private String parseArguments(String arguments, ResourceOperation operation, Device device,
+   * OPCUAObject object, Map<String, OPCUAObject> objects) {
+   * 
+   * PropertyValue value = object.getProperties().getValue(); String val = parseArg(arguments,
+   * operation, value, operation.getParameter());
+   * 
+   * // if the written value is on a multiplexed handle, read the current value and apply // the
+   * mask first // if (!value.mask().equals(BigInteger.ZERO)) { // String result = //
+   * driver.processCommand("get", device.getAddressable(), object.getAttributes(), val); // val =
+   * transform.maskedValue(value, val, result); // if (operation.getSecondary() != null) { // for
+   * (String secondary: operation.getSecondary()) { // if (objects.get(secondary) != null) { //
+   * PropertyValue secondaryValue = objects.get(secondary).getProperties().getValue(); // String
+   * secondVal = parseArg(arguments, operation, secondaryValue, secondary); // val =
+   * transform.maskedValue(secondaryValue, secondVal, "0x" + val); // } // } // } // }
+   * 
+   * while (val.length() < value.size()) { val = "0" + val; }
+   * 
+   * 
+   * return val; }
+   * 
+   * 
+   * private String parseArg(String arguments, ResourceOperation operation, PropertyValue value,
+   * String object) { // parse the argument string and get the "value" parameter JsonObject args;
+   * String val = ""; JsonElement jElem = null; Boolean passed = true;
+   * 
+   * if (value != null) { val = value.getDefaultValue(); } // check for parameters from the command
+   * if (arguments != null) { args = new JsonParser().parse(arguments).getAsJsonObject(); for
+   * (String obj : object.split(",")) { jElem = args.get(obj); if (jElem == null) { passed = false;
+   * } } if (passed == true) { val = args.toString(); } // jElem = args.get(object); }
+   * 
+   * // // if the parameter is passed from the command, use it, otherwise treat parameter // // as
+   * the default // if (jsonElem == null || jsonElem.toString().equals("null")) { // val =
+   * operation.getParameter(); // passed = false; // } else { // val =
+   * jsonElem.toString().replace("\"", ""); // } // // // if no value is specified by argument or
+   * parameter, take the object default from the // profile // if (val == null) { // val =
+   * value.getDefaultValue(); // passed = false; // } // // // if a mapping translation has been
+   * specified in the profile, use it // Map<String,String> mappings = operation.getMappings(); //
+   * if (mappings != null && mappings.containsKey(val)) { // val = mappings.get(val); // passed =
+   * false; // } // // if (!value.mask().equals(BigInteger.ZERO) && passed) { // val =
+   * transform.format(value, val); // }
+   * 
+   * return val; }
+   */
   public void completeTransaction(String transactionId, String opId, List<Reading> readings) {
     synchronized (transactions) {
       transactions.get(transactionId).finishOp(opId, readings);

@@ -23,7 +23,9 @@ package org.edgexfoundry.device.opcua.handler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import org.command.json.format.EdgeData;
+import org.command.json.format.EdgeFormatIdentifier;
+import org.command.json.format.EdgeJsonFormatter;
 import org.edgexfoundry.device.opcua.Initializer;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.domain.meta.Device;
@@ -48,7 +50,7 @@ public class CommandHandler {
   @Autowired
   Initializer init;
 
-  public Map<String,String> getResponse(String deviceId, String cmd, String arguments) {
+  public String getResponse(String deviceId, String cmd, String arguments) {
     if (init.isServiceLocked()) {
       logger.error("GET request cmd: " + cmd + " with device service locked on: " + deviceId);
       throw new LockedException("GET request cmd: " + cmd
@@ -59,35 +61,39 @@ public class CommandHandler {
       logger.error("GET request cmd: " + cmd + " with device locked on: " + deviceId);
       throw new LockedException("GET request cmd: " + cmd + " with device locked on: " + deviceId);
     }
-
+    
     Device device = devices.getDeviceById(deviceId);
     if (OPCUA.commandExists(device, cmd)) {
-      return OPCUA.executeCommand(device, cmd, arguments);
+      EdgeData resultData = new EdgeData(EdgeFormatIdentifier.DEFAULT_VERSION.getValue(),
+          EdgeFormatIdentifier.OPCUA_TYPE.getValue(), OPCUA.executeCommand(device, cmd, arguments));
+      return EdgeJsonFormatter.encodeEdgeDataToJsonString(resultData);
     } else {
       logger.error("Command: " + cmd + " does not exist for device with id: " + deviceId);
       throw new NotFoundException("Command", cmd);
     }
   }
 
-  public Map<String,String> getResponses(String cmd, String arguments) {
-    Map<String,String> responses = new HashMap<String,String>();
+  public String getResponses(String cmd, String arguments) {
 
     if (init.isServiceLocked()) {
       logger.error("GET request cmd: " + cmd + " with device service locked ");
       throw new LockedException("GET request cmd: " + cmd + " with device locked");
     }
+    
+    EdgeData resultData = new EdgeData(EdgeFormatIdentifier.DEFAULT_VERSION.getValue(),
+        EdgeFormatIdentifier.OPCUA_TYPE.getValue());
 
     for (String deviceId: devices.getDevices().entrySet().stream()
         .map(d -> d.getValue().getId()).collect(Collectors.toList())) {
       if (devices.isDeviceLocked(deviceId)) {
         continue;
       }
-
+      
       Device device = devices.getDeviceById(deviceId);
       if (OPCUA.commandExists(device, cmd)) {
-        responses.putAll(OPCUA.executeCommand(device, cmd, arguments));
+        resultData.getEdgeElementList().addAll(OPCUA.executeCommand(device, cmd, arguments));
       }
     }
-    return responses;
+    return EdgeJsonFormatter.encodeEdgeDataToJsonString(resultData);
   }
 }

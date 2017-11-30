@@ -28,8 +28,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.command.json.format.EdgeAttribute;
+import org.command.json.format.EdgeElement;
+import org.command.json.format.EdgeFormatIdentifier;
 import org.edgexfoundry.controller.DeviceClient;
 import org.edgexfoundry.controller.EventClient;
+import org.edgexfoundry.device.opcua.DataDefaultValue;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.device.opcua.domain.OPCUAObject;
 import org.edgexfoundry.device.opcua.domain.ResponseObject;
@@ -43,136 +47,138 @@ import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 @Service
 public class CoreDataMessageHandler {
 
-    private final static EdgeXLogger logger = EdgeXLoggerFactory
-            .getEdgeXLogger(CoreDataMessageHandler.class);
+  private final static EdgeXLogger logger =
+      EdgeXLoggerFactory.getEdgeXLogger(CoreDataMessageHandler.class);
 
-    @Value("${service.connect.retries}")
-    private int retries;
-    @Value("${service.connect.wait}")
-    private long delay;
+  @Value("${service.connect.retries}")
+  private int retries;
+  @Value("${service.connect.wait}")
+  private long delay;
 
-    @Autowired
-    private DeviceClient deviceClient;
+  @Autowired
+  private DeviceClient deviceClient;
 
-    @Autowired
-    private EventClient eventClient;
+  @Autowired
+  private EventClient eventClient;
 
-    @Autowired
-    private DeviceStore devices;
+  @Autowired
+  private DeviceStore devices;
 
-    private static List<readingNode> readingList = new LinkedList<readingNode>();
+  private static List<readingNode> readingList = new LinkedList<readingNode>();
 
-    private class readingNode {
-        private Reading reading;
-        private String operation;
+  private class readingNode {
+    private Reading reading;
+    private String operation;
 
-        readingNode(Reading reading, String operation) {
-            this.reading = reading;
-            this.operation = operation;
-        }
-
-        public Reading getReading() {
-            return reading;
-        }
-
-        public String getOperation() {
-            return operation;
-        }
+    readingNode(Reading reading, String operation) {
+      this.reading = reading;
+      this.operation = operation;
     }
 
-    public Reading buildReading(String key, String value, String deviceName, String operation) {
-        Reading reading = new Reading();
-        reading.setName(key);
-        reading.setValue(value);
-        reading.setDevice(deviceName);
-        synchronized (readingList) {
-            readingList.add(new readingNode(reading, operation));
-        }
-        return reading;
+    public Reading getReading() {
+      return reading;
     }
 
-    private Event buildEvent(String deviceName, List<Reading> readings) {
-        Event event = new Event(deviceName);
-        event.setReadings(readings);
-        return event;
+    public String getOperation() {
+      return operation;
     }
+  }
 
-    private boolean sendEvent(Event event, int attempt) {
-        if (retries == 0 || attempt < retries) {
-            if (event != null) {
-                try {
-                    eventClient.add(event);
-                    return true;
-                } catch (Exception e) { // something happened trying to send to
-                                        // core data - likely that the service
-                                        // is down.
-                    logger.debug("Problem sending event for " + event.getDevice()
-                            + " to core data.  Retrying (attempt " + (attempt + 1) + ")...");
-                    try {
-                        Thread.sleep(delay);
-                    } catch (InterruptedException interrupt) {
-                        logger.debug("Event send delay interrupted");
-                        interrupt.printStackTrace();
-                    }
-                    return sendEvent(event, ++attempt);
-                }
-            }
-        }
-        return false;
+  public Reading buildReading(String key, String value, String deviceName, String operation) {
+    Reading reading = new Reading();
+    reading.setName(key);
+    reading.setValue(value);
+    reading.setDevice(deviceName);
+    synchronized (readingList) {
+      readingList.add(new readingNode(reading, operation));
     }
+    return reading;
+  }
 
-    private void updateLastConnected(String deviceName) {
-        Device device = devices.getDevice(deviceName);
-        if (device != null) {
-            deviceClient.updateLastConnected(device.getId(),
-                    Calendar.getInstance().getTimeInMillis());
-            if (device.getOperatingState().equals(OperatingState.disabled))
-                devices.setDeviceByIdOpState(device.getId(), OperatingState.enabled);
-        } else {
-            logger.debug("No device found for device name: " + deviceName
-                    + ". Could not update last connected time");
-        }
-    }
+  private Event buildEvent(String deviceName, List<Reading> readings) {
+    Event event = new Event(deviceName);
+    event.setReadings(readings);
+    return event;
+  }
 
-    public List<ResponseObject> sendCoreData(String deviceName, List<Reading> readings,
-            Map<String, OPCUAObject> objects) {
+  private boolean sendEvent(Event event, int attempt) {
+    if (retries == 0 || attempt < retries) {
+      if (event != null) {
         try {
-
-            if (objects != null) {
-                List<ResponseObject> resps = new ArrayList<>();
-                logger.debug("readings: " + readings);
-                for (Reading reading : readings) {
-                    String readingOperation = "";
-                    for (readingNode rnode : readingList) {
-                        if (rnode.getReading() == reading) {
-                            readingOperation = rnode.getOperation();
-                            readingList.remove(rnode);
-                            break;
-                        }
-                    }
-                    ResponseObject resp = new ResponseObject(
-                            reading.getName() + "(" + readingOperation + ")", reading.getValue());
-                    resps.add(resp);
-                }
-                boolean success = sendEvent(buildEvent(deviceName, readings), 0);
-                if (success) {
-                    updateLastConnected(deviceName);
-                    logger.debug("resps: " + resps);
-                    return resps;
-                } else {
-                    if (devices.getDevice(deviceName).getOperatingState()
-                            .equals(OperatingState.enabled))
-                        devices.setDeviceOpState(deviceName, OperatingState.disabled);
-                    logger.error("Could not send event to core data for " + deviceName
-                            + ".  Check core data service");
-                }
-            } else
-                logger.debug("No profile object found for the device " + deviceName
-                        + ".  MQTT message ignored.");
-        } catch (Exception e) {
-            logger.error("Cannot push the readings to Coredata " + e.getMessage());
-            e.printStackTrace();
+          eventClient.add(event);
+          return true;
+        } catch (Exception e) { // something happened trying to send to
+                                // core data - likely that the service
+                                // is down.
+          logger.debug("Problem sending event for " + event.getDevice()
+              + " to core data.  Retrying (attempt " + (attempt + 1) + ")...");
+          try {
+            Thread.sleep(delay);
+          } catch (InterruptedException interrupt) {
+            logger.debug("Event send delay interrupted");
+            interrupt.printStackTrace();
+          }
+          return sendEvent(event, ++attempt);
         }
-        return new ArrayList<ResponseObject>();
+      }
     }
+    return false;
+  }
+
+  private void updateLastConnected(String deviceName) {
+    Device device = devices.getDevice(deviceName);
+    if (device != null) {
+      deviceClient.updateLastConnected(device.getId(), Calendar.getInstance().getTimeInMillis());
+      if (device.getOperatingState().equals(OperatingState.disabled))
+        devices.setDeviceByIdOpState(device.getId(), OperatingState.enabled);
+    } else {
+      logger.debug("No device found for device name: " + deviceName
+          + ". Could not update last connected time");
+    }
+  }
+
+  public List<EdgeElement> sendCoreData(String deviceName, List<Reading> readings,
+      Map<String, OPCUAObject> objects) {
+    try {
+      if (objects != null) {
+        List<EdgeElement> elementList = new ArrayList<EdgeElement>();
+        logger.debug("readings: " + readings);
+        for (Reading reading : readings) {
+          String readingOperation = "";
+          for (readingNode rnode : readingList) {
+            if (rnode.getReading() == reading) {
+              readingOperation = rnode.getOperation();
+              readingList.remove(rnode);
+              break;
+            }
+          }
+          EdgeElement element = new EdgeElement(readingOperation);
+          element.getEdgeAttributeList()
+              .add(new EdgeAttribute(DataDefaultValue.CMD_VALUEDESCRIPTOR.getValue(),
+                  EdgeFormatIdentifier.STRING_TYPE.getValue(), reading.getName()));
+          element.getEdgeAttributeList()
+              .add(new EdgeAttribute(DataDefaultValue.CMD_RESULT.getValue(),
+                  EdgeFormatIdentifier.STRING_TYPE.getValue(), reading.getValue()));
+          elementList.add(element);
+        }
+        boolean success = sendEvent(buildEvent(deviceName, readings), 0);
+        if (success) {
+          updateLastConnected(deviceName);
+          logger.debug("elementList: " + elementList);
+          return elementList;
+        } else {
+          if (devices.getDevice(deviceName).getOperatingState().equals(OperatingState.enabled))
+            devices.setDeviceOpState(deviceName, OperatingState.disabled);
+          logger.error(
+              "Could not send event to core data for " + deviceName + ".  Check core data service");
+        }
+      } else
+        logger.debug(
+            "No profile object found for the device " + deviceName + ".  MQTT message ignored.");
+    } catch (Exception e) {
+      logger.error("Cannot push the readings to Coredata " + e.getMessage());
+      e.printStackTrace();
+    }
+    return new ArrayList<EdgeElement>();
+  }
 }

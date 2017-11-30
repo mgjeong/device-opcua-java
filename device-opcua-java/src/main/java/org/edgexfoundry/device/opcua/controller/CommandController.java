@@ -41,12 +41,12 @@ public class CommandController {
 
   @RequestMapping(value = "/{deviceId}/{cmd}", method =
       { RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET })
-  public Callable<Map<String,String>> getCommand(@PathVariable String deviceId,
+  public Callable<String> getCommand(@PathVariable String deviceId,
       @PathVariable String cmd,
       @RequestBody(required = false) String arguments) {
-    Callable<Map<String,String>> callable = new Callable<Map<String,String>>() {
+    Callable<String> callable = new Callable<String>() {
       @Override
-      public Map<String,String> call() throws Exception {
+      public String call() throws Exception {
         return command.getResponse(deviceId, cmd, arguments);
       }
     };
@@ -55,11 +55,11 @@ public class CommandController {
 
   @RequestMapping(value = "/all/{cmd}", method =
       { RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET })
-  public Callable<Map<String,String>> getCommands(@PathVariable String cmd,
+  public Callable<String> getCommands(@PathVariable String cmd,
       @RequestBody(required = false) String arguments) {
-    Callable<Map<String,String>> callable = new Callable<Map<String,String>>() {
+    Callable<String> callable = new Callable<String>() {
       @Override
-      public Map<String,String> call() throws Exception {
+      public String call() throws Exception {
         return command.getResponses(cmd, arguments);
       }
     };

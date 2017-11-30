@@ -2,7 +2,7 @@ package org.edgexfoundry.device.opcua.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.edge.protocol.opcua.api.common.EdgeCommandType;
 import org.edgexfoundry.device.opcua.DataDefaultValue;
 import org.edgexfoundry.domain.meta.ProfileResource;
 import org.edgexfoundry.domain.meta.ResourceOperation;
@@ -42,15 +42,15 @@ public class ProfileResourceGenerator {
         int getOperationIndex = 1;
         List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
         // TODO set secondary and mappings
-        getList.add(newGetOperation(deviceInfoKey, "read", getOperationIndex++));
+        getList.add(newGetOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
         profileResource.setGet(getList);
 
         List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
         // TODO set secondary and mappings
         int putOperationIndex = 1;
-        setList.add(newPutOperation(deviceInfoKey, "write", putOperationIndex++));
-        setList.add(newPutOperation(deviceInfoKey, "sub", putOperationIndex++));
-        setList.add(newPutOperation(deviceInfoKey, "method", putOperationIndex++));
+        setList.add(newPutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(), putOperationIndex++));
+        setList.add(newPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
+        setList.add(newPutOperation(deviceInfoKey, EdgeCommandType.CMD_METHOD.getValue(), putOperationIndex++));
         profileResource.setSet(setList);
         return profileResource;
     }
