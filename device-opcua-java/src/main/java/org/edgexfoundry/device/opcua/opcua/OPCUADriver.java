@@ -94,7 +94,7 @@ public class OPCUADriver {
     // OPCUA Object to be written to
     // value is string to be written or null
     public void process(ResourceOperation operation, Device device, OPCUAObject object,
-            String value, String transactionId, String opId) {
+            EdgeElement edgeElement, String transactionId, String opId) {
         String result = "";
 
         // TODO 2: [Optional] Modify this processCommand call to pass any
@@ -105,7 +105,7 @@ public class OPCUADriver {
          */
 
         result = processCommand(operation.getOperation(), device.getAddressable(),
-                object.getAttributes(), operation.getParameter(), value);
+                object.getAttributes(), operation.getParameter(), edgeElement);
 
         objectCache.put(device, operation, result);
         handler.completeTransaction(transactionId, opId,
@@ -115,11 +115,11 @@ public class OPCUADriver {
     // Modify this function as needed to pass necessary metadata from the device
     // and its profile to the driver interface
     public String processCommand(String operation, Addressable addressable,
-            OPCUAAttribute attributes, String parameters, String value) {
+            OPCUAAttribute attributes, String parameters, EdgeElement edgeElement) {
         String address = addressable.getPath();
         String intface = addressable.getAddress();
         logger.debug("ProcessCommand: " + operation + ", interface: " + intface + ", address: "
-                + address + ", attributes: " + attributes + ", value: " + value);
+                + address + ", attributes: " + attributes + ", edgeElement: " + edgeElement);
         String result = "none";
 
         // Get command
@@ -127,10 +127,9 @@ public class OPCUADriver {
         future.whenComplete((message, ex) -> {
         });
 
-        EdgeElement element = null;
         EdgeMessage msg = null;
         try {
-			      msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element, operation, 
+			      msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(edgeElement, operation, 
 			    		  attributes.getProviderKey(), addressable, future);
 		    } catch (Exception e) {
 			      // TODO Auto-generated catch block
