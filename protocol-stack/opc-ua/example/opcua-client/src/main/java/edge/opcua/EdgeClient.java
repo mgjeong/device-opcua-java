@@ -103,7 +103,7 @@ public class EdgeClient {
     EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
         .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
         .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue())
-        .setSecurityPolicyUri(securePolicyType).build();
+        .setViewNodeFlag(false).setSecurityPolicyUri(securePolicyType).build();
     EdgeEndpointInfo ep =
         new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
     EdgeNodeInfo endpoint = new EdgeNodeInfo.Builder().build();
@@ -202,8 +202,11 @@ public class EdgeClient {
   }
 
   public static void testSubDelete(String provider) throws Exception {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("[select sensor] : ");
+    String sensor = scanner.next();
     EdgeSubRequest sub = new EdgeSubRequest.Builder(EdgeNodeIdentifier.Edge_Delete_Sub).build();
-    EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(provider).build();
+    EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(sensor).build();
 
     EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_SUB)
         .setRequest(new EdgeRequest.Builder(ep).setSubReq(sub).build()).build();
@@ -319,7 +322,7 @@ public class EdgeClient {
         String sensor = scanner.next();
 
         System.out.print("[input variable to change] : ");
-        Object valueToChange = scanner.next();
+        int valueToChange = scanner.nextInt();
 
         System.out.println(ANSI_GREEN + "\n------------------------" + ANSI_RESET);
         System.out.println(ANSI_YELLOW + " Write Req/Res " + ANSI_RESET);

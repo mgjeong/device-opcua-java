@@ -29,11 +29,11 @@
    1) `sudo keytool -importcert -noprompt -trustcacerts -alias ALIASNAME -file /PATH/TO/YOUR/DESKTOP/CertificateName.cer -keystore /PATH/TO/YOUR/JDK/jre/lib/security/cacerts -storepass changeit`
 <br></br>
 ## How to build OPC-UA Device Service
-1. cd ./device-service-opcua
+1. cd ./device-opcua-java
 
 2. ./build.sh
 
-3. docker build -t device-service-opcua .
+3. docker build -t device-opcua-java .
 <br></br>
 
 #### OPC-UA library(Stand-alone) build [here](./protocol-stack/opc-ua/edge-opcua/README.md)
