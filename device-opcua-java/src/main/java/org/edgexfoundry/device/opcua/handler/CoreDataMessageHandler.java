@@ -34,6 +34,7 @@ import org.command.json.format.EdgeFormatIdentifier;
 import org.edgexfoundry.controller.DeviceClient;
 import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.device.opcua.DataDefaultValue;
+import org.edgexfoundry.device.opcua.adapter.OPCUAMessageKeyIdentifier;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.device.opcua.domain.OPCUAObject;
 import org.edgexfoundry.device.opcua.domain.ResponseObject;
@@ -154,10 +155,10 @@ public class CoreDataMessageHandler {
           }
           EdgeElement element = new EdgeElement(readingOperation);
           element.getEdgeAttributeList()
-              .add(new EdgeAttribute(DataDefaultValue.CMD_VALUEDESCRIPTOR.getValue(),
+              .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.VALUE_DESCRIPTOR.getValue(),
                   EdgeFormatIdentifier.STRING_TYPE.getValue(), reading.getName()));
           element.getEdgeAttributeList()
-              .add(new EdgeAttribute(DataDefaultValue.CMD_RESULT.getValue(),
+              .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
                   EdgeFormatIdentifier.STRING_TYPE.getValue(), reading.getValue()));
           elementList.add(element);
         }
