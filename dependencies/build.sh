@@ -9,7 +9,7 @@ cd messaging-zmq/java/edgex-emf
 
 cd $DEP_ROOT
 git clone https://github.sec.samsung.net/RS7-EdgeComputing/protocol-opcua-java.git
-cd protocol-opcua-java/java/edge-opcua
+cd protocol-opcua-java
 ./build.sh
 
 cd $DEP_ROOT
