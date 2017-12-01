@@ -21,44 +21,73 @@ package org.edgexfoundry.device.opcua.metadata;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
+import org.edge.protocol.opcua.providers.EdgeServices;
 import org.edgexfoundry.device.opcua.DataDefaultValue;
+import org.edgexfoundry.device.opcua.adapter.OPCUAMessageKeyIdentifier;
 import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.DeviceObject;
 import org.edgexfoundry.domain.meta.DeviceProfile;
 import org.edgexfoundry.domain.meta.ProfileResource;
 
 public class DeviceProfileGenerator {
+  private static ArrayList<String> attributeProviderKeyList = null;
 
-    private DeviceProfileGenerator() {
+  private DeviceProfileGenerator() {}
+
+  public static DeviceProfile NewtDeviceProfile(String deviceInfoKey) {
+    DeviceProfile deviceProfile = null;
+    deviceProfile = new DeviceProfile();
+    deviceProfile.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
+    deviceProfile.setCreated(new Timestamp(System.currentTimeMillis()).getTime());
+    deviceProfile.setName(deviceInfoKey);
+    deviceProfile.setManufacturer(DataDefaultValue.MANUFACTURER.getValue());
+    deviceProfile.setModel(DataDefaultValue.MODEL.getValue());
+    deviceProfile.setDescription(DataDefaultValue.DESCRIPTION_DEVICEPROFILE.getValue());
+    deviceProfile.setObjects(DataDefaultValue.OBJ.getValue());
+    String[] labels = {DataDefaultValue.LABEL1.getValue(), DataDefaultValue.LABEL2.getValue()};
+    deviceProfile.setLabels(labels);
+
+    List<DeviceObject> deviceObjectList = new ArrayList<DeviceObject>();
+    List<ProfileResource> profileResourceList = new ArrayList<ProfileResource>();
+    List<Command> commandList = new ArrayList<Command>();
+
+    for (String providerKey : getAttributeProviderKeyList()) {
+      deviceObjectList.add(DeviceObjectGenerator.newDeviceObject(providerKey,
+          OPCUAMessageKeyIdentifier.ATTRIBUTE_COMMAND.getValue()));
+      profileResourceList.add(ProfileResourceGenerator.newProfileResource(providerKey,
+          OPCUAMessageKeyIdentifier.ATTRIBUTE_COMMAND.getValue()));
+      commandList.add(CommandGenerator.newCommand(providerKey,
+          OPCUAMessageKeyIdentifier.ATTRIBUTE_COMMAND.getValue()));
     }
+    deviceObjectList.add(DeviceObjectGenerator.newDeviceObject(
+        OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+        OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND.getValue()));
+    profileResourceList.add(ProfileResourceGenerator.newProfileResource(
+        OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+        OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND.getValue()));
+    commandList.add(
+        CommandGenerator.newCommand(OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+            OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND.getValue()));
+    deviceProfile.setDeviceResources(deviceObjectList);
+    deviceProfile.setResources(profileResourceList);
+    deviceProfile.setCommands(commandList);
 
-    public static DeviceProfile NewtDeviceProfile(String deviceInfoKey) {
-        DeviceProfile deviceProfile = null;
-        deviceProfile = new DeviceProfile();
-        deviceProfile.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
-        deviceProfile.setCreated(new Timestamp(System.currentTimeMillis()).getTime());
-        deviceProfile.setName(deviceInfoKey);
-        deviceProfile.setManufacturer(DataDefaultValue.MANUFACTURER.getValue());
-        deviceProfile.setModel(DataDefaultValue.MODEL.getValue());
-        deviceProfile.setDescription(DataDefaultValue.DESCRIPTION_DEVICEPROFILE.getValue());
-        deviceProfile.setObjects(DataDefaultValue.OBJ.getValue());
-        String[] labels = {DataDefaultValue.LABEL1.getValue(), DataDefaultValue.LABEL2.getValue()};
-        deviceProfile.setLabels(labels);
+    return deviceProfile;
+  }
 
-        List<DeviceObject> deviceObjectList = new ArrayList<DeviceObject>();
-        deviceObjectList.add(DeviceObjectGenerator.newDeviceObject(deviceInfoKey));
-        deviceProfile.setDeviceResources(deviceObjectList);
-
-        List<ProfileResource> profileResourceList = new ArrayList<ProfileResource>();
-        profileResourceList.add(ProfileResourceGenerator.newProfileResource(deviceInfoKey));
-        deviceProfile.setResources(profileResourceList);
-
-        List<Command> commandList = new ArrayList<Command>();
-        commandList.add(CommandGenerator.newCommand(deviceInfoKey));
-        deviceProfile.setCommands(commandList);
-
-        return deviceProfile;
+  public static ArrayList<String> getAttributeProviderKeyList() {
+    if (attributeProviderKeyList == null) {
+      attributeProviderKeyList = new ArrayList<String>();
+      for (String deviceInfoKey : EdgeServices.getAttributeProviderKeyList()) {
+        if (deviceInfoKey.equals(EdgeOpcUaCommon.WELL_KNOWN_GROUP.getValue())) {
+          continue;
+        }
+        attributeProviderKeyList
+            .add(deviceInfoKey.replaceAll("/", DataDefaultValue.REPLACE_DEVICE_NAME));
+      }
     }
+    return attributeProviderKeyList;
+  }
 
 }

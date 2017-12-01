@@ -7,8 +7,15 @@ public enum OPCUAMessageKeyIdentifier {
 	VALUE_DESCRIPTOR(3, "value_descriptor", "command valuedescriptor name"),
 	SAMPLING_INTERVAL(4, "sampling_interval", "sampling interval"),
 	APPLICATION_NAME(5, "application_name", "application name for server"),
-	APPLICATION_URI(6, "application_uri", "application uri for server");
+	APPLICATION_URI(6, "application_uri", "application uri for server"),
 
+  
+	WELLKNOWN_COMMAND(10, "wellknown_command", "wellknown command"),
+	ATTRIBUTE_COMMAND(11, "attribute_command", "attribute command"),
+	METHOD_COMMAND(12, "method_command", "method command"),
+	
+    WELLKNOWN_COMMAND_GROUP(20, "wellknown~groupcommand", "wellknown group command service");
+  
 	private int code;
 	private String value;
 	private String description;

@@ -18,10 +18,7 @@
 
 package org.edgexfoundry.device.opcua.metadata;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
-import org.edge.protocol.opcua.providers.EdgeServices;
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceClient;
 import org.edgexfoundry.controller.DeviceProfileClient;
@@ -70,7 +67,6 @@ public class DeviceEnroller {
   private DeviceStore deviceStore;
 
   private static Addressable addressable = null;
-  private static ArrayList<String> attributeProviderKeyList = null;
   private static final boolean enableDeleteEvent = false;
 
   private DeviceEnroller() {}
@@ -88,16 +84,16 @@ public class DeviceEnroller {
   }
 
   private Addressable updateAddressableToMetaData() {
-	    if (addressable == null) {
-	      addressable = AddressableGenerator.updateAddressable();
-	      try {
-	        addressableClient.update(addressable);
-	      } catch (Exception e) {
-	        logger.debug("Could not update addressable to metadata msg: " + e.getMessage());
-	      }
-	    }
-	    return addressable;
-	  }
+    if (addressable == null) {
+      addressable = AddressableGenerator.updateAddressable();
+      try {
+        addressableClient.update(addressable);
+      } catch (Exception e) {
+        logger.debug("Could not update addressable to metadata msg: " + e.getMessage());
+      }
+    }
+    return addressable;
+  }
 
   private DeviceProfile addDeviceProfileToMetaData(String deviceInfoKey) {
     DeviceProfile profile = DeviceProfileGenerator.NewtDeviceProfile(deviceInfoKey);
@@ -122,8 +118,8 @@ public class DeviceEnroller {
     return device;
   }
 
-  
-  //TODO
+
+  // TODO
   // we can get events below 100. but can not set limits
   // I will modify it when I can set a limit.
   @SuppressWarnings("unused")
@@ -192,23 +188,19 @@ public class DeviceEnroller {
     long start = System.currentTimeMillis();
     logger.info("Device Service Initializing Start ");
 
-    if (attributeProviderKeyList == null)
-      configureMetaData();
+    configureMetaData();
 
     long end = System.currentTimeMillis();
     logger.info("Device Service Initialize Time is " + (end - start) / 1000.0 + "sec");
-    logger.info("" + attributeProviderKeyList.size());
+    //logger.info("" + attributeProviderKeyList.size());
   }
 
   private void configureMetaData() {
     try {
       addAddressableToMetaData();
       updateAddressableToMetaData();
-      attributeProviderKeyList = getAttributeProviderKeyList();
-      for (String deviceInfoKey : attributeProviderKeyList) {
-        addDeviceProfileToMetaData(deviceInfoKey);
-        addDeviceToMetaData(deviceInfoKey);
-      }
+      addDeviceProfileToMetaData("opcua");
+      addDeviceToMetaData("opcua");
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -237,19 +229,5 @@ public class DeviceEnroller {
     // when we try to remove all events.
     deleteEvent();
     deleteValueDescriptor();
-  }
-
-  public ArrayList<String> getAttributeProviderKeyList() {
-    if (attributeProviderKeyList == null) {
-      attributeProviderKeyList = new ArrayList<String>();
-      for (String deviceInfoKey : EdgeServices.getAttributeProviderKeyList()) {
-        if (deviceInfoKey.equals(EdgeOpcUaCommon.WELL_KNOWN_GROUP.getValue())) {
-          continue;
-        }
-        attributeProviderKeyList
-            .add(deviceInfoKey.replaceAll("/", DataDefaultValue.REPLACE_DEVICE_NAME));
-      }
-    }
-    return attributeProviderKeyList;
   }
 }
