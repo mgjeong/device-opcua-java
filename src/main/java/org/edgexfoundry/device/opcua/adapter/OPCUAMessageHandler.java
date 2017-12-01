@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import javax.ws.rs.DefaultValue;
 import org.command.json.format.EdgeAttribute;
-import org.command.json.format.EdgeAttributeList;
 import org.command.json.format.EdgeElement;
 import org.command.json.format.EdgeFormatIdentifier;
 import org.command.json.format.EdgeJsonFormatter;
