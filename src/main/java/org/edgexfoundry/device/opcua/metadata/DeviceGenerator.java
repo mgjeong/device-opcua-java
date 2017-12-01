@@ -72,6 +72,7 @@ public class DeviceGenerator {
         try {
             device.setAddressable(addressableClient
                     .addressableForName(AddressableGenerator.getAddressable().getName()));
+
         } catch (Exception e) {
             logger.debug("Could not set Addressable for device msg: " + e.getMessage());
             return null;
