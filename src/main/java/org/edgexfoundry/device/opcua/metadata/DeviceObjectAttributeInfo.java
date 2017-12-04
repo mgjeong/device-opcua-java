@@ -18,8 +18,6 @@
 
 package org.edgexfoundry.device.opcua.metadata;
 
-import org.edgexfoundry.device.opcua.DataDefaultValue;
-
 public class DeviceObjectAttributeInfo {
     final private String providerKey;
     private String dataType;
@@ -29,7 +27,7 @@ public class DeviceObjectAttributeInfo {
         private String dataType;
 
         public Builder(String providerKey) {
-            this.providerKey = providerKey.replace(DataDefaultValue.REPLACE_DEVICE_NAME, "/");
+            this.providerKey = providerKey.replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
         }
 
         public Builder setDataType(String dataType) {

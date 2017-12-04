@@ -21,7 +21,6 @@ package org.edgexfoundry.device.opcua.metadata;
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceProfileClient;
 import org.edgexfoundry.controller.DeviceServiceClient;
-import org.edgexfoundry.device.opcua.DataDefaultValue;
 import org.edgexfoundry.domain.meta.AdminState;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.OperatingState;
@@ -54,19 +53,19 @@ public class DeviceGenerator {
     private DeviceGenerator() {
     }
 
-    public Device newDevice(String deviceInfoKey) {
+    public Device generateDevice(String deviceInfoKey) {
         Device device = new Device();
         device.setAdminState(AdminState.unlocked);
-        device.setDescription(DataDefaultValue.DESCRIPTION_DEVICE.getValue());
-        device.setLastConnected(DataDefaultValue.DEFAULT_LAST_CONNECTED);
-        device.setLastReported(DataDefaultValue.DEFAULT_LAST_REPORTED);
-        device.setLocation(DataDefaultValue.LOCATION.getValue());
+        device.setDescription(OPCUADefaultMetaData.DESCRIPTION_DEVICE.getValue());
+        device.setLastConnected(OPCUADefaultMetaData.DEFAULT_LAST_CONNECTED);
+        device.setLastReported(OPCUADefaultMetaData.DEFAULT_LAST_REPORTED);
+        device.setLocation(OPCUADefaultMetaData.LOCATION.getValue());
         device.setName(deviceInfoKey);
         device.setOperatingState(OperatingState.enabled);
-        device.setOrigin(DataDefaultValue.DEFAULT_ORIGIN);
+        device.setOrigin(OPCUADefaultMetaData.DEFAULT_ORIGIN);
         device.setProfile(deviceProfileClient.deviceProfileForName(deviceInfoKey));
-        String[] labels = { DataDefaultValue.LABEL1.getValue(),
-                DataDefaultValue.LABEL2.getValue() };
+        String[] labels = { OPCUADefaultMetaData.LABEL1.getValue(),
+                OPCUADefaultMetaData.LABEL2.getValue() };
         device.setLabels(labels);
 
         try {

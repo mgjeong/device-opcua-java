@@ -18,7 +18,6 @@
 
 package org.edgexfoundry.device.opcua.metadata;
 
-import org.edgexfoundry.device.opcua.DataDefaultValue;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
 
@@ -29,12 +28,12 @@ public class AddressableGenerator {
 
     private static Addressable addressable = null;
 
-    static Addressable newAddressable() {
+    static Addressable generateAddressable() {
         if (addressable == null) {
             // TODO generate randomly
-            addressable = new Addressable(DataDefaultValue.NAME.getValue(), Protocol.TCP,
-                    DataDefaultValue.ADDRESS.getValue(), DataDefaultValue.PATH.getValue(),
-                    DataDefaultValue.ADDRESSABLE_PORT);
+            addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
+                    OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
+                    OPCUADefaultMetaData.ADDRESSABLE_PORT);
         }
         return addressable;
     }
@@ -42,9 +41,9 @@ public class AddressableGenerator {
     static Addressable updateAddressable() {
         if (addressable == null) {
             // TODO generate randomly
-            addressable = new Addressable(DataDefaultValue.NAME.getValue(), Protocol.TCP,
-                    DataDefaultValue.ADDRESS1.getValue(), DataDefaultValue.PATH.getValue(),
-                    DataDefaultValue.ADDRESSABLE_PORT);
+            addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
+                    OPCUADefaultMetaData.ADDRESS1.getValue(), OPCUADefaultMetaData.PATH.getValue(),
+                    OPCUADefaultMetaData.ADDRESSABLE_PORT);
         }
         return addressable;
     }

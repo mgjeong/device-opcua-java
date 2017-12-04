@@ -1,6 +1,6 @@
 package org.edgexfoundry.device.opcua.metadata;
 
-public enum OPCUAMetaDataIdentifier {
+public enum OPCUACommandIdentifier {
   WELLKNOWN_COMMAND(10, "wellknown_command"), ATTRIBUTE_COMMAND(11,
       "attribute_command"), METHOD_COMMAND(12,
           "method_command"), WELLKNOWN_COMMAND_GROUP(20, "wellknown~groupcommand");
@@ -8,7 +8,7 @@ public enum OPCUAMetaDataIdentifier {
   private int code;
   private String value;
 
-  private OPCUAMetaDataIdentifier(int code, String value) {
+  private OPCUACommandIdentifier(int code, String value) {
     this.code = code;
     this.value = value;
   }

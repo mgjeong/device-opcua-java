@@ -25,11 +25,9 @@ import org.edgexfoundry.controller.DeviceProfileClient;
 import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.controller.ReadingClient;
 import org.edgexfoundry.controller.ValueDescriptorClient;
-import org.edgexfoundry.device.opcua.DataDefaultValue;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.domain.common.ValueDescriptor;
 import org.edgexfoundry.domain.core.Event;
-import org.edgexfoundry.domain.core.Reading;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.DeviceProfile;
@@ -73,7 +71,7 @@ public class DeviceEnroller {
 
   private Addressable addAddressableToMetaData() {
     if (addressable == null) {
-      addressable = AddressableGenerator.newAddressable();
+      addressable = AddressableGenerator.generateAddressable();
       try {
         addressableClient.add(addressable);
       } catch (Exception e) {
@@ -96,7 +94,7 @@ public class DeviceEnroller {
   }
 
   private DeviceProfile addDeviceProfileToMetaData(String deviceInfoKey) {
-    DeviceProfile profile = DeviceProfileGenerator.NewtDeviceProfile(deviceInfoKey);
+    DeviceProfile profile = DeviceProfileGenerator.generateDeviceProfile(deviceInfoKey);
     try {
       logger.debug("Add deviceProfile successfully msg: " + deviceProfileClient.add(profile));
     } catch (Exception e) {
@@ -106,7 +104,7 @@ public class DeviceEnroller {
   }
 
   private Device addDeviceToMetaData(String deviceInfoKey) {
-    Device device = deviceGenerator.newDevice(deviceInfoKey);
+    Device device = deviceGenerator.generateDevice(deviceInfoKey);
     try {
       String deviceId = deviceClient.add(device);
       logger.debug("Add device successfully msg: " + deviceId);

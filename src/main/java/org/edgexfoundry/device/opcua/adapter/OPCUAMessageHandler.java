@@ -39,8 +39,8 @@ import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeResult;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
-import org.edgexfoundry.device.opcua.DataDefaultValue;
-import org.edgexfoundry.device.opcua.metadata.OPCUAMetaDataIdentifier;
+import org.edgexfoundry.device.opcua.metadata.OPCUADefaultMetaData;
+import org.edgexfoundry.device.opcua.metadata.OPCUACommandIdentifier;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
@@ -278,8 +278,8 @@ public class OPCUAMessageHandler {
   private EdgeMessage getReadMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
-    if (providerKey.equals(OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
-        .replace(DataDefaultValue.REPLACE_DEVICE_NAME, "/")) == true) {
+    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
+        .replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/")) == true) {
       List<EdgeRequest> requests = new ArrayList<EdgeRequest>();
       getReadRequestDeviceList(element.getEdgeAttributeList(), requests);
 
@@ -311,8 +311,8 @@ public class OPCUAMessageHandler {
   private EdgeMessage getWriteMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
-    if (providerKey.equals(OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
-        .replace(DataDefaultValue.REPLACE_DEVICE_NAME, "/")) == true) {
+    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
+        .replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/")) == true) {
       List<EdgeRequest> requests = new ArrayList<EdgeRequest>();
       getWriteRequestDeviceList(element.getEdgeAttributeList(), requests);
       EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr))

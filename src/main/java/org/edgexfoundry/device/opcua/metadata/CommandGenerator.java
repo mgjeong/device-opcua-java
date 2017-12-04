@@ -25,7 +25,6 @@ import org.edge.protocol.mapper.api.EdgeMapperCommon;
 import org.edge.protocol.mapper.api.EdgeResponseCode;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.providers.EdgeServices;
-import org.edgexfoundry.device.opcua.DataDefaultValue;
 import org.edgexfoundry.device.opcua.adapter.OPCUAMessageKeyIdentifier;
 import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.Get;
@@ -39,9 +38,9 @@ public class CommandGenerator {
   }
 
   private static String getDeviceInfo(String deviceInfoKey, String id, String deviceType) {
-    if (OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true)
+    if (OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true)
       return null;
-    deviceInfoKey = deviceInfoKey.replaceAll(DataDefaultValue.REPLACE_DEVICE_NAME, "/");
+    deviceInfoKey = deviceInfoKey.replaceAll(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
     EdgeMapper mapper = EdgeServices.getAttributeProvider(deviceInfoKey)
         .getAttributeService(deviceInfoKey).getMapper();
     if (mapper == null) {
@@ -54,11 +53,11 @@ public class CommandGenerator {
   private static Get newGetOperation(String deviceInfoKey, String deviceType) {
     String readwrite =
         getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType);
-    if (readwrite != null && readwrite.equals(DataDefaultValue.WRITEPONLY) == true) {
+    if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.WRITEPONLY) == true) {
       return null;
     }
     Get get = new Get();
-    get.setPath(DataDefaultValue.DEFAULT_ROOT_PATH + deviceInfoKey);
+    get.setPath(OPCUADefaultMetaData.DEFAULT_ROOT_PATH + deviceInfoKey);
     for (EdgeResponseCode code : EdgeResponseCode.values()) {
       List<String> expected = new ArrayList<>();
       expected.add(String.valueOf(code.getValue()));
@@ -70,15 +69,15 @@ public class CommandGenerator {
   private static Put newPutOperation(String deviceInfoKey, String deviceType) {
     String readwrite =
         getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType);
-    if (readwrite != null && readwrite.equals(DataDefaultValue.READONLY) == true) {
+    if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.READONLY) == true) {
       return null;
     }
     List<String> parametNames = new ArrayList<>();
-    parametNames.add(DataDefaultValue.PARAMETER_OPERATION.getValue());
-    parametNames.add(DataDefaultValue.PARAMETER_VALUE.getValue());
+    parametNames.add(OPCUADefaultMetaData.PARAMETER_OPERATION.getValue());
+    parametNames.add(OPCUADefaultMetaData.PARAMETER_VALUE.getValue());
 
     Put put = new Put();
-    put.setPath(DataDefaultValue.DEFAULT_ROOT_PATH + deviceInfoKey);
+    put.setPath(OPCUADefaultMetaData.DEFAULT_ROOT_PATH + deviceInfoKey);
     put.setParameterNames(parametNames);
 
     for (EdgeResponseCode code : EdgeResponseCode.values()) {
