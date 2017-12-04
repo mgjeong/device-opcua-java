@@ -107,9 +107,9 @@ public class OPCUAAdapter {
 				logger.info("[res] " + res.getMessage().getValue().toString());
 			}
 
-			CompletableFuture<EdgeMessage> future = data.getEdgeEndpointInfo().getFuture();
+			CompletableFuture<String> future = data.getEdgeEndpointInfo().getFuture();
 			if (future != null) {
-				future.complete(data);
+				future.complete(data.getResponses().get(0).getMessage().getValue().toString());
 			}
 		}
 
@@ -145,10 +145,13 @@ public class OPCUAAdapter {
 				logger.info("-> {}, {}", ep.getEndpointUri(), ep.getConfig().getSecurityPolicyUri());
 			}
 
-			CompletableFuture<EdgeMessage> future = epInfo.getFuture();
-			EdgeMessage data = new EdgeMessage.Builder(epInfo).build();
+			CompletableFuture<String> future = epInfo.getFuture();
+
+			// TODO
+			// response format based command data model should be generated in this place.
+			String responseFormat = "default_endpoint_res";
 			if (future != null) {
-				future.complete(data);
+				future.complete(responseFormat);
 			}
 		}
 
@@ -231,7 +234,7 @@ public class OPCUAAdapter {
 
 		EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
 				.setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
-				.setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).build();
+				.setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).setViewNodeFlag(true).build();
 		EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(endpointUri).setConfig(endpointConfig).build();
 
 		// startClient

@@ -68,7 +68,7 @@ public class OPCUAMessageHandler {
 
   /**
    * @fn @EdgeMessage convertEdgeElementToEdgeMessage(@EdgeElement element, String operation, String
-   *     providerKey, Addressable addr, CompletableFuture<@EdgeMessage> future)
+   *     providerKey, Addressable addr, CompletableFuture<String> future)
    * @brief covert @EdgeElement to @EdgeMessage
    * @param [in] element element object of json format
    * @param [in] operation opcua command
@@ -78,7 +78,7 @@ public class OPCUAMessageHandler {
    * @return @EdgeMessage
    */
   public EdgeMessage convertEdgeElementToEdgeMessage(EdgeElement element, String operation,
-      String providerKey, Addressable addr, CompletableFuture<EdgeMessage> future)
+      String providerKey, Addressable addr, CompletableFuture<String> future)
       throws Exception {
     EdgeMessage msg = null;
 
@@ -104,7 +104,7 @@ public class OPCUAMessageHandler {
 
   /**
    * @fn @EdgeMessage getStartMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<@EdgeMessage> future)
+   *     CompletableFuture<String> future)
    * @brief get @EdgeMessage which has start command
    * @param [in] element element object of json format
    * @param [in] providerKey provider key which node
@@ -113,7 +113,7 @@ public class OPCUAMessageHandler {
    * @return @EdgeMessage
    */
   private EdgeMessage getStartMessage(EdgeElement element, String providerKey, Addressable addr,
-      CompletableFuture<EdgeMessage> future) throws Exception {
+      CompletableFuture<String> future) throws Exception {
 
     EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
         .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
@@ -130,7 +130,7 @@ public class OPCUAMessageHandler {
 
   /**
    * @fn @EdgeMessage getStoptMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<@EdgeMessage> future)
+   *     CompletableFuture<String> future)
    * @brief get @EdgeMessage which has stop command
    * @param [in] element element object of json format
    * @param [in] providerKey provider key which node
@@ -139,7 +139,7 @@ public class OPCUAMessageHandler {
    * @return @EdgeMessage
    */
   private EdgeMessage getStopMessage(EdgeElement element, String providerKey, Addressable addr,
-      CompletableFuture<EdgeMessage> future) throws Exception {
+      CompletableFuture<String> future) throws Exception {
     EdgeNodeInfo endpoint = new EdgeNodeInfo.Builder().build();
     EdgeEndpointInfo epInfo =
         new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr)).setFuture(future).build();
@@ -151,7 +151,7 @@ public class OPCUAMessageHandler {
 
   /**
    * @fn @EdgeMessage getReadMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<@EdgeMessage> future)
+   *     CompletableFuture<String> future)
    * @brief get @EdgeMessage which has read command
    * @param [in] element element object of json format
    * @param [in] providerKey provider key which node
@@ -160,7 +160,7 @@ public class OPCUAMessageHandler {
    * @return @EdgeMessage
    */
   private EdgeMessage getReadMessage(EdgeElement element, String providerKey, Addressable addr,
-      CompletableFuture<EdgeMessage> future) throws Exception {
+      CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
     if (providerKey.equals(OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
         .replace(DataDefaultValue.REPLACE_DEVICE_NAME, "/")) == true) {
@@ -184,7 +184,7 @@ public class OPCUAMessageHandler {
 
   /**
    * @fn @EdgeMessage getWriteMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<@EdgeMessage> future)
+   *     CompletableFuture<String> future)
    * @brief get @EdgeMessage which has write command
    * @param [in] element element object of json format
    * @param [in] providerKey provider key which node
@@ -193,7 +193,7 @@ public class OPCUAMessageHandler {
    * @return @EdgeMessage
    */
   private EdgeMessage getWriteMessage(EdgeElement element, String providerKey, Addressable addr,
-      CompletableFuture<EdgeMessage> future) throws Exception {
+      CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
     if (providerKey.equals(OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
         .replace(DataDefaultValue.REPLACE_DEVICE_NAME, "/")) == true) {
@@ -221,7 +221,7 @@ public class OPCUAMessageHandler {
 
   /**
    * @fn @EdgeMessage getSubMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<@EdgeMessage> future)
+   *     CompletableFuture<String> future)
    * @brief get @EdgeMessage which has subscription command
    * @param [in] element element object of json format
    * @param [in] providerKey provider key which node
@@ -230,7 +230,7 @@ public class OPCUAMessageHandler {
    * @return @EdgeMessage
    */
   private EdgeMessage getSubMessage(EdgeElement element, String providerKey, Addressable addr,
-      CompletableFuture<EdgeMessage> future) throws Exception {
+      CompletableFuture<String> future) throws Exception {
     Object inputValue = EdgeJsonFormatter.getDoubleValueByName(element.getEdgeAttributeList(),
         OPCUAMessageKeyIdentifier.SAMPLING_INTERVAL.getValue());
 
@@ -249,7 +249,7 @@ public class OPCUAMessageHandler {
 
   /**
    * @fn @EdgeMessage getMethodMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<@EdgeMessage> future)
+   *     CompletableFuture<String> future)
    * @brief get @EdgeMessage which has method command
    * @param [in] element element object of json format
    * @param [in] providerKey provider key which node
@@ -258,7 +258,7 @@ public class OPCUAMessageHandler {
    * @return @EdgeMessage
    */
   private EdgeMessage getMethodMessage(EdgeElement element, String providerKey, Addressable addr,
-      CompletableFuture<EdgeMessage> future) throws Exception {
+      CompletableFuture<String> future) throws Exception {
     EdgeEndpointInfo epInfo =
         new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr)).setFuture(future).build();
     EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(providerKey).build();
@@ -271,7 +271,7 @@ public class OPCUAMessageHandler {
 
   /**
    * @fn @EdgeMessage getEndpointMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<@EdgeMessage> future)
+   *     CompletableFuture<String> future)
    * @brief get @EdgeMessage which has get-endpoint command
    * @param [in] element element object of json format
    * @param [in] providerKey provider key which node
@@ -280,7 +280,7 @@ public class OPCUAMessageHandler {
    * @return @EdgeMessage
    */
   private EdgeMessage getEndpointMessage(EdgeElement element, String providerKey, Addressable addr,
-      CompletableFuture<EdgeMessage> future) throws Exception {
+      CompletableFuture<String> future) throws Exception {
     EdgeEndpointConfig config = new EdgeEndpointConfig.Builder()
         .setApplicationName(EdgeOpcUaCommon.DEFAULT_SERVER_APP_NAME.getValue())
         .setApplicationUri(EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue()).build();

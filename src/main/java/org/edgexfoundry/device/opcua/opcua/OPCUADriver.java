@@ -123,7 +123,7 @@ public class OPCUADriver {
         String result = "none";
 
         // Get command
-        CompletableFuture<EdgeMessage> future = new CompletableFuture<>();
+        CompletableFuture<String> future = new CompletableFuture<>();
         future.whenComplete((message, ex) -> {
         });
 
@@ -138,15 +138,12 @@ public class OPCUADriver {
         
         try {
 			      OPCUAMessageHandler.getInstance().sendMessage(msg);
-			      EdgeMessage retEdgeMessage = future.get(10, TimeUnit.SECONDS);
-			      if (retEdgeMessage != null) {
-			          result = retEdgeMessage.getResponses().get(0).getMessage().getValue().toString();
-			             }
+			      result = future.get(10, TimeUnit.SECONDS);
 		    } catch (Exception e) {
             // TODO Auto-generated catch block
 			      e.printStackTrace();
 			      future.complete(null);
-			    }       
+			    } 
 
         return result;
     }
@@ -157,7 +154,7 @@ public class OPCUADriver {
 
         try {
         		OPCUAAdapter.getInstance(callback).testStartServer();
-        	  OPCUAAdapter.getInstance(callback).startAdapter();	         		  	
+        	  OPCUAAdapter.getInstance(callback).startAdapter();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
