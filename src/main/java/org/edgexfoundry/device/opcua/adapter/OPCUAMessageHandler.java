@@ -18,11 +18,9 @@
 
 package org.edgexfoundry.device.opcua.adapter;
 
-import static com.google.common.collect.Lists.newArrayList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import javax.ws.rs.DefaultValue;
 import org.command.json.format.EdgeAttribute;
 import org.command.json.format.EdgeElement;
 import org.command.json.format.EdgeFormatIdentifier;
@@ -41,8 +39,8 @@ import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeResult;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
-import org.edge.protocol.opcua.example.EdgeSampleCommon;
 import org.edgexfoundry.device.opcua.DataDefaultValue;
+import org.edgexfoundry.device.opcua.metadata.OPCUAMetaDataIdentifier;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
@@ -280,7 +278,7 @@ public class OPCUAMessageHandler {
   private EdgeMessage getReadMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
-    if (providerKey.equals(OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
+    if (providerKey.equals(OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
         .replace(DataDefaultValue.REPLACE_DEVICE_NAME, "/")) == true) {
       List<EdgeRequest> requests = new ArrayList<EdgeRequest>();
       getReadRequestDeviceList(element.getEdgeAttributeList(), requests);
@@ -313,7 +311,7 @@ public class OPCUAMessageHandler {
   private EdgeMessage getWriteMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
-    if (providerKey.equals(OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
+    if (providerKey.equals(OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
         .replace(DataDefaultValue.REPLACE_DEVICE_NAME, "/")) == true) {
       List<EdgeRequest> requests = new ArrayList<EdgeRequest>();
       getWriteRequestDeviceList(element.getEdgeAttributeList(), requests);

@@ -54,21 +54,21 @@ public class DeviceProfileGenerator {
 
     for (String providerKey : getAttributeProviderKeyList()) {
       deviceObjectList.add(DeviceObjectGenerator.newDeviceObject(providerKey,
-          OPCUAMessageKeyIdentifier.ATTRIBUTE_COMMAND.getValue()));
+          OPCUAMetaDataIdentifier.ATTRIBUTE_COMMAND.getValue()));
       profileResourceList.add(ProfileResourceGenerator.newProfileResource(providerKey,
-          OPCUAMessageKeyIdentifier.ATTRIBUTE_COMMAND.getValue()));
+          OPCUAMetaDataIdentifier.ATTRIBUTE_COMMAND.getValue()));
       commandList.add(CommandGenerator.newCommand(providerKey,
-          OPCUAMessageKeyIdentifier.ATTRIBUTE_COMMAND.getValue()));
+          OPCUAMetaDataIdentifier.ATTRIBUTE_COMMAND.getValue()));
     }
     deviceObjectList.add(DeviceObjectGenerator.newDeviceObject(
-        OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
-        OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND.getValue()));
+        OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+        OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND.getValue()));
     profileResourceList.add(ProfileResourceGenerator.newProfileResource(
-        OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
-        OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND.getValue()));
+        OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+        OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND.getValue()));
     commandList.add(
-        CommandGenerator.newCommand(OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
-            OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND.getValue()));
+        CommandGenerator.newCommand(OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+            OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND.getValue()));
     deviceProfile.setDeviceResources(deviceObjectList);
     deviceProfile.setResources(profileResourceList);
     deviceProfile.setCommands(commandList);

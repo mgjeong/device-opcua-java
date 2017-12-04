@@ -21,69 +21,80 @@ package org.edgexfoundry.device.opcua.adapter.emf;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.edge.protocol.opcua.api.client.EdgeResponse;
 import org.edge.protocol.opcua.api.common.EdgeMessage;
-
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.core.Reading;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 
 public class EMFAdapter {
-	private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(EMFAdapter.class);
-	private static EMFAdapter singleton = null;
-	private static final int mPort = 5562;
-	private static Publisher pub = null;
+  private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(EMFAdapter.class);
+  private static EMFAdapter singleton = null;
+  private static final int mPort = 5562;
+  private static Publisher pub = null;
 
-	private EMFAdapter() {
-		pub = Publisher.getInstance();
-		pub.startPublisher(mPort);
-	}
+  private EMFAdapter() {
+    pub = Publisher.getInstance();
+    pub.startPublisher(mPort);
+  }
 
-	public static EMFAdapter getInstance() {
-		if (singleton == null) {
-			singleton = new EMFAdapter();
-		}
+  /**
+   * @fn EMFAdapter getInstance()
+   * @brief get EMFAdapter instance
+   * @return EMFAdapter instance based singleton
+   */
+  public static EMFAdapter getInstance() {
+    if (singleton == null) {
+      singleton = new EMFAdapter();
+    }
+    return singleton;
+  }
 
-		return singleton;
-	}
+  /**
+   * @fn void publish(EdgeMessage data)
+   * @brief publish data related @EdgeMessage.
+   */
+  public void publish(EdgeMessage data) {
+    for (EdgeResponse res : data.getResponses()) {
+      logger.info("onMonitoredMessage = {}", res.getMessage().getValue());
+    }
 
-	public void publish(EdgeMessage data) {
-		for (EdgeResponse res : data.getResponses()) {
-			logger.info("onMonitoredMessage = {}", res.getMessage().getValue());
-		}
+    try {
+      pub.publishEvent(getEvent(data));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 
-		try {
-			pub.publishEvent(getEvent(data));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * @fn Event getEvent(EdgeMessage data)
+   * @brief get Event Object. Name is set as provider key called ValueAlias. And Device is set as
+   *        endpointUri of opcua server. And others will be set as default value.
+   */
+  private Event getEvent(EdgeMessage data) {
 
-	private Event getEvent(EdgeMessage data) {
+    List<Reading> readings = null;
+    readings = new ArrayList<Reading>();
+    Reading reading = new Reading();
+    reading.setName(data.getResponses().get(0).getEdgeNodeInfo().getValueAlias());
+    reading.setValue(data.getResponses().get(0).getMessage().getValue().toString());
+    reading.setCreated(0);
+    reading.setDevice(data.getEdgeEndpointInfo().getEndpointUri());
+    reading.setModified(0);
+    reading.setId("id1");
+    reading.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
+    reading.setPushed(new Timestamp(System.currentTimeMillis()).getTime());
 
-		List<Reading> readings = null;
-		readings = new ArrayList<Reading>();
-		Reading reading = new Reading();
-		reading.setName(data.getResponses().get(0).getEdgeNodeInfo().getValueAlias());
-		reading.setValue(data.getResponses().get(0).getMessage().getValue().toString());
-		reading.setCreated(0);
-		reading.setDevice(data.getEdgeEndpointInfo().getEndpointUri());
-		reading.setModified(0);
-		reading.setId("id1");
-		reading.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
-		reading.setPushed(new Timestamp(System.currentTimeMillis()).getTime());
+    readings.add(reading);
 
-		readings.add(reading);
+    Event event = new Event(data.getEdgeEndpointInfo().getEndpointUri(), readings);
+    event.setCreated(0);
+    event.setModified(0);
+    event.setId("id1");
+    event.markPushed(new Timestamp(System.currentTimeMillis()).getTime());
+    event.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
 
-		Event event = new Event(data.getEdgeEndpointInfo().getEndpointUri(), readings);
-		event.setCreated(0);
-		event.setModified(0);
-		event.setId("id1");
-		event.markPushed(new Timestamp(System.currentTimeMillis()).getTime());
-		event.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
-
-		return event;
-	}
+    return event;
+  }
 }

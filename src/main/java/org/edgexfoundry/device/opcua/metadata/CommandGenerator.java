@@ -39,7 +39,7 @@ public class CommandGenerator {
   }
 
   private static String getDeviceInfo(String deviceInfoKey, String id, String deviceType) {
-    if (OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true)
+    if (OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true)
       return null;
     deviceInfoKey = deviceInfoKey.replaceAll(DataDefaultValue.REPLACE_DEVICE_NAME, "/");
     EdgeMapper mapper = EdgeServices.getAttributeProvider(deviceInfoKey)

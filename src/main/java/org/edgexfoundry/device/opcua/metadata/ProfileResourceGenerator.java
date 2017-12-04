@@ -57,9 +57,9 @@ public class ProfileResourceGenerator {
   public static ProfileResource newProfileResource(String deviceInfoKey, String deviceType) {
     ProfileResource profileResource = new ProfileResource();
     profileResource.setName(deviceInfoKey);
-    if(OPCUAMessageKeyIdentifier.ATTRIBUTE_COMMAND.getValue().equals(deviceType) == true){
+    if(OPCUAMetaDataIdentifier.ATTRIBUTE_COMMAND.getValue().equals(deviceType) == true){
       setAttributeServiceOperation(deviceInfoKey, profileResource);
-    }else if(OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().equals(deviceInfoKey) == true){
+    }else if(OPCUAMetaDataIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().equals(deviceInfoKey) == true){
       setGroupServiceOperation(deviceInfoKey, profileResource);
     }
     return profileResource;

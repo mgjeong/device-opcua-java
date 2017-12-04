@@ -57,6 +57,11 @@ public class OPCUAAdapter {
   private Addressable addressable = null;
   private DriverCallback driverCallback = null;
 
+  /**
+   * @fn OPCUAAdapter(DriverCallback callback)
+   * @brief construct
+   * @param [in] DriverCallback callback
+   */
   private OPCUAAdapter(DriverCallback callback) {
     this.driverCallback = callback;
 
@@ -68,6 +73,12 @@ public class OPCUAAdapter {
     protocolManager.configure(configure);
   }
 
+  /**
+   * @fn OPCUAAdapter getInstance(DriverCallback callback)
+   * @brief get instance based singleton
+   * @param [in] DriverCallback callback
+   * @return OPCUAAdapter instance
+   */
   public static OPCUAAdapter getInstance(DriverCallback callback) {
 
     if (singleton == null) {
@@ -77,6 +88,11 @@ public class OPCUAAdapter {
     return singleton;
   }
 
+  /**
+   * @fn void receive(EdgeMessage data)
+   * @brief handling received data called @EdgeMessage
+   * @param [in] data @EdgeMessage
+   */
   private void receive(EdgeMessage data) {
     // TODO 7: [Optional] Fill with your own implementation for handling
     // asynchronous data from the driver layer to the device service
@@ -101,6 +117,11 @@ public class OPCUAAdapter {
   }
 
   ReceivedMessageCallback receiverCallback = new ReceivedMessageCallback() {
+    /**
+     * @fn void onResponseMessages(EdgeMessage data)
+     * @brief handling received data called @EdgeMessage
+     * @param [in] data @EdgeMessage
+     */
     @Override
     public void onResponseMessages(EdgeMessage data) {
       // TODO Auto-generated method stub
@@ -120,6 +141,12 @@ public class OPCUAAdapter {
       }
     }
 
+    /**
+     * @fn void onMonitoredMessage(EdgeMessage data)
+     * @brief handling monitored data called @EdgeMessage the data will be published into EMFAdapter
+     *        by default. since the data is considered as streaming data.
+     * @param [in] data @EdgeMessage
+     */
     @Override
     public void onMonitoredMessage(EdgeMessage data) {
       // TODO Auto-generated method stub
@@ -128,12 +155,25 @@ public class OPCUAAdapter {
       EMFAdapter.getInstance().publish(data);
     }
 
+    /**
+     * @fn void onErrorMessage(EdgeMessage data)
+     * @brief handling error data called @EdgeMessage
+     * @param [in] data @EdgeMessage
+     */
     @Override
     public void onErrorMessage(EdgeMessage data) {
       // TODO Auto-generated method stub
       logger.info("[Error] onErrorMessage");
     }
 
+    /**
+     * @fn void onBrowseMessage(EdgeNodeInfo endpoint, List<EdgeBrowseResult> responses, int
+     *     requestId)
+     * @brief handling browsing data.
+     * @param [in] endpoint endpoint
+     * @param [in] responses responses which has browsed node information called @EdgeBrowseResult.
+     * @param [in] requestId requestId
+     */
     @Override
     public void onBrowseMessage(EdgeNodeInfo endpoint, List<EdgeBrowseResult> responses,
         int requestId) {
@@ -142,7 +182,13 @@ public class OPCUAAdapter {
     }
   };
 
+
   DiscoveryCallback discoveryCallback = new DiscoveryCallback() {
+    /**
+     * @fn onFoundEndpoint(EdgeDevice device)
+     * @brief handling found endpoint information through Get Endpoint logic.
+     * @param [in] device endpoint list based EdgeDevice class
+     */
     @Override
     public void onFoundEndpoint(EdgeDevice device) {
       // TODO Auto-generated method stub
@@ -166,6 +212,12 @@ public class OPCUAAdapter {
       }
     }
 
+    /**
+     * @fn onFoundDevice(EdgeDevice device)
+     * @brief handling found device information through Device Discovery logic. it is not supported
+     *        yet.
+     * @param [in] device device list based EdgeDevice class
+     */
     @Override
     public void onFoundDevice(EdgeDevice device) {
       // TODO Auto-generated method stub
@@ -174,7 +226,17 @@ public class OPCUAAdapter {
   };
 
   StatusCallback statusCallback = new StatusCallback() {
-
+    /**
+     * @fn onStart(EdgeEndpointInfo ep, EdgeStatusCode status, List<String> attiributeAliasList,
+     *     List<String> methodAliasList, List<String> viewAliasList)
+     * @brief it will be called when server or client is started. and service providers (based
+     *        Attribute, Method, View Type) list will be provided.
+     * @param [in] ep endpoint to start
+     * @param [in] status status code
+     * @param [in] attiributeAliasList service provider list base on Object/Variable Type
+     * @param [in] methodAliasList service provider list base on Method Type
+     * @param [in] viewAliasList service provider list base on View Type
+     */
     @Override
     public void onStart(EdgeEndpointInfo ep, EdgeStatusCode status,
         List<String> attiributeAliasList, List<String> methodAliasList,
@@ -205,6 +267,12 @@ public class OPCUAAdapter {
       }
     }
 
+    /**
+     * @fn onStop(EdgeEndpointInfo ep, EdgeStatusCode status)
+     * @brief it will be called when server or client is stopped.
+     * @param [in] ep endpoint to stop
+     * @param [in] status status code
+     */
     @Override
     public void onStop(EdgeEndpointInfo ep, EdgeStatusCode status) {
       // TODO Auto-generated method stub
@@ -213,6 +281,12 @@ public class OPCUAAdapter {
       driverCallback.onDeleteMetaData(MetaDataType.ALL);
     }
 
+    /**
+     * @fn onNetworkStatus(EdgeEndpointInfo ep, EdgeStatusCode status)
+     * @brief it will be called when network status is up or down.
+     * @param [in] ep endpoint to stop
+     * @param [in] status status code
+     */
     @Override
     public void onNetworkStatus(EdgeEndpointInfo ep, EdgeStatusCode status) {
       // TODO Auto-generated method stub
@@ -231,6 +305,10 @@ public class OPCUAAdapter {
     OPCUAServerAdapter.getInstance().startOPCUAAdapter();
   }
 
+  /**
+   * @fn void startAdapter()
+   * @brief start client with opcua configuration
+   */
   public void startAdapter() throws Exception {
     // 1. run discovery device
     // TODO
