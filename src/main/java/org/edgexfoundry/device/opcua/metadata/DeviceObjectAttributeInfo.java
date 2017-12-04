@@ -19,37 +19,37 @@
 package org.edgexfoundry.device.opcua.metadata;
 
 public class DeviceObjectAttributeInfo {
+  final private String providerKey;
+  private String dataType;
+
+  public static class Builder {
     final private String providerKey;
     private String dataType;
 
-    public static class Builder {
-        final private String providerKey;
-        private String dataType;
-
-        public Builder(String providerKey) {
-            this.providerKey = providerKey.replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
-        }
-
-        public Builder setDataType(String dataType) {
-        	this.dataType = dataType;
-        	return this;
-        }
-
-        public DeviceObjectAttributeInfo build() {
-            return new DeviceObjectAttributeInfo(this);
-        }
+    public Builder(String providerKey) {
+      this.providerKey = providerKey.replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
     }
 
-    DeviceObjectAttributeInfo(Builder builder) {
-        this.providerKey = builder.providerKey;
-        this.dataType = builder.dataType;
+    public Builder setDataType(String dataType) {
+      this.dataType = dataType;
+      return this;
     }
 
-    public String getProviderKey() {
-        return providerKey;
+    public DeviceObjectAttributeInfo build() {
+      return new DeviceObjectAttributeInfo(this);
     }
+  }
 
-    public String getDataType() {
-    	return dataType;
-    }
+  DeviceObjectAttributeInfo(Builder builder) {
+    this.providerKey = builder.providerKey;
+    this.dataType = builder.dataType;
+  }
+
+  public String getProviderKey() {
+    return providerKey;
+  }
+
+  public String getDataType() {
+    return dataType;
+  }
 }

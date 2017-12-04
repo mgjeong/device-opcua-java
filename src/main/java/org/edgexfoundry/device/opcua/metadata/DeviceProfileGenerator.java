@@ -42,7 +42,8 @@ public class DeviceProfileGenerator {
     deviceProfile.setModel(OPCUADefaultMetaData.MODEL.getValue());
     deviceProfile.setDescription(OPCUADefaultMetaData.DESCRIPTION_DEVICEPROFILE.getValue());
     deviceProfile.setObjects(OPCUADefaultMetaData.OBJ.getValue());
-    String[] labels = {OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue()};
+    String[] labels =
+        {OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue()};
     deviceProfile.setLabels(labels);
 
     List<DeviceObject> deviceObjectList = new ArrayList<DeviceObject>();
@@ -54,7 +55,7 @@ public class DeviceProfileGenerator {
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue()));
       profileResourceList.add(ProfileResourceGenerator.generateProfileResource(providerKey,
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue()));
-      commandList.add(CommandGenerator.newCommand(providerKey,
+      commandList.add(CommandGenerator.generateCommand(providerKey,
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue()));
     }
     deviceObjectList.add(DeviceObjectGenerator.generateDeviceObject(
@@ -64,7 +65,7 @@ public class DeviceProfileGenerator {
         OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
         OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
     commandList.add(
-        CommandGenerator.newCommand(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+        CommandGenerator.generateCommand(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
             OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
     deviceProfile.setDeviceResources(deviceObjectList);
     deviceProfile.setResources(profileResourceList);

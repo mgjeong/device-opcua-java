@@ -23,9 +23,7 @@ import java.util.List;
 import org.edge.protocol.mapper.api.EdgeMapper;
 import org.edge.protocol.mapper.api.EdgeMapperCommon;
 import org.edge.protocol.mapper.api.EdgeResponseCode;
-import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.providers.EdgeServices;
-import org.edgexfoundry.device.opcua.adapter.OPCUAMessageKeyIdentifier;
 import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.Get;
 import org.edgexfoundry.domain.meta.Put;
@@ -50,7 +48,7 @@ public class CommandGenerator {
     }
   }
 
-  private static Get newGetOperation(String deviceInfoKey, String deviceType) {
+  private static Get generateGetOperation(String deviceInfoKey, String deviceType) {
     String readwrite =
         getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType);
     if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.WRITEPONLY) == true) {
@@ -66,7 +64,7 @@ public class CommandGenerator {
     return get;
   }
 
-  private static Put newPutOperation(String deviceInfoKey, String deviceType) {
+  private static Put generatePutOperation(String deviceInfoKey, String deviceType) {
     String readwrite =
         getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType);
     if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.READONLY) == true) {
@@ -88,11 +86,11 @@ public class CommandGenerator {
     return put;
   }
 
-  public static Command newCommand(String deviceInfoKey, String deviceType) {
+  public static Command generateCommand(String deviceInfoKey, String deviceType) {
     Command command = new Command();
     command.setName(deviceInfoKey);
-    command.setGet(newGetOperation(deviceInfoKey, deviceType));
-    command.setPut(newPutOperation(deviceInfoKey, deviceType));
+    command.setGet(generateGetOperation(deviceInfoKey, deviceType));
+    command.setPut(generatePutOperation(deviceInfoKey, deviceType));
     return command;
   }
 }

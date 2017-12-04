@@ -190,7 +190,7 @@ public class DeviceEnroller {
 
     long end = System.currentTimeMillis();
     logger.info("Device Service Initialize Time is " + (end - start) / 1000.0 + "sec");
-    //logger.info("" + attributeProviderKeyList.size());
+    // logger.info("" + attributeProviderKeyList.size());
   }
 
   private void configureMetaData() {
