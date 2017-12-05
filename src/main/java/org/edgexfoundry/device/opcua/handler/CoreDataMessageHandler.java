@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.command.json.format.EdgeAttribute;
 import org.command.json.format.EdgeElement;
 import org.command.json.format.EdgeFormatIdentifier;
+import org.command.json.format.EdgeJsonFormatter;
 import org.edgexfoundry.controller.DeviceClient;
 import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.device.opcua.adapter.OPCUAMessageKeyIdentifier;
@@ -65,34 +66,11 @@ public class CoreDataMessageHandler {
   @Autowired
   private DeviceStore devices;
 
-  private static List<readingNode> readingList = new LinkedList<readingNode>();
-
-  private class readingNode {
-    private Reading reading;
-    private String operation;
-
-    readingNode(Reading reading, String operation) {
-      this.reading = reading;
-      this.operation = operation;
-    }
-
-    public Reading getReading() {
-      return reading;
-    }
-
-    public String getOperation() {
-      return operation;
-    }
-  }
-
-  public Reading buildReading(String key, String value, String deviceName, String operation) {
+  public Reading buildReading(String key, String value, String deviceName) {
     Reading reading = new Reading();
     reading.setName(key);
     reading.setValue(value);
     reading.setDevice(deviceName);
-    synchronized (readingList) {
-      readingList.add(new readingNode(reading, operation));
-    }
     return reading;
   }
 
@@ -145,22 +123,7 @@ public class CoreDataMessageHandler {
         List<EdgeElement> elementList = new ArrayList<EdgeElement>();
         logger.debug("readings: " + readings);
         for (Reading reading : readings) {
-          String readingOperation = "";
-          for (readingNode rnode : readingList) {
-            if (rnode.getReading() == reading) {
-              readingOperation = rnode.getOperation();
-              readingList.remove(rnode);
-              break;
-            }
-          }
-          EdgeElement element = new EdgeElement(readingOperation);
-          element.getEdgeAttributeList()
-              .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.VALUE_DESCRIPTOR.getValue(),
-                  EdgeFormatIdentifier.STRING_TYPE.getValue(), reading.getName()));
-          element.getEdgeAttributeList()
-              .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-                  EdgeFormatIdentifier.STRING_TYPE.getValue(), reading.getValue()));
-          elementList.add(element);
+          elementList.add(EdgeJsonFormatter.decodeJsonStringToEdgeElement(reading.getValue()));
         }
         boolean success = sendEvent(buildEvent(deviceName, readings), 0);
         if (success) {

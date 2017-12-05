@@ -7,7 +7,11 @@ public enum OPCUAMessageKeyIdentifier {
               "command valuedescriptor name"), SAMPLING_INTERVAL(4, "sampling_interval",
                   "sampling interval"), APPLICATION_NAME(5, "application_name",
                       "application name for server"), APPLICATION_URI(6, "application_uri",
-                          "application uri for server");
+                          "application uri for server"), SECURITYPOLICY_URI(7,
+                              "security_policy_uri",
+                              "security policy uri for server"), ENDPOINT_URI(8, "endpoint_uri",
+                                  "endpoint uri for server"), ENDPOINT_INFOMATION(9,
+                                      "endpoint_information", "endpoint infomation for server");
 
   private int code;
   private String value;

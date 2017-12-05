@@ -86,8 +86,7 @@ public class ObjectStore {
             String objectName = obj.getName();
             String result = transformResult(value, obj, device, operation);
             logger.debug("value TransFromResult : {}", result);
-            Reading reading = processor.buildReading(objectName, result, device.getName(),
-                    operation.getOperation());
+            Reading reading = processor.buildReading(objectName, result, device.getName());
             readings.add(reading);
 
             synchronized (objectCache) {
