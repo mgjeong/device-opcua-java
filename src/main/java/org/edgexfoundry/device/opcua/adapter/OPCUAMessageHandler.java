@@ -38,6 +38,7 @@ import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeResult;
+import org.edge.protocol.opcua.api.common.EdgeStatusCode;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUACommandIdentifier;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
@@ -116,7 +117,7 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForStart(EdgeMessage msg) {
-    return null;
+    return "";
   }
 
   /**
@@ -126,7 +127,7 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForStop(EdgeMessage msg) {
-    return null;
+    return "";
   }
 
   /**
@@ -136,9 +137,9 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForRead(EdgeMessage msg) {
-    logger.debug("result of the read request = {}",
-        msg.getResponses().get(0).getMessage().getValue().toString());
-    return null;
+    // logger.debug("result of the read request = {}",
+    // msg.getResponses().get(0).getMessage().getValue().toString());
+    return "";
   }
 
   /**
@@ -148,9 +149,9 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForWrite(EdgeMessage msg) {
-    logger.debug("result of the write request = {}",
-        msg.getResponses().get(0).getMessage().getValue().toString());
-    return null;
+    // logger.debug("result of the write request = {}",
+    // msg.getResponses().get(0).getMessage().getValue().toString());
+    return "";
   }
 
   /**
@@ -160,7 +161,7 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForSubscription(EdgeMessage msg) {
-    return null;
+    return "";
   }
 
   /**
@@ -170,7 +171,7 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForEndpoint(EdgeDevice device) {
-    return null;
+    return "";
   }
 
   /**
@@ -180,7 +181,7 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForMethod(EdgeMessage msg) {
-    return null;
+    return "";
   }
 
   /**
@@ -415,6 +416,9 @@ public class OPCUAMessageHandler {
    * @return @EdgeResult
    */
   public EdgeResult sendMessage(EdgeMessage msg) throws Exception {
+    if (null == msg) {
+      return new EdgeResult.Builder(EdgeStatusCode.STATUS_PARAM_INVALID).build();
+    }
     EdgeResult ret = null;
     try {
       ret = ProtocolManager.getProtocolManagerInstance().send(msg);
@@ -433,6 +437,10 @@ public class OPCUAMessageHandler {
    */
   public String getEndpointUrifromAddressable(Addressable addressable) {
     String endpointUri = "";
+
+    if (null == addressable) {
+      return null;
+    }
     if (addressable.getProtocol() == Protocol.TCP) {
       endpointUri += String.format("%s", "opc.tcp://");
     } else {

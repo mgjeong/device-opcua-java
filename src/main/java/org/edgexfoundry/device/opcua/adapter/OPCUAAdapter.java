@@ -38,6 +38,7 @@ import org.edge.protocol.opcua.api.common.EdgeNodeIdentifier;
 import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
+import org.edge.protocol.opcua.api.common.EdgeResult;
 import org.edge.protocol.opcua.api.common.EdgeStatusCode;
 import org.edgexfoundry.device.opcua.adapter.emf.EMFAdapter;
 import org.edgexfoundry.device.opcua.adapter.metadata.MetaDataType;
@@ -309,7 +310,7 @@ public class OPCUAAdapter {
    * @fn void startAdapter()
    * @brief start client with opcua configuration
    */
-  public void startAdapter() throws Exception {
+  public EdgeResult startAdapter() throws Exception {
     // 1. run discovery device
     // TODO
     // we need to support like discovery-seed micro-service
@@ -334,7 +335,8 @@ public class OPCUAAdapter {
     EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_START_CLIENT)
         .setMessageType(EdgeMessageType.SEND_REQUEST)
         .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
-    ProtocolManager.getProtocolManagerInstance().send(msg);
+    logger.info("out - startAdapter");
+    return ProtocolManager.getProtocolManagerInstance().send(msg);
   }
 
   private void testGetEndpoint() throws Exception {
