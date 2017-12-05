@@ -237,13 +237,16 @@ public class OPCUADriver {
     for (String providerKey : getAttributeProviderKeyList()) {
       Command command = CommandGenerator.generate(providerKey,
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue());
-      deviceProfileGenerator.addCommandToDeviceProfile(deviceProfileName, command);
+      DeviceProfile deviceProfile =
+          deviceProfileGenerator.update(deviceProfileName, command);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+      
       DeviceObject deviceObject = DeviceObjectGenerator.generate(providerKey,
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue());
-      deviceProfileGenerator.addDeviceObjectToDeviceProfile(deviceProfileName, deviceObject);
+      deviceEnroller.updateDeviceObjectToDeviceProfile(deviceProfileName, deviceObject);
       ProfileResource profileResource = ProfileResourceGenerator.generate(providerKey,
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue());
-      deviceProfileGenerator.addProfileResourceToDeviceProfile(deviceProfileName, profileResource);
+      deviceEnroller.updateProfileResourceToDeviceProfile(deviceProfileName, profileResource);
     }
   }
 

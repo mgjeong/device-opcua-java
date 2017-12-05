@@ -78,27 +78,10 @@ public class DeviceProfileGenerator {
     
     return deviceProfile;
   }
-  
-  public void addCommandToDeviceProfile(String deviceProfileName, Command command){
+
+  public DeviceProfile update(String deviceProfileName, Command command){
     DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
     deviceProfile.addCommand(command);
-    deviceProfileClient.update(deviceProfile);
-    deviceStore.updateProfile(deviceProfile.getId());
-  }
-  public void addDeviceObjectToDeviceProfile(String deviceProfileName, DeviceObject deviceObject){
-    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
-    List<DeviceObject> deviceObjectList  = deviceProfile.getDeviceResources();
-    deviceObjectList.add(deviceObject);
-    deviceProfile.setDeviceResources(deviceObjectList);
-    deviceProfileClient.update(deviceProfile);
-    deviceStore.updateProfile(deviceProfile.getId());
-  }
-  public void addProfileResourceToDeviceProfile(String deviceProfileName, ProfileResource profileResource){
-    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
-    List<ProfileResource> profileResourceList = deviceProfile.getResources();
-    profileResourceList.add(profileResource);
-    deviceProfile.setResources(profileResourceList);
-    deviceProfileClient.update(deviceProfile);
-    deviceStore.updateProfile(deviceProfile.getId());
+    return deviceProfile;    
   }
 }

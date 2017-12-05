@@ -29,8 +29,11 @@ import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.domain.common.ValueDescriptor;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.meta.Addressable;
+import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.Device;
+import org.edgexfoundry.domain.meta.DeviceObject;
 import org.edgexfoundry.domain.meta.DeviceProfile;
+import org.edgexfoundry.domain.meta.ProfileResource;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +92,13 @@ public class DeviceEnroller {
     return retDeviceProfile;
   }
 
+  public boolean updateDeviceProfileToMetaData(DeviceProfile deviceProfile) {
+    if (true == deviceProfileClient.update(deviceProfile)) {
+      deviceStore.updateProfile(deviceProfile.getId());
+    }
+    return true;
+  }
+
   public Device addDeviceToMetaData(Device device) {
     Device retDevice = null;
     try {
@@ -102,6 +112,25 @@ public class DeviceEnroller {
     return retDevice;
   }
 
+  public void updateDeviceObjectToDeviceProfile(String deviceProfileName,
+      DeviceObject deviceObject) {
+    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
+    List<DeviceObject> deviceObjectList = deviceProfile.getDeviceResources();
+    deviceObjectList.add(deviceObject);
+    deviceProfile.setDeviceResources(deviceObjectList);
+    deviceProfileClient.update(deviceProfile);
+    deviceStore.updateProfile(deviceProfile.getId());
+  }
+
+  public void updateProfileResourceToDeviceProfile(String deviceProfileName,
+      ProfileResource profileResource) {
+    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
+    List<ProfileResource> profileResourceList = deviceProfile.getResources();
+    profileResourceList.add(profileResource);
+    deviceProfile.setResources(profileResourceList);
+    deviceProfileClient.update(deviceProfile);
+    deviceStore.updateProfile(deviceProfile.getId());
+  }
 
   // TODO
   // we can get events below 100. but can not set limits
@@ -190,5 +219,5 @@ public class DeviceEnroller {
     deleteEvent();
     deleteValueDescriptor();
   }
-  
+
 }
