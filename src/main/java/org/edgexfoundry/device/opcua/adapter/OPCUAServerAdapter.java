@@ -22,7 +22,7 @@ import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.example.EdgeEmulator;
-import org.edgexfoundry.device.opcua.metadata.OPCUADefaultMetaData;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
@@ -39,7 +39,7 @@ public class OPCUAServerAdapter {
 		opcUaEmulator = new EdgeEmulator();
 	}
 
-	public static OPCUAServerAdapter getInstance() {
+	public synchronized static OPCUAServerAdapter getInstance() {
 
 		if (singleton == null) {
 			singleton = new OPCUAServerAdapter();

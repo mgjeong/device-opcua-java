@@ -44,7 +44,7 @@ public class EMFAdapter {
    * @brief get EMFAdapter instance
    * @return EMFAdapter instance based singleton
    */
-  public static EMFAdapter getInstance() {
+  public synchronized static EMFAdapter getInstance() {
     if (singleton == null) {
       singleton = new EMFAdapter();
     }

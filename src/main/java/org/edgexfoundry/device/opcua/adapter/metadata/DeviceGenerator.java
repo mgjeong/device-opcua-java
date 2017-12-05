@@ -16,7 +16,7 @@
  *
  ******************************************************************/
 
-package org.edgexfoundry.device.opcua.metadata;
+package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceProfileClient;

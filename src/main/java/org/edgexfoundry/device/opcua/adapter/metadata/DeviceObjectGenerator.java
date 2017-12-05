@@ -16,7 +16,7 @@
  *
  ******************************************************************/
 
-package org.edgexfoundry.device.opcua.metadata;
+package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import org.edge.protocol.mapper.api.EdgeMapper;
 import org.edge.protocol.mapper.api.EdgeMapperCommon;

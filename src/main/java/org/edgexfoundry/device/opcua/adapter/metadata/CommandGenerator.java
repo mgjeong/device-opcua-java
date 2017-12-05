@@ -16,7 +16,7 @@
  *
  ******************************************************************/
 
-package org.edgexfoundry.device.opcua.metadata;
+package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
