@@ -52,25 +52,24 @@ public class DeviceGenerator {
 
   private DeviceGenerator() {}
 
-  public Device generate(String deviceInfoKey) {
+  public Device generate(String deviceName) {
     Device device = new Device();
     device.setAdminState(AdminState.unlocked);
     device.setDescription(OPCUADefaultMetaData.DESCRIPTION_DEVICE.getValue());
     device.setLastConnected(OPCUADefaultMetaData.DEFAULT_LAST_CONNECTED);
     device.setLastReported(OPCUADefaultMetaData.DEFAULT_LAST_REPORTED);
     device.setLocation(OPCUADefaultMetaData.LOCATION.getValue());
-    device.setName(deviceInfoKey);
+    device.setName(deviceName);
     device.setOperatingState(OperatingState.enabled);
     device.setOrigin(OPCUADefaultMetaData.DEFAULT_ORIGIN);
-    device.setProfile(deviceProfileClient.deviceProfileForName(deviceInfoKey));
+    device.setProfile(deviceProfileClient.deviceProfileForName(deviceName));
     String[] labels =
         {OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue()};
     device.setLabels(labels);
 
     try {
       device.setAddressable(
-          addressableClient.addressableForName(AddressableGenerator.getAddressable().getName()));
-
+          addressableClient.addressableForName(deviceName));
     } catch (Exception e) {
       logger.debug("Could not set Addressable for device msg: " + e.getMessage());
       return null;

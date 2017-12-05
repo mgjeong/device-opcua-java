@@ -23,8 +23,15 @@ import javax.annotation.PostConstruct;
 import javax.ws.rs.NotFoundException;
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceServiceClient;
+import org.edgexfoundry.device.opcua.adapter.metadata.AddressableGenerator;
+import org.edgexfoundry.device.opcua.adapter.metadata.DeviceEnroller;
+import org.edgexfoundry.device.opcua.adapter.metadata.DeviceGenerator;
+import org.edgexfoundry.device.opcua.adapter.metadata.DeviceProfileGenerator;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.AdminState;
+import org.edgexfoundry.domain.meta.Device;
+import org.edgexfoundry.domain.meta.DeviceProfile;
 import org.edgexfoundry.domain.meta.DeviceService;
 import org.edgexfoundry.domain.meta.OperatingState;
 import org.edgexfoundry.domain.meta.Protocol;
@@ -69,6 +76,15 @@ public class BaseService {
   @Autowired
   private AddressableClient addressableClient;
 
+  @Autowired
+  private DeviceEnroller deviceEnroller;
+  
+  @Autowired
+  private DeviceGenerator deviceGenerator;
+
+  @Autowired
+  private DeviceProfileGenerator deviceProfileGenerator;
+  
   // service initialization
   @Value("${service.connect.retries}")
   private int initRetries;
@@ -160,6 +176,17 @@ public class BaseService {
     // if both are successful, then we're done
     if (isRegistered() && isInitialized()) {
       logger.info("initialization successful.");
+      
+      
+      Addressable addressable =
+          AddressableGenerator.generate(OPCUADefaultMetaData.DEVICE_NAME.getValue());
+      deviceEnroller.addAddressableToMetaData(addressable);
+      DeviceProfile deviceProfile =
+          deviceProfileGenerator.generate(OPCUADefaultMetaData.DEVICE_NAME.getValue());
+      deviceEnroller.addDeviceProfileToMetaData(deviceProfile);
+      Device device = deviceGenerator.generate(OPCUADefaultMetaData.DEVICE_NAME.getValue());
+      deviceEnroller.addDeviceToMetaData(device);
+      
     } else {
       // otherwise see if we need to keep going
       if ((getInitRetries() == 0) || (getInitAttempts() < getInitRetries())) {

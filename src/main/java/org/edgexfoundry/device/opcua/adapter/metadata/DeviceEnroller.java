@@ -59,61 +59,47 @@ public class DeviceEnroller {
   ReadingClient readingClient;
 
   @Autowired
-  private DeviceGenerator deviceGenerator;
-
-  @Autowired
   private DeviceStore deviceStore;
 
-  private static Addressable addressable = null;
   private static final boolean enableDeleteEvent = false;
 
   private DeviceEnroller() {}
 
-  private Addressable addAddressableToMetaData() {
-    if (addressable == null) {
-      addressable = AddressableGenerator.generate();
-      try {
-        addressableClient.add(addressable);
-      } catch (Exception e) {
-        logger.debug("Could not set addressable to metadata msg: " + e.getMessage());
-      }
-    }
-    return addressable;
-  }
-
-  private Addressable updateAddressableToMetaData() {
-    if (addressable == null) {
-      addressable = AddressableGenerator.update();
-      try {
-        addressableClient.update(addressable);
-      } catch (Exception e) {
-        logger.debug("Could not update addressable to metadata msg: " + e.getMessage());
-      }
-    }
-    return addressable;
-  }
-
-  private DeviceProfile addDeviceProfileToMetaData(String deviceInfoKey) {
-    DeviceProfile profile = DeviceProfileGenerator.generate(deviceInfoKey);
+  public Addressable addAddressableToMetaData(Addressable addressable) {
+    Addressable retAddressable = null;
     try {
-      logger.debug("Add deviceProfile successfully msg: " + deviceProfileClient.add(profile));
+      String addressableId = addressableClient.add(addressable);
+      logger.debug("Add addressable successfully msg: " + addressableId);
+      retAddressable = addressableClient.addressable(addressableId);
+    } catch (Exception e) {
+      logger.debug("Could not set addressable to metadata msg: " + e.getMessage());
+    }
+    return retAddressable;
+  }
+
+  public DeviceProfile addDeviceProfileToMetaData(DeviceProfile deviceProfile) {
+    DeviceProfile retDeviceProfile = null;
+    try {
+      String deviceProfileId = deviceProfileClient.add(deviceProfile);
+      logger.debug("Add deviceProfile successfully msg: " + deviceProfileId);
+      retDeviceProfile = deviceProfileClient.deviceProfile(deviceProfileId);
     } catch (Exception e) {
       logger.error("Could not add deviceProfile to metadata msg: " + e.getMessage());
     }
-    return profile;
+    return retDeviceProfile;
   }
 
-  private Device addDeviceToMetaData(String deviceInfoKey) {
-    Device device = deviceGenerator.generate(deviceInfoKey);
+  public Device addDeviceToMetaData(Device device) {
+    Device retDevice = null;
     try {
       String deviceId = deviceClient.add(device);
       logger.debug("Add device successfully msg: " + deviceId);
-      device = deviceClient.deviceForName(device.getName());
+      retDevice = deviceClient.device(deviceId);
       deviceStore.add(deviceId);
     } catch (Exception e) {
       logger.error("Could not add device to metadata msg: " + e.getMessage());
     }
-    return device;
+    return retDevice;
   }
 
 
@@ -179,30 +165,6 @@ public class DeviceEnroller {
         logger.debug("Could not remove addressable from metadata msg: " + e.getMessage());
       }
     }
-    addressable = null;
-  }
-
-  public void initialize() {
-    long start = System.currentTimeMillis();
-    logger.info("Device Service Initializing Start ");
-
-    configureMetaData();
-
-    long end = System.currentTimeMillis();
-    logger.info("Device Service Initialize Time is " + (end - start) / 1000.0 + "sec");
-    // logger.info("" + attributeProviderKeyList.size());
-  }
-
-  private void configureMetaData() {
-    try {
-      addAddressableToMetaData();
-      updateAddressableToMetaData();
-      addDeviceProfileToMetaData("opcua");
-      addDeviceToMetaData("opcua");
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
   }
 
   public void cleanMetaData(MetaDataType type) {
@@ -228,4 +190,5 @@ public class DeviceEnroller {
     deleteEvent();
     deleteValueDescriptor();
   }
+  
 }
