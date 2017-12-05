@@ -71,7 +71,7 @@ public class Publisher {
    * @fn Publisher getInstance()
    * @brief get instance of publisher class based singleton.
    */
-  public static Publisher getInstance() {
+  public synchronized static Publisher getInstance() {
     if (singleton == null) {
       singleton = new Publisher();
     }

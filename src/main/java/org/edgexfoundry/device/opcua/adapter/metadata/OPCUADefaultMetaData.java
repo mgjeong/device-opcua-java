@@ -1,4 +1,4 @@
-package org.edgexfoundry.device.opcua.metadata;
+package org.edgexfoundry.device.opcua.adapter.metadata;
 
 public enum OPCUADefaultMetaData {
 

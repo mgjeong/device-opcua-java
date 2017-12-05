@@ -39,8 +39,8 @@ import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeResult;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
-import org.edgexfoundry.device.opcua.metadata.OPCUADefaultMetaData;
-import org.edgexfoundry.device.opcua.metadata.OPCUACommandIdentifier;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUACommandIdentifier;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
@@ -58,7 +58,7 @@ public class OPCUAMessageHandler {
    * @brief get OPCUAMessageHandler object
    * @return OPCUAMessageHandler singleton object
    */
-  public static OPCUAMessageHandler getInstance() {
+  public synchronized static OPCUAMessageHandler getInstance() {
     if (singleton == null) {
       singleton = new OPCUAMessageHandler();
     }

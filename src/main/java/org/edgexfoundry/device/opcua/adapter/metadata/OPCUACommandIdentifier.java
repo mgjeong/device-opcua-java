@@ -1,4 +1,4 @@
-package org.edgexfoundry.device.opcua.metadata;
+package org.edgexfoundry.device.opcua.adapter.metadata;
 
 public enum OPCUACommandIdentifier {
   WELLKNOWN_COMMAND(10, "wellknown_command"), ATTRIBUTE_COMMAND(11,

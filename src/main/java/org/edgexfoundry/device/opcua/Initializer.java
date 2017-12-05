@@ -19,9 +19,9 @@
  *******************************************************************************/
 package org.edgexfoundry.device.opcua;
 
+import org.edgexfoundry.device.opcua.adapter.metadata.DeviceEnroller;
+import org.edgexfoundry.device.opcua.adapter.metadata.MetaDataType;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
-import org.edgexfoundry.device.opcua.metadata.DeviceEnroller;
-import org.edgexfoundry.device.opcua.metadata.MetaDataType;
 import org.edgexfoundry.device.opcua.scheduling.Scheduler;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;

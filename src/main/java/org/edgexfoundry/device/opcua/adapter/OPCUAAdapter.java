@@ -40,8 +40,8 @@ import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeStatusCode;
 import org.edgexfoundry.device.opcua.adapter.emf.EMFAdapter;
-import org.edgexfoundry.device.opcua.metadata.OPCUADefaultMetaData;
-import org.edgexfoundry.device.opcua.metadata.MetaDataType;
+import org.edgexfoundry.device.opcua.adapter.metadata.MetaDataType;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.opcua.OPCUADriver.DriverCallback;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Device;
@@ -79,7 +79,7 @@ public class OPCUAAdapter {
    * @param [in] DriverCallback callback
    * @return OPCUAAdapter instance
    */
-  public static OPCUAAdapter getInstance(DriverCallback callback) {
+  public synchronized static OPCUAAdapter getInstance(DriverCallback callback) {
 
     if (singleton == null) {
       singleton = new OPCUAAdapter(callback);
