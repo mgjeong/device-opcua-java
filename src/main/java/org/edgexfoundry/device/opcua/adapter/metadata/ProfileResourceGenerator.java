@@ -70,7 +70,7 @@ public class ProfileResourceGenerator {
     } else if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_GETENDPOINT.getValue()
         .equals(deviceInfoKey) == true) {
       setGetEndpointServiceOperation(deviceInfoKey, profileResource);
-    } 
+    }
     return profileResource;
   }
 
@@ -108,7 +108,7 @@ public class ProfileResourceGenerator {
         createPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     profileResource.setSet(setList);
   }
-  
+
   private static void setStartServiceOperation(String deviceInfoKey,
       ProfileResource profileResource) {
     profileResource.setGet(null);
@@ -119,7 +119,7 @@ public class ProfileResourceGenerator {
         putOperationIndex++));
     profileResource.setSet(setList);
   }
-  
+
   private static void setStopServiceOperation(String deviceInfoKey,
       ProfileResource profileResource) {
     profileResource.setGet(null);
@@ -130,7 +130,7 @@ public class ProfileResourceGenerator {
         putOperationIndex++));
     profileResource.setSet(setList);
   }
-  
+
   private static void setGetEndpointServiceOperation(String deviceInfoKey,
       ProfileResource profileResource) {
     profileResource.setGet(null);
