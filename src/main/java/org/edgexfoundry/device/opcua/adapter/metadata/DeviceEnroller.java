@@ -29,8 +29,11 @@ import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.domain.common.ValueDescriptor;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.meta.Addressable;
+import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.Device;
+import org.edgexfoundry.domain.meta.DeviceObject;
 import org.edgexfoundry.domain.meta.DeviceProfile;
+import org.edgexfoundry.domain.meta.ProfileResource;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +92,13 @@ public class DeviceEnroller {
     return retDeviceProfile;
   }
 
+  public boolean updateDeviceProfileToMetaData(DeviceProfile deviceProfile) {
+    if (true == deviceProfileClient.update(deviceProfile)) {
+      deviceStore.updateProfile(deviceProfile.getId());
+    }
+    return true;
+  }
+
   public Device addDeviceToMetaData(Device device) {
     Device retDevice = null;
     try {
@@ -101,7 +111,6 @@ public class DeviceEnroller {
     }
     return retDevice;
   }
-
 
   // TODO
   // we can get events below 100. but can not set limits
@@ -190,5 +199,5 @@ public class DeviceEnroller {
     deleteEvent();
     deleteValueDescriptor();
   }
-  
+
 }

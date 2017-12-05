@@ -21,31 +21,24 @@ package org.edgexfoundry.device.opcua.adapter.metadata;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
-import org.edge.protocol.opcua.providers.EdgeServices;
 import org.edgexfoundry.controller.DeviceProfileClient;
-import org.edgexfoundry.device.opcua.data.DeviceStore;
-import org.edgexfoundry.device.opcua.data.ProfileStore;
 import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.DeviceObject;
 import org.edgexfoundry.domain.meta.DeviceProfile;
 import org.edgexfoundry.domain.meta.ProfileResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DeviceProfileGenerator {
-  
-  @Autowired
-  private DeviceStore deviceStore;
-  
+
   @Autowired
   private DeviceProfileClient deviceProfileClient;
 
   private DeviceProfileGenerator() {}
 
-  public DeviceProfile generate(String deviceProfileName) {
+  public DeviceProfile generate(String deviceProfileName, List<DeviceObject> deviceObjectList,
+      List<ProfileResource> profileResourceList, List<Command> commandList) {
     DeviceProfile deviceProfile = new DeviceProfile();
     deviceProfile.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
     deviceProfile.setCreated(new Timestamp(System.currentTimeMillis()).getTime());
@@ -58,47 +51,32 @@ public class DeviceProfileGenerator {
         {OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue()};
     deviceProfile.setLabels(labels);
 
-    List<DeviceObject> deviceObjectList = new ArrayList<DeviceObject>();
-    List<ProfileResource> profileResourceList = new ArrayList<ProfileResource>();
-    List<Command> commandList = new ArrayList<Command>();
-
-    for (OPCUACommandIdentifier wellknownCommand : OPCUACommandIdentifier.WELLKNOWN_COMMAND_LIST) {
-      String commandName = wellknownCommand.getValue();
-      deviceObjectList.add(DeviceObjectGenerator.generate(commandName,
-          OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
-      profileResourceList.add(ProfileResourceGenerator.generate(commandName,
-          OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
-      commandList.add(CommandGenerator.generate(commandName,
-          OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
-    }
-    
     deviceProfile.setDeviceResources(deviceObjectList);
     deviceProfile.setResources(profileResourceList);
     deviceProfile.setCommands(commandList);
-    
+
     return deviceProfile;
   }
-  
-  public void addCommandToDeviceProfile(String deviceProfileName, Command command){
+
+  public DeviceProfile update(String deviceProfileName, Command command) {
     DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
     deviceProfile.addCommand(command);
-    deviceProfileClient.update(deviceProfile);
-    deviceStore.updateProfile(deviceProfile.getId());
+    return deviceProfile;
   }
-  public void addDeviceObjectToDeviceProfile(String deviceProfileName, DeviceObject deviceObject){
+
+  public DeviceProfile update(String deviceProfileName, DeviceObject deviceObject) {
     DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
-    List<DeviceObject> deviceObjectList  = deviceProfile.getDeviceResources();
+    List<DeviceObject> deviceObjectList = deviceProfile.getDeviceResources();
     deviceObjectList.add(deviceObject);
     deviceProfile.setDeviceResources(deviceObjectList);
-    deviceProfileClient.update(deviceProfile);
-    deviceStore.updateProfile(deviceProfile.getId());
+    return deviceProfile;
   }
-  public void addProfileResourceToDeviceProfile(String deviceProfileName, ProfileResource profileResource){
+
+  public DeviceProfile update(String deviceProfileName, ProfileResource profileResource) {
     DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
     List<ProfileResource> profileResourceList = deviceProfile.getResources();
     profileResourceList.add(profileResource);
     deviceProfile.setResources(profileResourceList);
-    deviceProfileClient.update(deviceProfile);
-    deviceStore.updateProfile(deviceProfile.getId());
+    return deviceProfile;
   }
 }

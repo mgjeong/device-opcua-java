@@ -30,7 +30,7 @@ public class DeviceObjectGenerator {
 
   private DeviceObjectGenerator() {}
 
-  private static String getDeviceInfo(String deviceInfoKey, String id, String deviceType) {
+  private static String getAttributeInfo(String deviceInfoKey, String id, String deviceType) {
     if (OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true)
       return null;
     deviceInfoKey = deviceInfoKey.replaceAll(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
@@ -47,22 +47,22 @@ public class DeviceObjectGenerator {
     PropertyValue propertyValue = new PropertyValue();
     propertyValue.setType(OPCUADefaultMetaData.TYPE.getValue());
     propertyValue.setReadWrite(
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType));
+        getAttributeInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType));
     propertyValue.setMinimum(
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_MIN.name(), deviceType));
+        getAttributeInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_MIN.name(), deviceType));
     propertyValue.setMaximum(
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_MAX.name(), deviceType));
+        getAttributeInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_MAX.name(), deviceType));
     propertyValue.setDefaultValue(OPCUADefaultMetaData.DEFAULTVALUE.getValue());
     propertyValue.setSize(OPCUADefaultMetaData.SIZE.getValue());
     propertyValue.setPrecision(
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_PRECISION.name(), deviceType));
+        getAttributeInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_PRECISION.name(), deviceType));
     propertyValue.setLSB(OPCUADefaultMetaData.LSB.getValue());
 
     ///// optional
     propertyValue.setAssertion(
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_ASSERTION.name(), deviceType));
+        getAttributeInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_ASSERTION.name(), deviceType));
     propertyValue.setScale(
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_SCALE.name(), deviceType));
+        getAttributeInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_SCALE.name(), deviceType));
 
     return propertyValue;
   }
@@ -71,7 +71,7 @@ public class DeviceObjectGenerator {
     Units units = new Units();
     units.setType(OPCUADefaultMetaData.TYPE.getValue());
     units.setReadWrite(
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.UNITS_READWRITE.name(), deviceType));
+        getAttributeInfo(deviceInfoKey, EdgeMapperCommon.UNITS_READWRITE.name(), deviceType));
     units.setDefaultValue(OPCUADefaultMetaData.DEFAULTVALUE.getValue());
     return units;
   }
@@ -86,17 +86,17 @@ public class DeviceObjectGenerator {
   }
 
   public static DeviceObject generate(String deviceInfoKey, String deviceType) {
-    DeviceObject dObj = new DeviceObject();
-    dObj.setName(deviceInfoKey);
-    dObj.setTag(getDeviceInfo(deviceInfoKey, EdgeMapperCommon.DEVICEOBJECT_TAG.name(), deviceType));
-    dObj.setDescription(
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.DEVICEOBJECT_DESCRIPTION.name(), deviceType));
-    ProfileProperty dProp = createProfileProperty(deviceInfoKey, deviceType);
-    dObj.setProperties(dProp);
-    dObj.setAttributes(new DeviceObjectAttributeInfo.Builder(deviceInfoKey)
-        .setDataType(getDeviceInfo(deviceInfoKey,
+    DeviceObject deviceObj = new DeviceObject();
+    deviceObj.setName(deviceInfoKey);
+    deviceObj.setTag(getAttributeInfo(deviceInfoKey, EdgeMapperCommon.DEVICEOBJECT_TAG.name(), deviceType));
+    deviceObj.setDescription(
+        getAttributeInfo(deviceInfoKey, EdgeMapperCommon.DEVICEOBJECT_DESCRIPTION.name(), deviceType));
+    ProfileProperty property = createProfileProperty(deviceInfoKey, deviceType);
+    deviceObj.setProperties(property);
+    deviceObj.setAttributes(new DeviceObjectAttributeInfo.Builder(deviceInfoKey)
+        .setDataType(getAttributeInfo(deviceInfoKey,
             EdgeMapperCommon.DEVICEOBJECT_ATTRIBUTE_DATATYPE.name(), deviceType))
         .build());
-    return dObj;
+    return deviceObj;
   }
 }

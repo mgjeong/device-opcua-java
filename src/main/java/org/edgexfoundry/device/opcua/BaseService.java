@@ -27,6 +27,7 @@ import org.edgexfoundry.device.opcua.adapter.metadata.AddressableGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceEnroller;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceProfileGenerator;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUAMetadataGenerateManager;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.AdminState;
@@ -75,15 +76,9 @@ public class BaseService {
 
   @Autowired
   private AddressableClient addressableClient;
-
-  @Autowired
-  private DeviceEnroller deviceEnroller;
   
   @Autowired
-  private DeviceGenerator deviceGenerator;
-
-  @Autowired
-  private DeviceProfileGenerator deviceProfileGenerator;
+  private OPCUAMetadataGenerateManager metadataGenerateManager;
   
   // service initialization
   @Value("${service.connect.retries}")
@@ -177,15 +172,8 @@ public class BaseService {
     if (isRegistered() && isInitialized()) {
       logger.info("initialization successful.");
       
-      
-      Addressable addressable =
-          AddressableGenerator.generate(OPCUADefaultMetaData.DEVICE_NAME.getValue());
-      deviceEnroller.addAddressableToMetaData(addressable);
-      DeviceProfile deviceProfile =
-          deviceProfileGenerator.generate(OPCUADefaultMetaData.DEVICE_NAME.getValue());
-      deviceEnroller.addDeviceProfileToMetaData(deviceProfile);
-      Device device = deviceGenerator.generate(OPCUADefaultMetaData.DEVICE_NAME.getValue());
-      deviceEnroller.addDeviceToMetaData(device);
+      metadataGenerateManager.initMetaData();
+
       
     } else {
       // otherwise see if we need to keep going

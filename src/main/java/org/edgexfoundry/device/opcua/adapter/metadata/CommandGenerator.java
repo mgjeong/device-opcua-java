@@ -35,7 +35,7 @@ public class CommandGenerator {
 
   }
 
-  private static String getDeviceInfo(String deviceInfoKey, String id, String deviceType) {
+  private static String getAttributeInfo(String deviceInfoKey, String id, String deviceType) {
     if (OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true)
       return null;
     deviceInfoKey = deviceInfoKey.replaceAll(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
@@ -48,12 +48,7 @@ public class CommandGenerator {
     }
   }
 
-  private static Get createGetOperation(String deviceInfoKey, String deviceType) {
-    String readwrite =
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType);
-    if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.WRITEPONLY) == true) {
-      return null;
-    }
+  private static Get createGetOperation(String deviceInfoKey) {
     Get get = new Get();
     get.setPath(OPCUADefaultMetaData.DEFAULT_ROOT_PATH + deviceInfoKey);
     for (EdgeResponseCode code : EdgeResponseCode.values()) {
@@ -64,12 +59,7 @@ public class CommandGenerator {
     return get;
   }
 
-  private static Put createPutOperation(String deviceInfoKey, String deviceType) {
-    String readwrite =
-        getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType);
-    if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.READONLY) == true) {
-      return null;
-    }
+  private static Put createPutOperation(String deviceInfoKey) {
     List<String> parametNames = new ArrayList<>();
     parametNames.add(OPCUADefaultMetaData.PARAMETER_OPERATION.getValue());
     parametNames.add(OPCUADefaultMetaData.PARAMETER_VALUE.getValue());
@@ -86,11 +76,23 @@ public class CommandGenerator {
     return put;
   }
 
-  public static Command generate(String deviceInfoKey, String deviceType) {
+  public static Command generate(String deviceInfoKey, String commandType) {
     Command command = new Command();
     command.setName(deviceInfoKey);
-    command.setGet(createGetOperation(deviceInfoKey, deviceType));
-    command.setPut(createPutOperation(deviceInfoKey, deviceType));
+    
+    Get get = null;
+    Put put = null;
+    String readwrite = getAttributeInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), commandType);
+    if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.READ_ONLY) == true) {
+        get = CommandGenerator.createGetOperation(deviceInfoKey);
+    } else if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.WRITE_ONLY) == true) {
+        put = CommandGenerator.createPutOperation(deviceInfoKey);
+    } else {
+        get = CommandGenerator.createGetOperation(deviceInfoKey);
+        put = CommandGenerator.createPutOperation(deviceInfoKey);
+        }
+    command.setGet(get);
+    command.setPut(put);
     return command;
   }
 }

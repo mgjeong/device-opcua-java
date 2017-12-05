@@ -48,8 +48,8 @@ public enum OPCUADefaultMetaData {
   public static final long DEFAULT_ORIGIN = 123456789;
   public static final String DEFAULT_ROOT_PATH = "/api/v1/device/{deviceId}/";
 
-  public static final String READONLY = "Read";
-  public static final String WRITEPONLY = "Write";
+  public static final String READ_ONLY = "Read";
+  public static final String WRITE_ONLY = "Write";
   public static final String INSTANCE = "Instance";
   
   public static final String REPLACE_DEVICE_NAME = "~";
