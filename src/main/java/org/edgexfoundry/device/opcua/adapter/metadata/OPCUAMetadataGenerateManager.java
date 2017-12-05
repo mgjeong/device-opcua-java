@@ -75,18 +75,45 @@ public class OPCUAMetadataGenerateManager {
       deviceProfile = deviceProfileGenerator.update(deviceProfileName, profileResource);
       deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
     }
+    
+    command_type = OPCUACommandIdentifier.METHOD_COMMAND.getValue();
+    for (String providerKey : getMethodProviderKeyList()) {
+      Command command = CommandGenerator.generate(providerKey, command_type);
+      DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+      DeviceObject deviceObject = DeviceObjectGenerator.generate(providerKey, command_type);
+      deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+      List<ResourceOperation> getList = createMethodGetResourceOperation(providerKey);
+      List<ResourceOperation> setList = createMethodSetResourceOperation(providerKey);
+      ProfileResource profileResource =
+          profileResourceGenerator.generate(providerKey, getList, setList);
+      deviceProfile = deviceProfileGenerator.update(deviceProfileName, profileResource);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+    }
   }
 
   private static ArrayList<String> getAttributeProviderKeyList() {
     ArrayList<String> attributeProviderKeyList = new ArrayList<String>();
-    for (String deviceInfoKey : EdgeServices.getAttributeProviderKeyList()) {
-      if (deviceInfoKey.equals(EdgeOpcUaCommon.WELL_KNOWN_GROUP.getValue())) {
+    for (String providerKey : EdgeServices.getAttributeProviderKeyList()) {
+      if (providerKey.equals(EdgeOpcUaCommon.WELL_KNOWN_GROUP.getValue())) {
         continue;
       }
       attributeProviderKeyList
-          .add(deviceInfoKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME));
+          .add(providerKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME));
     }
     return attributeProviderKeyList;
+  }
+  
+  private static ArrayList<String> getMethodProviderKeyList() {
+    ArrayList<String> methodProviderKeyList = new ArrayList<String>();
+    for (String providerKey : EdgeServices.getMethodProviderKeyList()) {
+      methodProviderKeyList
+          .add(providerKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME));
+    }
+    return methodProviderKeyList;
   }
 
   // ProfileResource
@@ -129,6 +156,25 @@ public class OPCUAMetadataGenerateManager {
         EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     return setList;
   }
+  
+  private List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey) {
+    int getOperationIndex = startOperarionIndex;
+    List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
+    // TODO set secondary and mappings
+    getList.add(profileResourceGenerator.createGetOperation(deviceInfoKey,
+        EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
+    return getList;
+  }
+
+  private List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey) {
+    List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
+    // TODO set secondary and mappings
+    int putOperationIndex = startOperarionIndex;
+    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+        EdgeCommandType.CMD_METHOD.getValue(), putOperationIndex++));
+    return setList;
+  }
+  
 
   private List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
