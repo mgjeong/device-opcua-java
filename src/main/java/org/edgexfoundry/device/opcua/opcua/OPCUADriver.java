@@ -41,6 +41,7 @@ import org.edgexfoundry.device.opcua.adapter.metadata.DeviceGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceObjectGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceProfileGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.MetaDataType;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUAMetadataGenerateManager;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUACommandIdentifier;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.adapter.metadata.ProfileResourceGenerator;
@@ -84,7 +85,7 @@ public class OPCUADriver {
   DeviceEnroller deviceEnroller;
 
   @Autowired
-  private DeviceProfileGenerator deviceProfileGenerator;
+  OPCUAMetadataGenerateManager metadataGenerateManager;
 
   @Autowired
   EventClient eventClient;
@@ -219,7 +220,7 @@ public class OPCUADriver {
     @Override
     public void onInit() {
       // TODO Auto-generated method stub
-      configureMetaData(OPCUADefaultMetaData.DEVICE_NAME.getValue());
+      metadataGenerateManager.updateMetaData(OPCUADefaultMetaData.DEVICE_NAME.getValue());
     }
   };
 
@@ -231,34 +232,5 @@ public class OPCUADriver {
     public void onDeleteCoreData();
 
     public void onDeleteMetaData(MetaDataType type);
-  }
-  
-  public void configureMetaData(String deviceProfileName) {
-    for (String providerKey : getAttributeProviderKeyList()) {
-      Command command = CommandGenerator.generate(providerKey,
-          OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue());
-      DeviceProfile deviceProfile =
-          deviceProfileGenerator.update(deviceProfileName, command);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-      
-      DeviceObject deviceObject = DeviceObjectGenerator.generate(providerKey,
-          OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue());
-      deviceEnroller.updateDeviceObjectToDeviceProfile(deviceProfileName, deviceObject);
-      ProfileResource profileResource = ProfileResourceGenerator.generate(providerKey,
-          OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue());
-      deviceEnroller.updateProfileResourceToDeviceProfile(deviceProfileName, profileResource);
-    }
-  }
-
-  private static ArrayList<String> getAttributeProviderKeyList() {
-    ArrayList<String> attributeProviderKeyList = new ArrayList<String>();
-    for (String deviceInfoKey : EdgeServices.getAttributeProviderKeyList()) {
-      if (deviceInfoKey.equals(EdgeOpcUaCommon.WELL_KNOWN_GROUP.getValue())) {
-        continue;
-      }
-      attributeProviderKeyList
-          .add(deviceInfoKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME));
-    }
-    return attributeProviderKeyList;
   }
 }

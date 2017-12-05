@@ -112,26 +112,6 @@ public class DeviceEnroller {
     return retDevice;
   }
 
-  public void updateDeviceObjectToDeviceProfile(String deviceProfileName,
-      DeviceObject deviceObject) {
-    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
-    List<DeviceObject> deviceObjectList = deviceProfile.getDeviceResources();
-    deviceObjectList.add(deviceObject);
-    deviceProfile.setDeviceResources(deviceObjectList);
-    deviceProfileClient.update(deviceProfile);
-    deviceStore.updateProfile(deviceProfile.getId());
-  }
-
-  public void updateProfileResourceToDeviceProfile(String deviceProfileName,
-      ProfileResource profileResource) {
-    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
-    List<ProfileResource> profileResourceList = deviceProfile.getResources();
-    profileResourceList.add(profileResource);
-    deviceProfile.setResources(profileResourceList);
-    deviceProfileClient.update(deviceProfile);
-    deviceStore.updateProfile(deviceProfile.getId());
-  }
-
   // TODO
   // we can get events below 100. but can not set limits
   // I will modify it when I can set a limit.
