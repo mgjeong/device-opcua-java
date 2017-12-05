@@ -38,7 +38,9 @@ public enum OPCUADefaultMetaData {
   PARAMETER(34, "Parameter", "ProfileResource Parameter Value"),
   PARAMETER_OPERATION(35, "operation", "ProfileResource Parameter Value"),
   PARAMETER_VALUE(36, "value", "ProfileResource Parameter Value"),
-  RESOURCE(37, null, "ProfileResource Resource Value");
+  RESOURCE(37, null, "ProfileResource Resource Value"),
+  
+  DEVICE_NAME(40, "opcua", "Device Name");
   
   public static final int ADDRESSABLE_PORT = 12686;
   public static final long DEFAULT_LAST_CONNECTED = 1000000;
