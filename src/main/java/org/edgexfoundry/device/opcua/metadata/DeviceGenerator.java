@@ -52,7 +52,7 @@ public class DeviceGenerator {
 
   private DeviceGenerator() {}
 
-  public Device generateDevice(String deviceInfoKey) {
+  public Device generate(String deviceInfoKey) {
     Device device = new Device();
     device.setAdminState(AdminState.unlocked);
     device.setDescription(OPCUADefaultMetaData.DESCRIPTION_DEVICE.getValue());

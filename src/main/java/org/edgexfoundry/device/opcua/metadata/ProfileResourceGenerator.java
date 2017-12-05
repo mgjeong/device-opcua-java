@@ -29,7 +29,7 @@ public class ProfileResourceGenerator {
 
   private ProfileResourceGenerator() {}
 
-  private static ResourceOperation generateGetOperation(String deviceInfoKey, String operation,
+  private static ResourceOperation createGetOperation(String deviceInfoKey, String operation,
       int index) {
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
@@ -40,7 +40,7 @@ public class ProfileResourceGenerator {
     return resourceOperation;
   }
 
-  private static ResourceOperation generatePutOperation(String deviceInfoKey, String operation,
+  private static ResourceOperation createPutOperation(String deviceInfoKey, String operation,
       int index) {
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
@@ -53,7 +53,7 @@ public class ProfileResourceGenerator {
     return resourceOperation;
   }
 
-  public static ProfileResource generateProfileResource(String deviceInfoKey, String deviceType) {
+  public static ProfileResource generate(String deviceInfoKey, String deviceType) {
     ProfileResource profileResource = new ProfileResource();
     profileResource.setName(deviceInfoKey);
     if (OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue().equals(deviceType) == true) {
@@ -70,17 +70,17 @@ public class ProfileResourceGenerator {
     int getOperationIndex = startOperarionIndex;
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    getList.add(generateGetOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(),
+    getList.add(createGetOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(),
         getOperationIndex++));
     profileResource.setGet(getList);
 
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
     int putOperationIndex = startOperarionIndex;
-    setList.add(generatePutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(),
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(),
         putOperationIndex++));
-    setList.add(generatePutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(),
-        putOperationIndex++));
+    setList.add(
+        createPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     profileResource.setSet(setList);
   }
 
@@ -91,12 +91,12 @@ public class ProfileResourceGenerator {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
     int putOperationIndex = startOperarionIndex;
-    setList.add(generatePutOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(),
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(),
         putOperationIndex++));
-    setList.add(generatePutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(),
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(),
         putOperationIndex++));
-    setList.add(generatePutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(),
-        putOperationIndex++));
+    setList.add(
+        createPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     profileResource.setSet(setList);
   }
 }

@@ -33,7 +33,7 @@ public class DeviceProfileGenerator {
 
   private DeviceProfileGenerator() {}
 
-  public static DeviceProfile generateDeviceProfile(String deviceInfoKey) {
+  public static DeviceProfile generate(String deviceInfoKey) {
     DeviceProfile deviceProfile = new DeviceProfile();
     deviceProfile.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
     deviceProfile.setCreated(new Timestamp(System.currentTimeMillis()).getTime());
@@ -51,21 +51,21 @@ public class DeviceProfileGenerator {
     List<Command> commandList = new ArrayList<Command>();
 
     for (String providerKey : getAttributeProviderKeyList()) {
-      deviceObjectList.add(DeviceObjectGenerator.generateDeviceObject(providerKey,
+      deviceObjectList.add(DeviceObjectGenerator.generate(providerKey,
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue()));
-      profileResourceList.add(ProfileResourceGenerator.generateProfileResource(providerKey,
+      profileResourceList.add(ProfileResourceGenerator.generate(providerKey,
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue()));
-      commandList.add(CommandGenerator.generateCommand(providerKey,
+      commandList.add(CommandGenerator.generate(providerKey,
           OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue()));
     }
-    deviceObjectList.add(DeviceObjectGenerator.generateDeviceObject(
-        OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
-        OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
-    profileResourceList.add(ProfileResourceGenerator.generateProfileResource(
-        OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
-        OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
-    commandList.add(
-        CommandGenerator.generateCommand(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+    deviceObjectList.add(
+        DeviceObjectGenerator.generate(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+            OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
+    profileResourceList.add(
+        ProfileResourceGenerator.generate(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
+            OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
+    commandList
+        .add(CommandGenerator.generate(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue(),
             OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue()));
     deviceProfile.setDeviceResources(deviceObjectList);
     deviceProfile.setResources(profileResourceList);

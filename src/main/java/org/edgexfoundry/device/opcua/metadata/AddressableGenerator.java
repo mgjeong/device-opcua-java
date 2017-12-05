@@ -23,33 +23,32 @@ import org.edgexfoundry.domain.meta.Protocol;
 
 public class AddressableGenerator {
 
-    private AddressableGenerator() {
-    }
+  private AddressableGenerator() {}
 
-    private static Addressable addressable = null;
+  private static Addressable addressable = null;
 
-    static Addressable generateAddressable() {
-        if (addressable == null) {
-            // TODO generate randomly
-            addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
-                    OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
-                    OPCUADefaultMetaData.ADDRESSABLE_PORT);
-        }
-        return addressable;
+  static Addressable generate() {
+    if (addressable == null) {
+      // TODO generate randomly
+      addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
+          OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
+          OPCUADefaultMetaData.ADDRESSABLE_PORT);
     }
+    return addressable;
+  }
 
-    static Addressable updateAddressable() {
-        if (addressable == null) {
-            // TODO generate randomly
-            addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
-                    OPCUADefaultMetaData.ADDRESS1.getValue(), OPCUADefaultMetaData.PATH.getValue(),
-                    OPCUADefaultMetaData.ADDRESSABLE_PORT);
-        }
-        return addressable;
+  static Addressable update() {
+    if (addressable == null) {
+      // TODO generate randomly
+      addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
+          OPCUADefaultMetaData.ADDRESS1.getValue(), OPCUADefaultMetaData.PATH.getValue(),
+          OPCUADefaultMetaData.ADDRESSABLE_PORT);
     }
+    return addressable;
+  }
 
-    static Addressable getAddressable() {
-        return addressable;
-    }
+  static Addressable getAddressable() {
+    return addressable;
+  }
 
 }

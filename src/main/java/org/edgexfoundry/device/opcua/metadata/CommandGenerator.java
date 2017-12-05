@@ -48,7 +48,7 @@ public class CommandGenerator {
     }
   }
 
-  private static Get generateGetOperation(String deviceInfoKey, String deviceType) {
+  private static Get createGetOperation(String deviceInfoKey, String deviceType) {
     String readwrite =
         getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType);
     if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.WRITEPONLY) == true) {
@@ -64,7 +64,7 @@ public class CommandGenerator {
     return get;
   }
 
-  private static Put generatePutOperation(String deviceInfoKey, String deviceType) {
+  private static Put createPutOperation(String deviceInfoKey, String deviceType) {
     String readwrite =
         getDeviceInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), deviceType);
     if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.READONLY) == true) {
@@ -86,11 +86,11 @@ public class CommandGenerator {
     return put;
   }
 
-  public static Command generateCommand(String deviceInfoKey, String deviceType) {
+  public static Command generate(String deviceInfoKey, String deviceType) {
     Command command = new Command();
     command.setName(deviceInfoKey);
-    command.setGet(generateGetOperation(deviceInfoKey, deviceType));
-    command.setPut(generatePutOperation(deviceInfoKey, deviceType));
+    command.setGet(createGetOperation(deviceInfoKey, deviceType));
+    command.setPut(createPutOperation(deviceInfoKey, deviceType));
     return command;
   }
 }

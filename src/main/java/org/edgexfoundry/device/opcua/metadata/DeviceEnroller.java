@@ -71,7 +71,7 @@ public class DeviceEnroller {
 
   private Addressable addAddressableToMetaData() {
     if (addressable == null) {
-      addressable = AddressableGenerator.generateAddressable();
+      addressable = AddressableGenerator.generate();
       try {
         addressableClient.add(addressable);
       } catch (Exception e) {
@@ -83,7 +83,7 @@ public class DeviceEnroller {
 
   private Addressable updateAddressableToMetaData() {
     if (addressable == null) {
-      addressable = AddressableGenerator.updateAddressable();
+      addressable = AddressableGenerator.update();
       try {
         addressableClient.update(addressable);
       } catch (Exception e) {
@@ -94,7 +94,7 @@ public class DeviceEnroller {
   }
 
   private DeviceProfile addDeviceProfileToMetaData(String deviceInfoKey) {
-    DeviceProfile profile = DeviceProfileGenerator.generateDeviceProfile(deviceInfoKey);
+    DeviceProfile profile = DeviceProfileGenerator.generate(deviceInfoKey);
     try {
       logger.debug("Add deviceProfile successfully msg: " + deviceProfileClient.add(profile));
     } catch (Exception e) {
@@ -104,7 +104,7 @@ public class DeviceEnroller {
   }
 
   private Device addDeviceToMetaData(String deviceInfoKey) {
-    Device device = deviceGenerator.generateDevice(deviceInfoKey);
+    Device device = deviceGenerator.generate(deviceInfoKey);
     try {
       String deviceId = deviceClient.add(device);
       logger.debug("Add device successfully msg: " + deviceId);

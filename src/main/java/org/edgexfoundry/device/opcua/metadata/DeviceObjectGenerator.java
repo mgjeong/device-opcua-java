@@ -20,9 +20,7 @@ package org.edgexfoundry.device.opcua.metadata;
 
 import org.edge.protocol.mapper.api.EdgeMapper;
 import org.edge.protocol.mapper.api.EdgeMapperCommon;
-import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.providers.EdgeServices;
-import org.edgexfoundry.device.opcua.adapter.OPCUAMessageKeyIdentifier;
 import org.edgexfoundry.domain.meta.DeviceObject;
 import org.edgexfoundry.domain.meta.ProfileProperty;
 import org.edgexfoundry.domain.meta.PropertyValue;
@@ -45,7 +43,7 @@ public class DeviceObjectGenerator {
     }
   }
 
-  private static PropertyValue generatePropertyValue(String deviceInfoKey, String deviceType) {
+  private static PropertyValue createPropertyValue(String deviceInfoKey, String deviceType) {
     PropertyValue propertyValue = new PropertyValue();
     propertyValue.setType(OPCUADefaultMetaData.TYPE.getValue());
     propertyValue.setReadWrite(
@@ -69,7 +67,7 @@ public class DeviceObjectGenerator {
     return propertyValue;
   }
 
-  private static Units newUnits(String deviceInfoKey, String deviceType) {
+  private static Units createUnits(String deviceInfoKey, String deviceType) {
     Units units = new Units();
     units.setType(OPCUADefaultMetaData.TYPE.getValue());
     units.setReadWrite(
@@ -78,22 +76,22 @@ public class DeviceObjectGenerator {
     return units;
   }
 
-  private static ProfileProperty generateProfileProperty(String deviceInfoKey, String deviceType) {
+  private static ProfileProperty createProfileProperty(String deviceInfoKey, String deviceType) {
     ProfileProperty profileProperty = new ProfileProperty();
-    PropertyValue propertyValue = generatePropertyValue(deviceInfoKey, deviceType);
+    PropertyValue propertyValue = createPropertyValue(deviceInfoKey, deviceType);
     profileProperty.setValue(propertyValue);
-    Units units = newUnits(deviceInfoKey, deviceType);
+    Units units = createUnits(deviceInfoKey, deviceType);
     profileProperty.setUnits(units);
     return profileProperty;
   }
 
-  public static DeviceObject generateDeviceObject(String deviceInfoKey, String deviceType) {
+  public static DeviceObject generate(String deviceInfoKey, String deviceType) {
     DeviceObject dObj = new DeviceObject();
     dObj.setName(deviceInfoKey);
     dObj.setTag(getDeviceInfo(deviceInfoKey, EdgeMapperCommon.DEVICEOBJECT_TAG.name(), deviceType));
     dObj.setDescription(
         getDeviceInfo(deviceInfoKey, EdgeMapperCommon.DEVICEOBJECT_DESCRIPTION.name(), deviceType));
-    ProfileProperty dProp = generateProfileProperty(deviceInfoKey, deviceType);
+    ProfileProperty dProp = createProfileProperty(deviceInfoKey, deviceType);
     dObj.setProperties(dProp);
     dObj.setAttributes(new DeviceObjectAttributeInfo.Builder(deviceInfoKey)
         .setDataType(getDeviceInfo(deviceInfoKey,
