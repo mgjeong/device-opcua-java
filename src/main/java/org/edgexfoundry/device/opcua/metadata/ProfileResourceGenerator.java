@@ -21,66 +21,66 @@ package org.edgexfoundry.device.opcua.metadata;
 import java.util.ArrayList;
 import java.util.List;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
-import org.edgexfoundry.device.opcua.DataDefaultValue;
-import org.edgexfoundry.device.opcua.adapter.OPCUAMessageKeyIdentifier;
 import org.edgexfoundry.domain.meta.ProfileResource;
 import org.edgexfoundry.domain.meta.ResourceOperation;
 
 public class ProfileResourceGenerator {
+  private final static int startOperarionIndex = 1;
 
   private ProfileResourceGenerator() {}
 
-  private static ResourceOperation newGetOperation(String deviceInfoKey, String operation,
+  private static ResourceOperation createGetOperation(String deviceInfoKey, String operation,
       int index) {
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
     resourceOperation.setOperation(operation);
     resourceOperation.setObject(deviceInfoKey);
-    resourceOperation.setProperty(DataDefaultValue.PROPERTY_GET.getValue());
-    resourceOperation.setResource(DataDefaultValue.RESOURCE.getValue());
+    resourceOperation.setProperty(OPCUADefaultMetaData.PROPERTY_GET.getValue());
+    resourceOperation.setResource(OPCUADefaultMetaData.RESOURCE.getValue());
     return resourceOperation;
   }
 
-  private static ResourceOperation newPutOperation(String deviceInfoKey, String operation,
+  private static ResourceOperation createPutOperation(String deviceInfoKey, String operation,
       int index) {
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
     resourceOperation.setOperation(operation);
     resourceOperation.setObject(deviceInfoKey);
-    resourceOperation.setProperty(DataDefaultValue.PROPERTY_SET.getValue());
-    resourceOperation.setParameter(DataDefaultValue.PARAMETER_OPERATION.getValue() + ","
-        + DataDefaultValue.PARAMETER_VALUE.getValue());
-    resourceOperation.setResource(DataDefaultValue.RESOURCE.getValue());
+    resourceOperation.setProperty(OPCUADefaultMetaData.PROPERTY_SET.getValue());
+    resourceOperation.setParameter(OPCUADefaultMetaData.PARAMETER_OPERATION.getValue() + ","
+        + OPCUADefaultMetaData.PARAMETER_VALUE.getValue());
+    resourceOperation.setResource(OPCUADefaultMetaData.RESOURCE.getValue());
     return resourceOperation;
   }
 
-  public static ProfileResource newProfileResource(String deviceInfoKey, String deviceType) {
+  public static ProfileResource generate(String deviceInfoKey, String deviceType) {
     ProfileResource profileResource = new ProfileResource();
     profileResource.setName(deviceInfoKey);
-    if(OPCUAMessageKeyIdentifier.ATTRIBUTE_COMMAND.getValue().equals(deviceType) == true){
+    if (OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue().equals(deviceType) == true) {
       setAttributeServiceOperation(deviceInfoKey, profileResource);
-    }else if(OPCUAMessageKeyIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().equals(deviceInfoKey) == true){
+    } else if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
+        .equals(deviceInfoKey) == true) {
       setGroupServiceOperation(deviceInfoKey, profileResource);
     }
     return profileResource;
   }
-  
+
   private static void setAttributeServiceOperation(String deviceInfoKey,
       ProfileResource profileResource) {
-    int getOperationIndex = 1;
+    int getOperationIndex = startOperarionIndex;
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    getList.add(
-        newGetOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
+    getList.add(createGetOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(),
+        getOperationIndex++));
     profileResource.setGet(getList);
 
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = 1;
+    int putOperationIndex = startOperarionIndex;
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(),
+        putOperationIndex++));
     setList.add(
-        newPutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(), putOperationIndex++));
-    setList.add(
-        newPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
+        createPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     profileResource.setSet(setList);
   }
 
@@ -90,13 +90,13 @@ public class ProfileResourceGenerator {
 
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = 1;
+    int putOperationIndex = startOperarionIndex;
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(),
+        putOperationIndex++));
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(),
+        putOperationIndex++));
     setList.add(
-        newPutOperation(deviceInfoKey, EdgeCommandType.CMD_READ.getValue(), putOperationIndex++));
-    setList.add(
-        newPutOperation(deviceInfoKey, EdgeCommandType.CMD_WRITE.getValue(), putOperationIndex++));
-    setList.add(
-        newPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
+        createPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     profileResource.setSet(setList);
   }
 }

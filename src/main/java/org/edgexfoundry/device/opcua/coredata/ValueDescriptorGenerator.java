@@ -18,7 +18,7 @@
 
 package org.edgexfoundry.device.opcua.coredata;
 
-import org.edgexfoundry.device.opcua.DataDefaultValue;
+import org.edgexfoundry.device.opcua.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.common.IoTType;
 import org.edgexfoundry.domain.common.ValueDescriptor;
 
@@ -30,13 +30,13 @@ public class ValueDescriptorGenerator {
     public static ValueDescriptor newValueDescriptor(String DeviceName) {
         ValueDescriptor valueDescriptor = new ValueDescriptor();
         valueDescriptor.setName(DeviceName);
-        valueDescriptor.setMin(DataDefaultValue.MIN.getValue());
-        valueDescriptor.setMax(DataDefaultValue.MAX.getValue());
+        valueDescriptor.setMin(OPCUADefaultMetaData.MIN.getValue());
+        valueDescriptor.setMax(OPCUADefaultMetaData.MAX.getValue());
         valueDescriptor.setType(IoTType.J);
-        valueDescriptor.setUomLabel(DataDefaultValue.UOMLABEL.getValue());
-        valueDescriptor.setDefaultValue(DataDefaultValue.DEFAULTVALUE.getValue());
+        valueDescriptor.setUomLabel(OPCUADefaultMetaData.UOMLABEL.getValue());
+        valueDescriptor.setDefaultValue(OPCUADefaultMetaData.DEFAULTVALUE.getValue());
         valueDescriptor.setFormatting("%s");
-        String[] labels = {DataDefaultValue.LABEL1.getValue(), DataDefaultValue.LABEL2.getValue()};
+        String[] labels = {OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue()};
         valueDescriptor.setLabels(labels);
         return valueDescriptor;
     }

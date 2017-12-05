@@ -19,18 +19,20 @@
 package org.edgexfoundry.device.opcua.metadata;
 
 public enum MetaDataType {
-    ALL(0),
-    ADDRESSABLE(1),
-    DEVICE(2),
-    DEVICE_PROFILE(3);
+  ALL(0), ADDRESSABLE(1), DEVICE(2), DEVICE_PROFILE(3);
 
-    private int code;
+  private int code;
 
-    private MetaDataType(int code) {
-        this.code = code;
-    }
+  private MetaDataType(int code) {
+    this.code = code;
+  }
 
-    public int getCode() {
-        return code;
-    }
+  /**
+   * @fn int getCode()
+   * @brief get enum code
+   * @return code
+   */
+  public int getCode() {
+    return code;
+  }
 }

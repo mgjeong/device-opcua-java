@@ -1,6 +1,6 @@
-package org.edgexfoundry.device.opcua;
+package org.edgexfoundry.device.opcua.metadata;
 
-public enum DataDefaultValue {
+public enum OPCUADefaultMetaData {
 
   MIN(0, "Min", "ValueDescriptor/DeviceObject Min Value"),
   MAX(1, "Max", "ValueDescriptor/DeviceObject Max Value"),
@@ -40,7 +40,6 @@ public enum DataDefaultValue {
   PARAMETER_VALUE(36, "value", "ProfileResource Parameter Value"),
   RESOURCE(37, null, "ProfileResource Resource Value");
   
-  
   public static final int ADDRESSABLE_PORT = 12686;
   public static final long DEFAULT_LAST_CONNECTED = 1000000;
   public static final long DEFAULT_LAST_REPORTED = 2000000;
@@ -57,20 +56,35 @@ public enum DataDefaultValue {
   private String value;
   private String description;
 
-  private DataDefaultValue(int code, String value, String description) {
+  private OPCUADefaultMetaData(int code, String value, String description) {
       this.code = code;
       this.value = value;
       this.description = description;
   }
 
+  /**
+   * @fn int getCode()
+   * @brief get enum code
+   * @return code
+   */
   public int getCode() {
       return code;
   }
 
+  /**
+   * @fn String getValue()
+   * @brief get enum value
+   * @return value
+   */
   public String getValue() {
       return value;
   }
 
+  /**
+   * @fn String getDescription()
+   * @brief get description
+   * @return description
+   */
   public String getDescription() {
       return description;
   }

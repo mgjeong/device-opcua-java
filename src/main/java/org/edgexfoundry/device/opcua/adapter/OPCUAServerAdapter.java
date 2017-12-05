@@ -22,7 +22,7 @@ import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.example.EdgeEmulator;
-import org.edgexfoundry.device.opcua.DataDefaultValue;
+import org.edgexfoundry.device.opcua.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
@@ -60,9 +60,9 @@ public class OPCUAServerAdapter {
 		// we need to support like discovery-seed micro-service
 
 		// 2. create addressable (by default)
-		addressable = new Addressable(DataDefaultValue.NAME.getValue(), Protocol.TCP,
-				DataDefaultValue.ADDRESS.getValue(), DataDefaultValue.PATH.getValue(),
-				DataDefaultValue.ADDRESSABLE_PORT);
+		addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
+				OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
+				OPCUADefaultMetaData.ADDRESSABLE_PORT);
 
 		// 3. get EdgeEndpoint URI
 		endpointUri = getEndpointUrifromAddressable(addressable);
