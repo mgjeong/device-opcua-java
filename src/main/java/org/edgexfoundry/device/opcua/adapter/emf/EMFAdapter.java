@@ -56,6 +56,10 @@ public class EMFAdapter {
    * @brief publish data related @EdgeMessage.
    */
   public void publish(EdgeMessage data) {
+    if (null == data) {
+      return;
+    }
+
     for (EdgeResponse res : data.getResponses()) {
       logger.info("onMonitoredMessage = {}", res.getMessage().getValue());
     }
@@ -73,6 +77,9 @@ public class EMFAdapter {
    *        endpointUri of opcua server. And others will be set as default value.
    */
   private Event getEvent(EdgeMessage data) {
+    if (null == data) {
+      return null;
+    }
 
     List<Reading> readings = null;
     readings = new ArrayList<Reading>();
