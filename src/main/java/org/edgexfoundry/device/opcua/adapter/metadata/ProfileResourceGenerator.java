@@ -61,7 +61,16 @@ public class ProfileResourceGenerator {
     } else if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
         .equals(deviceInfoKey) == true) {
       setGroupServiceOperation(deviceInfoKey, profileResource);
-    }
+    } else if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_START.getValue()
+        .equals(deviceInfoKey) == true) {
+      setStartServiceOperation(deviceInfoKey, profileResource);
+    } else if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_STOP.getValue()
+        .equals(deviceInfoKey) == true) {
+      setStopServiceOperation(deviceInfoKey, profileResource);
+    } else if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_GETENDPOINT.getValue()
+        .equals(deviceInfoKey) == true) {
+      setGetEndpointServiceOperation(deviceInfoKey, profileResource);
+    } 
     return profileResource;
   }
 
@@ -97,6 +106,39 @@ public class ProfileResourceGenerator {
         putOperationIndex++));
     setList.add(
         createPutOperation(deviceInfoKey, EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
+    profileResource.setSet(setList);
+  }
+  
+  private static void setStartServiceOperation(String deviceInfoKey,
+      ProfileResource profileResource) {
+    profileResource.setGet(null);
+    List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
+    // TODO set secondary and mappings
+    int putOperationIndex = startOperarionIndex;
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_START_CLIENT.getValue(),
+        putOperationIndex++));
+    profileResource.setSet(setList);
+  }
+  
+  private static void setStopServiceOperation(String deviceInfoKey,
+      ProfileResource profileResource) {
+    profileResource.setGet(null);
+    List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
+    // TODO set secondary and mappings
+    int putOperationIndex = startOperarionIndex;
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_STOP_CLIENT.getValue(),
+        putOperationIndex++));
+    profileResource.setSet(setList);
+  }
+  
+  private static void setGetEndpointServiceOperation(String deviceInfoKey,
+      ProfileResource profileResource) {
+    profileResource.setGet(null);
+    List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
+    // TODO set secondary and mappings
+    int putOperationIndex = startOperarionIndex;
+    setList.add(createPutOperation(deviceInfoKey, EdgeCommandType.CMD_GET_ENDPOINTS.getValue(),
+        putOperationIndex++));
     profileResource.setSet(setList);
   }
 }
