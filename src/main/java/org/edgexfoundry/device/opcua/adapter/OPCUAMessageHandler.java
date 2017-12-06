@@ -474,12 +474,14 @@ public class OPCUAMessageHandler {
    */
   private EdgeMessage getMethodMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
+    Object inputValue = EdgeJsonFormatter.getObjectValueByName(element.getEdgeAttributeList(),
+        OPCUAMessageKeyIdentifier.INPUT_ARGUMENT.getValue());
     EdgeEndpointInfo epInfo =
         new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr)).setFuture(future).build();
     EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(providerKey).build();
     EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_METHOD)
         .setRequest(new EdgeRequest.Builder(ep)
-            .setMessage(new EdgeVersatility.Builder(16.0).build()).build())
+            .setMessage(new EdgeVersatility.Builder(inputValue).build()).build())
         .build();
     return msg;
   }

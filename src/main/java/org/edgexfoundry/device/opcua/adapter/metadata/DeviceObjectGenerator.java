@@ -33,7 +33,11 @@ public class DeviceObjectGenerator {
   private static String getAttributeInfo(String deviceInfoKey, String id, String deviceType) {
     if (OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true
         || OPCUACommandIdentifier.METHOD_COMMAND.getValue().equals(deviceType) == true){
-      return null;
+      if(id.equals(EdgeMapperCommon.PROPERTYVALUE_READWRITE.name())){
+        return "readwrite";
+      }else{
+        return null;
+      }
     }
     deviceInfoKey = deviceInfoKey.replaceAll(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
     EdgeMapper mapper = EdgeServices.getAttributeProvider(deviceInfoKey)
