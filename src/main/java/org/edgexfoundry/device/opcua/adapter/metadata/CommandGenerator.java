@@ -35,19 +35,6 @@ public class CommandGenerator {
 
   }
 
-  private static String getAttributeInfo(String deviceInfoKey, String id, String deviceType) {
-    if (OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true)
-      return null;
-    deviceInfoKey = deviceInfoKey.replaceAll(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
-    EdgeMapper mapper = EdgeServices.getAttributeProvider(deviceInfoKey)
-        .getAttributeService(deviceInfoKey).getMapper();
-    if (mapper == null) {
-      return null;
-    } else {
-      return mapper.getMappingData(id);
-    }
-  }
-
   private static Get createGetOperation(String deviceInfoKey) {
     Get get = new Get();
     get.setPath(OPCUADefaultMetaData.DEFAULT_ROOT_PATH + deviceInfoKey);
@@ -76,13 +63,12 @@ public class CommandGenerator {
     return put;
   }
 
-  public static Command generate(String deviceInfoKey, String commandType) {
+  public static Command generate(String deviceInfoKey, String readwrite) {
     Command command = new Command();
     command.setName(deviceInfoKey);
     
     Get get = null;
     Put put = null;
-    String readwrite = getAttributeInfo(deviceInfoKey, EdgeMapperCommon.PROPERTYVALUE_READWRITE.name(), commandType);
     if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.READ_ONLY) == true) {
         get = CommandGenerator.createGetOperation(deviceInfoKey);
     } else if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.WRITE_ONLY) == true) {

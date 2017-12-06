@@ -2,6 +2,8 @@ package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.edge.protocol.mapper.api.EdgeMapper;
+import org.edge.protocol.mapper.api.EdgeMapperCommon;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.providers.EdgeServices;
@@ -27,10 +29,7 @@ public class OPCUAMetadataGenerateManager {
   @Autowired
   private DeviceProfileGenerator deviceProfileGenerator;
 
-  @Autowired
-  private ProfileResourceGenerator profileResourceGenerator;
-
-  private final static int startOperarionIndex = 1;
+  private final static int startOperationIndex = 1;
 
   public void initMetaData() {
     String name = OPCUADefaultMetaData.DEVICE_NAME.getValue();
@@ -47,8 +46,8 @@ public class OPCUAMetadataGenerateManager {
       deviceObjectList.add(DeviceObjectGenerator.generate(commandName, command_type));
       List<ResourceOperation> setList = createWellKnownSetList(commandName);
       List<ResourceOperation> getList = null;
-      profileResourceList.add(profileResourceGenerator.generate(commandName, getList, setList));
-      commandList.add(CommandGenerator.generate(commandName, command_type));
+      profileResourceList.add(ProfileResourceGenerator.generate(commandName, getList, setList));
+      commandList.add(CommandGenerator.generate(commandName, null));
     }
     DeviceProfile deviceProfile =
         deviceProfileGenerator.generate(name, deviceObjectList, profileResourceList, commandList);
@@ -57,43 +56,83 @@ public class OPCUAMetadataGenerateManager {
     deviceEnroller.addDeviceToMetaData(device);
   }
 
-  public void updateMetaData(String deviceProfileName) {
-    String command_type = OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue();
+  private void updateAttributeService(String deviceProfileName, String commandType) {
     for (String providerKey : getAttributeProviderKeyList()) {
-      Command command = CommandGenerator.generate(providerKey, command_type);
+      EdgeMapper mapper = EdgeServices.getAttributeProvider(providerKey)
+          .getAttributeService(providerKey).getMapper();
+      if (mapper == null) {
+        mapper = new EdgeMapper();
+      }
+      
+      String deviceInfoName = providerKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME);
+      
+      Command command = CommandGenerator.generate(deviceInfoName,
+          mapper.getMappingData(EdgeMapperCommon.PROPERTYVALUE_READWRITE.name()));
       DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
       deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
 
-      DeviceObject deviceObject = DeviceObjectGenerator.generate(providerKey, command_type);
+      DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
       deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
       deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
 
-      List<ResourceOperation> getList = createAttributeGetResourceOperation(providerKey);
-      List<ResourceOperation> setList = createAttributeSetResourceOperation(providerKey);
+      List<ResourceOperation> getList = createAttributeGetResourceOperation(deviceInfoName);
+      List<ResourceOperation> setList = createAttributeSetResourceOperation(deviceInfoName);
       ProfileResource profileResource =
-          profileResourceGenerator.generate(providerKey, getList, setList);
+          ProfileResourceGenerator.generate(deviceInfoName, getList, setList);
       deviceProfile = deviceProfileGenerator.update(deviceProfileName, profileResource);
       deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
     }
   }
 
+  private void updateMethodService(String deviceProfileName, String commandType) {
+    for (String providerKey : getMethodProviderKeyList()) {
+      String deviceInfoName = providerKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME);
+      
+      Command command = CommandGenerator.generate(deviceInfoName, null);
+      DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+      DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
+      deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+      List<ResourceOperation> getList = createMethodGetResourceOperation(deviceInfoName);
+      List<ResourceOperation> setList = createMethodSetResourceOperation(deviceInfoName);
+      ProfileResource profileResource =
+          ProfileResourceGenerator.generate(deviceInfoName, getList, setList);
+      deviceProfile = deviceProfileGenerator.update(deviceProfileName, profileResource);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+    }
+  }
+
+  public void updateMetaData(String deviceProfileName) {
+    updateAttributeService(deviceProfileName, OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue());
+    updateMethodService(deviceProfileName, OPCUACommandIdentifier.METHOD_COMMAND.getValue());
+  }
+
   private static ArrayList<String> getAttributeProviderKeyList() {
     ArrayList<String> attributeProviderKeyList = new ArrayList<String>();
-    for (String deviceInfoKey : EdgeServices.getAttributeProviderKeyList()) {
-      if (deviceInfoKey.equals(EdgeOpcUaCommon.WELL_KNOWN_GROUP.getValue())) {
+    for (String providerKey : EdgeServices.getAttributeProviderKeyList()) {
+      if (providerKey.equals(EdgeOpcUaCommon.WELL_KNOWN_GROUP.getValue())) {
         continue;
       }
-      attributeProviderKeyList
-          .add(deviceInfoKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME));
+      attributeProviderKeyList.add(providerKey);
     }
     return attributeProviderKeyList;
+  }
+
+  private static ArrayList<String> getMethodProviderKeyList() {
+    ArrayList<String> methodProviderKeyList = new ArrayList<String>();
+    for (String providerKey : EdgeServices.getMethodProviderKeyList()) {
+      methodProviderKeyList.add(providerKey);
+    }
+    return methodProviderKeyList;
   }
 
   // ProfileResource
   private List<ResourceOperation> createWellKnownSetList(String deviceInfoKey) {
     List<ResourceOperation> setList = null;
-    if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
-        .equals(deviceInfoKey) == true) {
+    if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().equals(deviceInfoKey) == true) {
       setList = createGroupResourceOperation(deviceInfoKey);
     } else if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_START.getValue()
         .equals(deviceInfoKey) == true) {
@@ -111,10 +150,10 @@ public class OPCUAMetadataGenerateManager {
   }
 
   private List<ResourceOperation> createAttributeGetResourceOperation(String deviceInfoKey) {
-    int getOperationIndex = startOperarionIndex;
+    int getOperationIndex = startOperationIndex;
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    getList.add(profileResourceGenerator.createGetOperation(deviceInfoKey,
+    getList.add(ProfileResourceGenerator.createGetOperation(deviceInfoKey,
         EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
     return getList;
   }
@@ -122,23 +161,42 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createAttributeSetResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
-    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+    int putOperationIndex = startOperationIndex;
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_WRITE.getValue(), putOperationIndex++));
-    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     return setList;
   }
 
+  private List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey) {
+    int getOperationIndex = startOperationIndex;
+    List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
+    // TODO set secondary and mappings
+    getList.add(ProfileResourceGenerator.createGetOperation(deviceInfoKey,
+        EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
+    return getList;
+  }
+
+  private List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey) {
+    List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
+    // TODO set secondary and mappings
+    int putOperationIndex = startOperationIndex;
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
+        EdgeCommandType.CMD_METHOD.getValue(), putOperationIndex++));
+    return setList;
+  }
+
+
   private List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
-    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+    int putOperationIndex = startOperationIndex;
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_READ.getValue(), putOperationIndex++));
-    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_WRITE.getValue(), putOperationIndex++));
-    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     return setList;
   }
@@ -146,8 +204,8 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createStartServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
-    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+    int putOperationIndex = startOperationIndex;
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_START_CLIENT.getValue(), putOperationIndex++));
     return setList;
   }
@@ -155,8 +213,8 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createStopServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
-    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+    int putOperationIndex = startOperationIndex;
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_STOP_CLIENT.getValue(), putOperationIndex++));
     return setList;
   }
@@ -164,8 +222,8 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createGetEndpointServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
-    setList.add(profileResourceGenerator.createPutOperation(deviceInfoKey,
+    int putOperationIndex = startOperationIndex;
+    setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_GET_ENDPOINTS.getValue(), putOperationIndex++));
     return setList;
   }
