@@ -12,15 +12,14 @@ services:
       - /edgex/logs
       - /consul/config
       - /consul/data
-      - /framework/ha
 
   consul:
     image: edgexfoundry/docker-core-consul
-    container_name: edgex-core-consul
     ports:
       - "8400"
       - "8500"
       - "8600"
+    container_name: edgex-core-consul
     hostname: edgex-core-consul
     networks:
       - edgex-network
@@ -30,9 +29,8 @@ services:
       - volume
 
   config-seed:
-    #image: docker-core-config-seed
-    image: edgexfoundry/docker-core-config-seed
-    container_name: edgex-core-config-seed
+    image: docker.sec.samsung.net:5000/docker-core-config-seed/x86_64
+    container_name: edgex-config-seed
     hostname: edgex-core-config-seed
     networks:
       - edgex-network
@@ -44,9 +42,9 @@ services:
 
   mongo:
     image: edgexfoundry/docker-edgex-mongo
-    container_name: edgex-mongo
     ports:
       - "27017"
+    container_name: edgex-mongo
     hostname: edgex-mongo
     networks:
       - edgex-network
@@ -108,6 +106,7 @@ services:
     ports:
       - "48080"
       - "5563"
+    container_name: edgex-core-data
     hostname: edgex-core-data
     networks:
       - edgex-network
@@ -139,10 +138,9 @@ services:
       - mongo-seed
       - logging
       - metadata
-      
-######################### Bosporus S/W ##########################
+
   device-opcua-java:
-    image: device-opcua-java
+    image: target-project
     ports:
       - "49997"
     container_name: device-opcua-java
@@ -153,23 +151,14 @@ services:
       - volume
     depends_on:
       - volume
-      - consul
       - metadata
-
-#  command-test-tool:
-#    image: command-test-tool
-#    container_name: command-test-tool
-#    hostname: command-test-tool
-#    stdin_open: true
-#    networks:
-#      - edgex-network
-#    volumes_from:
-#      - volume
-#    depends_on:
-#      - metadata
+      - data
+      - command
+      - consul
 
 
 networks:
   edgex-network:
     driver: "bridge"
 ... 
+
