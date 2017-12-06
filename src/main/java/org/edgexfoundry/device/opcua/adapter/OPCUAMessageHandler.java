@@ -119,9 +119,10 @@ public class OPCUAMessageHandler {
    */
   public String getResponseElementForStart(EdgeStatusCode status) {
     EdgeElement edgeElement = new EdgeElement(EdgeCommandType.CMD_START_CLIENT.getValue());
-    if (status == null) {edgeElement.getEdgeAttributeList()
-      .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-          EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+    if (status == null) {
+      edgeElement.getEdgeAttributeList()
+          .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
+              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
     } else {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
@@ -140,8 +141,8 @@ public class OPCUAMessageHandler {
     EdgeElement edgeElement = new EdgeElement(EdgeCommandType.CMD_STOP_CLIENT.getValue());
     if (status == null) {
       edgeElement.getEdgeAttributeList()
-      .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-          EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+          .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
+              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
     } else {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
@@ -346,8 +347,9 @@ public class OPCUAMessageHandler {
       applicationUri = EdgeOpcUaCommon.DEFAULT_SERVER_APP_URI.getValue();
     }
 
-    EdgeEndpointConfig endpointConfig = new EdgeEndpointConfig.Builder()
-        .setApplicationName(applicationName).setApplicationUri(applicationUri).build();
+    EdgeEndpointConfig endpointConfig =
+        new EdgeEndpointConfig.Builder().setApplicationName(applicationName)
+            .setApplicationUri(applicationUri).setViewNodeFlag(true).build();
     EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr))
         .setConfig(endpointConfig).setFuture(future).build();
 
