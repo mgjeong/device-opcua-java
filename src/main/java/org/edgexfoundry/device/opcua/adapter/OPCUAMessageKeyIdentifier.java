@@ -11,7 +11,9 @@ public enum OPCUAMessageKeyIdentifier {
                               "security_policy_uri",
                               "security policy uri for server"), ENDPOINT_URI(8, "endpoint_uri",
                                   "endpoint uri for server"), ENDPOINT_INFOMATION(9,
-                                      "endpoint_information", "endpoint infomation for server");
+                                      "endpoint_information",
+                                      "endpoint infomation for server"), RESPONSE_INFO(10,
+                                          "response_information", "response infomation");
 
   private int code;
   private String value;
