@@ -29,7 +29,7 @@ public class OPCUAMetadataGenerateManager {
   @Autowired
   private DeviceProfileGenerator deviceProfileGenerator;
 
-  private final static int startOperarionIndex = 1;
+  private final static int startOperationIndex = 1;
 
   public void initMetaData() {
     String name = OPCUADefaultMetaData.DEVICE_NAME.getValue();
@@ -150,7 +150,7 @@ public class OPCUAMetadataGenerateManager {
   }
 
   private List<ResourceOperation> createAttributeGetResourceOperation(String deviceInfoKey) {
-    int getOperationIndex = startOperarionIndex;
+    int getOperationIndex = startOperationIndex;
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
     getList.add(ProfileResourceGenerator.createGetOperation(deviceInfoKey,
@@ -161,7 +161,7 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createAttributeSetResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
+    int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_WRITE.getValue(), putOperationIndex++));
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
@@ -170,7 +170,7 @@ public class OPCUAMetadataGenerateManager {
   }
 
   private List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey) {
-    int getOperationIndex = startOperarionIndex;
+    int getOperationIndex = startOperationIndex;
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
     getList.add(ProfileResourceGenerator.createGetOperation(deviceInfoKey,
@@ -181,7 +181,7 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
+    int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_METHOD.getValue(), putOperationIndex++));
     return setList;
@@ -191,7 +191,7 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
+    int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_READ.getValue(), putOperationIndex++));
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
@@ -204,7 +204,7 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createStartServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
+    int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_START_CLIENT.getValue(), putOperationIndex++));
     return setList;
@@ -213,7 +213,7 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createStopServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
+    int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_STOP_CLIENT.getValue(), putOperationIndex++));
     return setList;
@@ -222,7 +222,7 @@ public class OPCUAMetadataGenerateManager {
   private List<ResourceOperation> createGetEndpointServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
-    int putOperationIndex = startOperarionIndex;
+    int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
         EdgeCommandType.CMD_GET_ENDPOINTS.getValue(), putOperationIndex++));
     return setList;
