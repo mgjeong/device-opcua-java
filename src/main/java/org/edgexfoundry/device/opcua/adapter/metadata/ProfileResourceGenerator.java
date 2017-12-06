@@ -23,12 +23,11 @@ import org.edgexfoundry.domain.meta.ProfileResource;
 import org.edgexfoundry.domain.meta.ResourceOperation;
 import org.springframework.stereotype.Component;
 
-@Component
 public class ProfileResourceGenerator {
 
   private ProfileResourceGenerator() {}
 
-  public ResourceOperation createGetOperation(String deviceInfoKey, String operation, int index) {
+  public static ResourceOperation createGetOperation(String deviceInfoKey, String operation, int index) {
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
     resourceOperation.setOperation(operation);
@@ -38,7 +37,7 @@ public class ProfileResourceGenerator {
     return resourceOperation;
   }
 
-  public ResourceOperation createPutOperation(String deviceInfoKey, String operation, int index) {
+  public static ResourceOperation createPutOperation(String deviceInfoKey, String operation, int index) {
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
     resourceOperation.setOperation(operation);
@@ -50,7 +49,7 @@ public class ProfileResourceGenerator {
     return resourceOperation;
   }
 
-  public ProfileResource generate(String deviceInfoKey, List<ResourceOperation> getList,
+  public static ProfileResource generate(String deviceInfoKey, List<ResourceOperation> getList,
       List<ResourceOperation> setList) {
     ProfileResource profileResource = new ProfileResource();
     profileResource.setName(deviceInfoKey);
