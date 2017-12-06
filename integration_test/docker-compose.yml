@@ -139,12 +139,12 @@ services:
       - logging
       - metadata
 
-  samsung-edgex-opcua:
+  device-opcua-java:
     image: target-project
     ports:
       - "49997"      
-    container_name: samsung-edgex-opcua
-    hostname: samsung-edgex-opcua
+    container_name: device-opcua-java
+    hostname: device-opcua-java
     networks:
       - edgex-network
     volumes_from:
@@ -158,6 +158,8 @@ services:
 
   edgex-core-test-tool:
     image: docker.sec.samsung.net:5000/edgex-core-test-tool/x86_64
+    ports:
+      - "49113"
     container_name: edgex-core-test-tool
     hostname: edgex-core-test-tool
     stdin_open: true
