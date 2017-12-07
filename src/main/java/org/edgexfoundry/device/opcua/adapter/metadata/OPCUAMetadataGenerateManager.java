@@ -35,8 +35,13 @@ public class OPCUAMetadataGenerateManager {
 
   private final static int startOperationIndex = 1;
 
+  /**
+   * @fn void initMetaData()
+   * @brief Initialize MetaData
+   *        Generate  DeviceObjcetList, ProfileResourceList, CommandList (Wellknown Command)
+   *        Add this to DeviceProfile and MetaData  
+   */
   public void initMetaData() {
-
     if (deviceEnroller == null || deviceProfileGenerator == null || deviceGenerator == null) {
       logger.error("metadata instacne is invalid");
       return;
@@ -66,6 +71,14 @@ public class OPCUAMetadataGenerateManager {
     deviceEnroller.addDeviceToMetaData(device);
   }
 
+  /**
+   * @fn void updateAttributeService(String deviceProfileName, String commandType)
+   * @brief Get Attribute Service List from opcua
+   *        Generate  DeviceObjcetList, ProfileResourceList, CommandList (Attribute Service)
+   *        Add this to DeviceProfile and MetaData  
+   * @param [in] deviceProfileName @String
+   * @param [in] commandType @String
+   */
   private void updateAttributeService(String deviceProfileName, String commandType) {
     for (String providerKey : getAttributeProviderKeyList()) {
       EdgeMapper mapper = EdgeServices.getAttributeProvider(providerKey)
@@ -95,6 +108,14 @@ public class OPCUAMetadataGenerateManager {
     }
   }
 
+  /**
+   * @fn void updateMethodService(String deviceProfileName, String commandType)
+   * @brief Get Method Service List from opcua
+   *        Generate  DeviceObjcetList, ProfileResourceList, CommandList (Method Service)
+   *        Add this to DeviceProfile and MetaData  
+   * @param [in] deviceProfileName @String
+   * @param [in] commandType @String
+   */
   private void updateMethodService(String deviceProfileName, String commandType) {
     for (String providerKey : getMethodProviderKeyList()) {
       String deviceInfoName = providerKey.replaceAll(OPCUADefaultMetaData.BEFORE_REPLACE_WORD,
@@ -117,11 +138,21 @@ public class OPCUAMetadataGenerateManager {
     }
   }
 
+  /**
+   * @fn void updateMetaData(String deviceProfileName)
+   * @brief Update MetaData
+   * @param [in] deviceProfileName @String
+   */
   public void updateMetaData(String deviceProfileName) {
     updateAttributeService(deviceProfileName, OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue());
     updateMethodService(deviceProfileName, OPCUACommandIdentifier.METHOD_COMMAND.getValue());
   }
 
+  /**
+   * @fn ArrayList<String> getAttributeProviderKeyList()
+   * @brief Get AttributeProvider Key Name List from OPCUA
+   * @return @ArrayList<String>
+   */
   private static ArrayList<String> getAttributeProviderKeyList() {
     ArrayList<String> attributeProviderKeyList = new ArrayList<String>();
     for (String providerKey : EdgeServices.getAttributeProviderKeyList()) {
@@ -133,6 +164,11 @@ public class OPCUAMetadataGenerateManager {
     return attributeProviderKeyList;
   }
 
+  /**
+   * @fn ArrayList<String> getMethodProviderKeyList()
+   * @brief Get MethodProvider Key Name List from OPCUA
+   * @return @ArrayList<String>
+   */
   private static ArrayList<String> getMethodProviderKeyList() {
     ArrayList<String> methodProviderKeyList = new ArrayList<String>();
     for (String providerKey : EdgeServices.getMethodProviderKeyList()) {
@@ -141,7 +177,11 @@ public class OPCUAMetadataGenerateManager {
     return methodProviderKeyList;
   }
 
-  // ProfileResource
+  /**
+   * @fn List<ResourceOperation> createWellKnownSetList(String deviceInfoKey)
+   * @brief Create WellKnownCommand Set List
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createWellKnownSetList(String deviceInfoKey) {
     List<ResourceOperation> setList = null;
     if (OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().equals(deviceInfoKey) == true) {
@@ -161,6 +201,11 @@ public class OPCUAMetadataGenerateManager {
     return setList;
   }
 
+  /**
+   * @fn List<ResourceOperation> createAttributeGetResourceOperation(String deviceInfoKey)
+   * @brief Create GetResourceOperation for Attribute Service
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createAttributeGetResourceOperation(String deviceInfoKey) {
     int getOperationIndex = startOperationIndex;
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
@@ -170,6 +215,11 @@ public class OPCUAMetadataGenerateManager {
     return getList;
   }
 
+  /**
+   * @fn List<ResourceOperation> createAttributeSetResourceOperation(String deviceInfoKey)
+   * @brief Create SetResourceOperation for Attribute Service
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createAttributeSetResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
@@ -180,7 +230,12 @@ public class OPCUAMetadataGenerateManager {
         EdgeCommandType.CMD_SUB.getValue(), putOperationIndex++));
     return setList;
   }
-
+  
+  /**
+   * @fn List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey)
+   * @brief Create GetResourceOperation for Method Service
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey) {
     int getOperationIndex = startOperationIndex;
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
@@ -190,6 +245,11 @@ public class OPCUAMetadataGenerateManager {
     return getList;
   }
 
+  /**
+   * @fn List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey)
+   * @brief Create SetResourceOperation for Method Service
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
@@ -200,6 +260,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
 
+  /**
+   * @fn List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey)
+   * @brief Create ResourceOperation for Group Service
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
@@ -213,6 +278,11 @@ public class OPCUAMetadataGenerateManager {
     return setList;
   }
 
+  /**
+   * @fn List<ResourceOperation> createStartServiceOperation(String deviceInfoKey)
+   * @brief Create ResourceOperation for Start Command
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createStartServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
@@ -222,6 +292,11 @@ public class OPCUAMetadataGenerateManager {
     return setList;
   }
 
+  /**
+   * @fn List<ResourceOperation> createStopServiceOperation(String deviceInfoKey)
+   * @brief Create ResourceOperation for Stop Command
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createStopServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
@@ -231,6 +306,11 @@ public class OPCUAMetadataGenerateManager {
     return setList;
   }
 
+  /**
+   * @fn List<ResourceOperation> createGetEndpointServiceOperation(String deviceInfoKey)
+   * @brief Create ResourceOperation for GetEndpoint Command
+   * @return @List<ResourceOperation>
+   */
   private List<ResourceOperation> createGetEndpointServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings

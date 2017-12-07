@@ -24,8 +24,20 @@ import org.edgexfoundry.domain.meta.ResourceOperation;
 
 public class ProfileResourceGenerator {
 
+  /**
+   * @fn DeviceGenerator()
+   * @brief constructor
+   */
   private ProfileResourceGenerator() {}
 
+  /**
+   * @fn ResourceOperation createGetOperation(String object, String operation, int index)
+   * @brief Create GetOperation
+   * @param [in] object @String
+   * @param [in] operation @String
+   * @param [in] index @int
+   * @return @ResourceOperation
+   */
   public static ResourceOperation createGetOperation(String object, String operation, int index) {
     if (object == null || object.isEmpty()) {
       return null;
@@ -40,6 +52,14 @@ public class ProfileResourceGenerator {
     return resourceOperation;
   }
 
+  /**
+   * @fn ResourceOperation createPutOperation(String object, String operation, int index)
+   * @brief Create PutOperation
+   * @param [in] object @String
+   * @param [in] operation @String
+   * @param [in] index @int
+   * @return @ResourceOperation
+   */
   public static ResourceOperation createPutOperation(String object, String operation, int index) {
     if (object == null || object.isEmpty()) {
       return null;
@@ -56,6 +76,15 @@ public class ProfileResourceGenerator {
     return resourceOperation;
   }
 
+  /**
+   * @fn ProfileResource generate(String name, List<ResourceOperation> getList,
+   *     List<ResourceOperation> setList)
+   * @brief generate ProfileResource
+   * @param [in] name @String
+   * @param [in] getList @List<ResourceOperation>
+   * @param [in] setList @List<ResourceOperation>
+   * @return @ProfileResource
+   */
   public static ProfileResource generate(String name, List<ResourceOperation> getList,
       List<ResourceOperation> setList) {
     if (name == null || name.isEmpty()) {

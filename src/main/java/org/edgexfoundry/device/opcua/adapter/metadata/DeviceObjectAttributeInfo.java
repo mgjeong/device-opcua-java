@@ -26,6 +26,11 @@ public class DeviceObjectAttributeInfo {
     final private String providerKey;
     private String dataType;
 
+    /**
+     * @fn Builder(String providerKey)
+     * @brief constructor
+     * @param [in] providerKey @String
+     */
     public Builder(String providerKey) {
       if (null != providerKey) {
         this.providerKey = providerKey.replace(OPCUADefaultMetaData.AFTER_REPLACE_WORD,
@@ -35,25 +40,51 @@ public class DeviceObjectAttributeInfo {
       }
     }
 
+    /**
+     * @fn Builder setDataType(String dataType)
+     * @brief set Data Type
+     * @param [in] dataType @String
+     * @return @Builder
+     */
     public Builder setDataType(String dataType) {
       this.dataType = dataType;
       return this;
     }
 
+    /**
+     * @fn DeviceObjectAttributeInfo build()
+     * @brief create DeviceObjectAttributeInfo instance (builder)
+     * @return DeviceObjectAttributeInfo instance
+     */
     public DeviceObjectAttributeInfo build() {
       return new DeviceObjectAttributeInfo(this);
     }
   }
 
+  /**
+   * @fn DeviceObjectAttributeInfo(Builder builder)
+   * @brief constructor
+   * @param [in] builder @Builder
+   */
   DeviceObjectAttributeInfo(Builder builder) {
     this.providerKey = builder.providerKey;
     this.dataType = builder.dataType;
   }
 
+  /**
+   * @fn String getProviderKey()
+   * @brief get ProviderKey
+   * @return @String
+   */
   public String getProviderKey() {
     return providerKey;
   }
 
+  /**
+   * @fn String getDataType()
+   * @brief get DataType
+   * @return @String
+   */
   public String getDataType() {
     return dataType;
   }

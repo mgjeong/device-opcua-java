@@ -36,10 +36,19 @@ public class OPCUAServerAdapter {
   private String endpointUri = null;
   private Addressable addressable = null;
 
+  /**
+   * @fn OPCUAServerAdapter()
+   * @brief constructor
+   */
   private OPCUAServerAdapter() {
     opcUaEmulator = new EdgeEmulator();
   }
 
+  /**
+   * @fn OPCUAServerAdapter getInstance()
+   * @brief Get OPCUAServerAdapter Instance (singleton)
+   * @return @OPCUAServerAdapter
+   */
   public synchronized static OPCUAServerAdapter getInstance() {
 
     if (singleton == null) {
@@ -49,12 +58,20 @@ public class OPCUAServerAdapter {
     return singleton;
   }
 
+  /**
+   * @fn void runServer() throws Exception
+   * @brief Run OPCUA Server
+   */
   public void runServer() throws Exception {
     // Create Namespace and nodes
     opcUaEmulator.runAutoUpdateServer();
     opcUaEmulator.initServerNodes();
   }
 
+  /**
+   * @fn void startOPCUAAdapter() throws Exception
+   * @brief Start OPCUA Adapter
+   */
   public void startOPCUAAdapter() throws Exception {
     // 1. run discovery device
     // TODO
@@ -77,6 +94,12 @@ public class OPCUAServerAdapter {
     opcUaEmulator.startServer(ep, "");
   }
 
+  /**
+   * @fn String getEndpointUrifromAddressable(Addressable addressable)
+   * @brief Get EndpointUri from Addressable 
+   * @param [in] addressable @Addressable
+   * @return @String
+   */
   private String getEndpointUrifromAddressable(Addressable addressable) {
     String endpointUri = "";
     if (addressable.getProtocol() == Protocol.TCP) {

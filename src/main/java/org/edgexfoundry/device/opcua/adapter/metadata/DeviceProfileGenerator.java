@@ -34,8 +34,22 @@ public class DeviceProfileGenerator {
   @Autowired
   private DeviceProfileClient deviceProfileClient;
 
+  /**
+   * @fn DeviceProfileGenerator()
+   * @brief constructor
+   */
   public DeviceProfileGenerator() {}
 
+  /**
+   * @fn DeviceProfile generate(String name, List<DeviceObject> deviceObjectList,
+   *     List<ProfileResource> profileResourceList, List<Command> commandList)
+   * @brief Generate DeviceProfile
+   * @param [in] name @String
+   * @param [in] deviceObjectList @List<DeviceObject>
+   * @param [in] profileResourceList @List<ProfileResource>
+   * @param [in] commandList @List<Command>
+   * @return @DeviceProfile
+   */
   public DeviceProfile generate(String name, List<DeviceObject> deviceObjectList,
       List<ProfileResource> profileResourceList, List<Command> commandList) {
     if (name == null || name.isEmpty()) {
@@ -61,6 +75,13 @@ public class DeviceProfileGenerator {
     return deviceProfile;
   }
 
+  /**
+   * @fn DeviceProfile update(String name, Command command)
+   * @brief Update DeviceProfile (Changed Command)
+   * @param [in] name @String
+   * @param [in] command @Command
+   * @return @DeviceProfile
+   */
   public DeviceProfile update(String name, Command command) {
     if (deviceProfileClient == null || command == null) {
       return null;
@@ -71,6 +92,13 @@ public class DeviceProfileGenerator {
     return deviceProfile;
   }
 
+  /**
+   * @fn DeviceProfile update(String name, DeviceObject deviceObject)
+   * @brief Update DeviceProfile (Changed DeviceObject)
+   * @param [in] name @String
+   * @param [in] deviceObject @DeviceObject
+   * @return @DeviceProfile
+   */
   public DeviceProfile update(String name, DeviceObject deviceObject) {
     if (deviceProfileClient == null || deviceObject == null) {
       return null;
@@ -83,6 +111,13 @@ public class DeviceProfileGenerator {
     return deviceProfile;
   }
 
+  /**
+   * @fn DeviceProfile update(String name, ProfileResource profileResource)
+   * @brief Update DeviceProfile (Changed ProfileResource)
+   * @param [in] name @String
+   * @param [in] profileResource @ProfileResource
+   * @return @DeviceProfile
+   */
   public DeviceProfile update(String name, ProfileResource profileResource) {
     if (deviceProfileClient == null || profileResource == null) {
       return null;

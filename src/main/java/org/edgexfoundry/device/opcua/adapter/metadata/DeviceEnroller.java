@@ -63,8 +63,18 @@ public class DeviceEnroller {
 
   private static final boolean enableDeleteEvent = false;
 
+  /**
+   * @fn DeviceEnroller()
+   * @brief constructor
+   */
   private DeviceEnroller() {}
 
+  /**
+   * @fn Addressable addAddressableToMetaData(Addressable addressable)
+   * @brief Add Addressable To MetaData
+   * @param [in] addressable @Addressable
+   * @return @Addressable
+   */
   public Addressable addAddressableToMetaData(Addressable addressable) {
     if (null == addressable || addressableClient == null) {
       logger.debug("addAddressableToMetaData has failed");
@@ -82,6 +92,12 @@ public class DeviceEnroller {
     return retAddressable;
   }
 
+  /**
+   * @fn DeviceProfile addDeviceProfileToMetaData(DeviceProfile deviceProfile)
+   * @brief Add DeviceProfile To MetaData
+   * @param [in] deviceProfile @DeviceProfile
+   * @return @DeviceProfile
+   */
   public DeviceProfile addDeviceProfileToMetaData(DeviceProfile deviceProfile) {
     if (null == deviceProfile || deviceProfileClient == null) {
       logger.debug("addDeviceProfileToMetaData has failed");
@@ -99,6 +115,12 @@ public class DeviceEnroller {
     return retDeviceProfile;
   }
 
+  /**
+   * @fn boolean updateDeviceProfileToMetaData(DeviceProfile deviceProfile)
+   * @brief Update DeviceProfile To MetaData
+   * @param [in] deviceProfile @DeviceProfile
+   * @return @boolean
+   */
   public boolean updateDeviceProfileToMetaData(DeviceProfile deviceProfile) {
     if (null == deviceProfile || deviceProfileClient == null) {
       logger.debug("updateDeviceProfileToMetaData has failed");
@@ -111,6 +133,12 @@ public class DeviceEnroller {
     return true;
   }
 
+  /**
+   * @fn Device addDeviceToMetaData(Device device)
+   * @brief Add Device To MetaData
+   * @param [in] deviceProfile @Device
+   * @return @Device
+   */
   public Device addDeviceToMetaData(Device device) {
     if (null == device || deviceClient == null) {
       logger.debug("addDeviceToMetaData has failed");
@@ -132,6 +160,10 @@ public class DeviceEnroller {
   // TODO
   // we can get events below 100. but can not set limits
   // I will modify it when I can set a limit.
+  /**
+   * @fn void deleteEvent()
+   * @brief Delete Event
+   */
   @SuppressWarnings("unused")
   private void deleteEvent() {
     if (enableDeleteEvent == true) {
@@ -145,6 +177,14 @@ public class DeviceEnroller {
     }
   }
 
+
+  // TODO
+  // we can get events below 100. but can not set limits
+  // I will modify it when I can set a limit.
+  /**
+   * @fn void deleteValueDescriptor()
+   * @brief Delete ValueDescriptor
+   */
   @SuppressWarnings("unused")
   private void deleteValueDescriptor() {
     if (enableDeleteEvent == true) {
@@ -159,6 +199,10 @@ public class DeviceEnroller {
     }
   }
 
+  /**
+   * @fn void deleteDevice()
+   * @brief Delete Device
+   */
   private void deleteDevice() {
     for (Device device : deviceClient.devices()) {
       try {
@@ -169,6 +213,10 @@ public class DeviceEnroller {
     }
   }
 
+  /**
+   * @fn void deleteDeviceProfile()
+   * @brief Delete DeviceProfile
+   */
   private void deleteDeviceProfile() {
     for (DeviceProfile deviceProfile : deviceProfileClient.deviceProfiles()) {
       try {
@@ -180,6 +228,10 @@ public class DeviceEnroller {
     }
   }
 
+  /**
+   * @fn void deleteAddressable()
+   * @brief Delete Addressable
+   */
   private void deleteAddressable() {
     List<Addressable> addressableList = null;
     addressableList = addressableClient.addressables();
@@ -193,6 +245,11 @@ public class DeviceEnroller {
     }
   }
 
+  /**
+   * @fn void cleanMetaData(MetaDataType type)
+   * @brief Clean MetaData
+   * @param [in] type @MetaDataType
+   */
   public void cleanMetaData(MetaDataType type) {
     if (MetaDataType.DEVICE == type) {
       deleteDevice();
@@ -207,6 +264,10 @@ public class DeviceEnroller {
     }
   }
 
+  /**
+   * @fn void cleanCoreData()
+   * @brief Clean CoreData
+   */
   public void cleanCoreData() {
     // TODO
     // ValueDescriptor can be removed in coredata after remove all events in coredata.

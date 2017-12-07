@@ -28,10 +28,18 @@ import org.edgexfoundry.domain.meta.Response;
 
 public class CommandGenerator {
 
-  private CommandGenerator() {
+  /**
+   * @fn AddressableGenerator()
+   * @brief constructor
+   */
+  private CommandGenerator() {}
 
-  }
-
+  /**
+   * @fn Get createGetOperation(String deviceInfoKey)
+   * @brief create Get Operation
+   * @param [in] deviceInfoKey @String
+   * @return @Get
+   */
   private static Get createGetOperation(String deviceInfoKey) {
     Get get = new Get();
     get.setPath(OPCUADefaultMetaData.DEFAULT_ROOT_PATH + deviceInfoKey);
@@ -43,6 +51,12 @@ public class CommandGenerator {
     return get;
   }
 
+  /**
+   * @fn Put createPutOperation(String deviceInfoKey)
+   * @brief create Put Operation
+   * @param [in] deviceInfoKey @String
+   * @return @Put
+   */
   private static Put createPutOperation(String deviceInfoKey) {
     List<String> parametNames = new ArrayList<>();
     parametNames.add(OPCUADefaultMetaData.PARAMETER_OPERATION.getValue());
@@ -60,6 +74,13 @@ public class CommandGenerator {
     return put;
   }
 
+  /**
+   * @fn Command generate(String name, String readwrite)
+   * @brief generate Command
+   * @param [in] name @String
+   * @param [in] readwrite @String
+   * @return @Command
+   */
   public static Command generate(String name, String readwrite) {
     if (name == null || name.isEmpty()) {
       return null;

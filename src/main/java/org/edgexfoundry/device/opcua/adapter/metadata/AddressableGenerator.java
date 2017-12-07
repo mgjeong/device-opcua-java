@@ -23,8 +23,18 @@ import org.edgexfoundry.domain.meta.Protocol;
 
 public class AddressableGenerator {
 
+  /**
+   * @fn AddressableGenerator()
+   * @brief constructor
+   */
   private AddressableGenerator() {}
 
+  /**
+   * @fn Addressable generate(String name)
+   * @brief generate Addressable
+   * @param [in] name @String
+   * @return @Addressable
+   */
   public static Addressable generate(String name) {
     if (name == null || name.isEmpty()) {
       return null;
