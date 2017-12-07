@@ -29,11 +29,8 @@ import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.domain.common.ValueDescriptor;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.meta.Addressable;
-import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.Device;
-import org.edgexfoundry.domain.meta.DeviceObject;
 import org.edgexfoundry.domain.meta.DeviceProfile;
-import org.edgexfoundry.domain.meta.ProfileResource;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +66,11 @@ public class DeviceEnroller {
   private DeviceEnroller() {}
 
   public Addressable addAddressableToMetaData(Addressable addressable) {
+    if (null == addressable || addressableClient == null) {
+      logger.debug("addAddressableToMetaData has failed");
+      return null;
+    }
+
     Addressable retAddressable = null;
     try {
       String addressableId = addressableClient.add(addressable);
@@ -81,6 +83,11 @@ public class DeviceEnroller {
   }
 
   public DeviceProfile addDeviceProfileToMetaData(DeviceProfile deviceProfile) {
+    if (null == deviceProfile || deviceProfileClient == null) {
+      logger.debug("addDeviceProfileToMetaData has failed");
+      return null;
+    }
+
     DeviceProfile retDeviceProfile = null;
     try {
       String deviceProfileId = deviceProfileClient.add(deviceProfile);
@@ -93,6 +100,11 @@ public class DeviceEnroller {
   }
 
   public boolean updateDeviceProfileToMetaData(DeviceProfile deviceProfile) {
+    if (null == deviceProfile || deviceProfileClient == null) {
+      logger.debug("updateDeviceProfileToMetaData has failed");
+      return false;
+    }
+
     if (true == deviceProfileClient.update(deviceProfile)) {
       deviceStore.updateProfile(deviceProfile.getId());
     }
@@ -100,6 +112,11 @@ public class DeviceEnroller {
   }
 
   public Device addDeviceToMetaData(Device device) {
+    if (null == device || deviceClient == null) {
+      logger.debug("addDeviceToMetaData has failed");
+      return null;
+    }
+
     Device retDevice = null;
     try {
       String deviceId = deviceClient.add(device);

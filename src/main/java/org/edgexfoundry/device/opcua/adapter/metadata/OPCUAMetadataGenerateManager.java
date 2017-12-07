@@ -14,11 +14,15 @@ import org.edgexfoundry.domain.meta.DeviceObject;
 import org.edgexfoundry.domain.meta.DeviceProfile;
 import org.edgexfoundry.domain.meta.ProfileResource;
 import org.edgexfoundry.domain.meta.ResourceOperation;
+import org.edgexfoundry.support.logging.client.EdgeXLogger;
+import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OPCUAMetadataGenerateManager {
+  private final static EdgeXLogger logger =
+      EdgeXLoggerFactory.getEdgeXLogger(OPCUAMetadataGenerateManager.class);
 
   @Autowired
   private DeviceEnroller deviceEnroller;
@@ -32,6 +36,12 @@ public class OPCUAMetadataGenerateManager {
   private final static int startOperationIndex = 1;
 
   public void initMetaData() {
+    
+    if (deviceEnroller == null || deviceProfileGenerator == null || deviceGenerator == null) {
+      logger.error("metadata instacne is invalid");
+      return;
+    }
+      
     String name = OPCUADefaultMetaData.DEVICE_NAME.getValue();
     Addressable addressable = AddressableGenerator.generate(name);
     deviceEnroller.addAddressableToMetaData(addressable);
@@ -63,9 +73,9 @@ public class OPCUAMetadataGenerateManager {
       if (mapper == null) {
         mapper = new EdgeMapper();
       }
-      
+
       String deviceInfoName = providerKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME);
-      
+
       Command command = CommandGenerator.generate(deviceInfoName,
           mapper.getMappingData(EdgeMapperCommon.PROPERTYVALUE_READWRITE.name()));
       DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
@@ -87,7 +97,7 @@ public class OPCUAMetadataGenerateManager {
   private void updateMethodService(String deviceProfileName, String commandType) {
     for (String providerKey : getMethodProviderKeyList()) {
       String deviceInfoName = providerKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME);
-      
+
       Command command = CommandGenerator.generate(deviceInfoName, null);
       DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
       deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);

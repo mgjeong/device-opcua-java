@@ -54,7 +54,7 @@ public class DeviceGenerator {
 
   @SuppressWarnings("deprecation")
   public Device generate(String name) {
-    if (name == null || name.isEmpty()) {
+    if (name == null || name.isEmpty() || deviceProfileClient == null) {
       return null;
     }
 

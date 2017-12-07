@@ -27,7 +27,11 @@ public class DeviceObjectAttributeInfo {
     private String dataType;
 
     public Builder(String providerKey) {
-      this.providerKey = providerKey.replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
+      if (null != providerKey) {
+        this.providerKey = providerKey.replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
+      } else {
+        this.providerKey = providerKey;
+      }
     }
 
     public Builder setDataType(String dataType) {

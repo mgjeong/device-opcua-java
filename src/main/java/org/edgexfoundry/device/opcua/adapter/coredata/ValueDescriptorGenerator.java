@@ -27,13 +27,13 @@ public class ValueDescriptorGenerator {
 	private ValueDescriptorGenerator() {
 	}
 
-	public static ValueDescriptor generate(String deviceName) {
-		if (deviceName == null || deviceName.isEmpty()) {
+	public static ValueDescriptor generate(String name) {
+		if (name == null || name.isEmpty()) {
 			return null;
 		}
 
 		ValueDescriptor valueDescriptor = new ValueDescriptor();
-		valueDescriptor.setName(deviceName);
+		valueDescriptor.setName(name);
 		valueDescriptor.setMin(OPCUADefaultMetaData.MIN.getValue());
 		valueDescriptor.setMax(OPCUADefaultMetaData.MAX.getValue());
 		valueDescriptor.setType(IoTType.J);

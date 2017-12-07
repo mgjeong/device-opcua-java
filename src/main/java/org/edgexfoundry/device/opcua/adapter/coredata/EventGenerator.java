@@ -42,18 +42,18 @@ public class EventGenerator {
     return readings;
   }
 
-  public static Event generate(String deviceName, String value) {
-    if (deviceName == null || deviceName.isEmpty()) {
+  public static Event generate(String name, String value) {
+    if (name == null || name.isEmpty()) {
       return null;
     }
     // Guide1: To construct event, device identifier required.
     // device identifier can be name of device which posted in metadata DB.
-    List<Reading> readingList = createReadingList(deviceName, value);
+    List<Reading> readingList = createReadingList(name, value);
 
-    Event event = new Event(deviceName, readingList);
+    Event event = new Event(name, readingList);
 
     event.markPushed(new Timestamp(System.currentTimeMillis()).getTime());
-    event.setDevice(deviceName);
+    event.setDevice(name);
     event.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
     return event;
   }
