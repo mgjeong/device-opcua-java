@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -20,7 +18,6 @@
 package org.edgexfoundry.device.opcua.controller;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.edgexfoundry.device.opcua.handler.UpdateHandler;
 import org.edgexfoundry.domain.meta.ActionType;
 import org.edgexfoundry.domain.meta.CallbackAlert;
@@ -54,7 +51,7 @@ public class UpdateController {
     String method = request.getMethod();
 
     // TODO: simply this logic using switch statements
-    if (actionType == null || id  == null || method  == null) {
+    if (actionType == null || id == null || method == null) {
       throw new ClientException("Callback parameters were null");
     }
 
@@ -118,7 +115,7 @@ public class UpdateController {
             + provisionWatcher);
       } else {
         logger.error("Received add device provision watcher request without an id attached.");
-        throw new NotFoundException("provisionWatcher",provisionWatcher);
+        throw new NotFoundException("provisionWatcher", provisionWatcher);
       }
     }
   }
@@ -129,7 +126,7 @@ public class UpdateController {
         logger.debug("Update device provision watcher with id:" + provisionWatcher);
       } else {
         logger.error("Received update device provision watcher request without an id attached.");
-        throw new NotFoundException("provisionWatcher",provisionWatcher);
+        throw new NotFoundException("provisionWatcher", provisionWatcher);
       }
     }
   }
@@ -140,7 +137,7 @@ public class UpdateController {
         logger.debug("Remove device provision watcher with id:" + provisionWatcher);
       } else {
         logger.error("Received remove device provision watcher request without an id attached.");
-        throw new NotFoundException("provisionWatcher",provisionWatcher);
+        throw new NotFoundException("provisionWatcher", provisionWatcher);
       }
     }
   }
@@ -151,7 +148,7 @@ public class UpdateController {
         logger.debug("Added device.  Received add device request with id:" + deviceId);
       } else {
         logger.error("Received add device request without a device id attached.");
-        throw new NotFoundException("device",deviceId);
+        throw new NotFoundException("device", deviceId);
       }
     }
   }
@@ -162,7 +159,7 @@ public class UpdateController {
         logger.debug("Updated device. Received update device request with id:" + deviceId);
       } else {
         logger.error("Received update device request without a device id attached.");
-        throw new NotFoundException("device",deviceId);
+        throw new NotFoundException("device", deviceId);
       }
     }
   }
@@ -173,7 +170,7 @@ public class UpdateController {
         logger.debug("Removing device. Received delete device request with id:" + deviceId);
       } else {
         logger.error("Received delete device request without a device id attached.");
-        throw new NotFoundException("device",deviceId);
+        throw new NotFoundException("device", deviceId);
       }
     }
   }
@@ -184,7 +181,7 @@ public class UpdateController {
         logger.debug("Updated profile. Received update profile request with id:" + profileId);
       } else {
         logger.error("Received update profile request without a profile id attached.");
-        throw new NotFoundException("profile",profileId);
+        throw new NotFoundException("profile", profileId);
       }
     }
   }

@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -24,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceClient;
 import org.edgexfoundry.controller.DeviceProfileClient;
@@ -67,7 +64,7 @@ public class DeviceStore {
   private String serviceName;
 
   // cache for devices
-  private Map<String, Device> devices = new HashMap<String,Device>();
+  private Map<String, Device> devices = new HashMap<String, Device>();
 
   public boolean remove(Device device) {
     logger.debug("Removing managed device:  " + device.getName());
@@ -81,8 +78,8 @@ public class DeviceStore {
   }
 
   public boolean remove(String deviceId) {
-    Device d = devices.values().stream().filter(device -> device.getId().equals(deviceId))
-        .findAny().orElse(null);
+    Device d = devices.values().stream().filter(device -> device.getId().equals(deviceId)).findAny()
+        .orElse(null);
 
     if (d != null) {
       remove(d);
@@ -127,8 +124,8 @@ public class DeviceStore {
     } catch (javax.ws.rs.NotFoundException e) {
       addressable = device.getAddressable();
       addressable.setOrigin(System.currentTimeMillis());
-      logger.info("Creating new Addressable Object with name: "
-          + addressable.getName() + ", Address:" + addressable);
+      logger.info("Creating new Addressable Object with name: " + addressable.getName()
+          + ", Address:" + addressable);
       String addressableId = addressableClient.add(addressable);
       addressable.setId(addressableId);
       device.setAddressable(addressable);
@@ -146,8 +143,8 @@ public class DeviceStore {
       try {
         device.setId(deviceClient.add(device));
       } catch (Exception f) {
-        logger.error("Could not add new device " + device.getName()
-            + " to metadata with error " + e.getMessage());
+        logger.error("Could not add new device " + device.getName() + " to metadata with error "
+            + e.getMessage());
         return null;
       }
     }
@@ -160,7 +157,7 @@ public class DeviceStore {
   public boolean update(String deviceId) {
     Device device = deviceClient.device(deviceId);
     Device localDevice = getDeviceById(deviceId);
-    if (device != null && localDevice != null && compare(device,localDevice)) {
+    if (device != null && localDevice != null && compare(device, localDevice)) {
       return true;
     }
 
@@ -170,14 +167,10 @@ public class DeviceStore {
   private boolean compare(Device a, Device b) {
     if (a.getAddressable().equals(b.getAddressable())
         && a.getAdminState().equals(b.getAddressable())
-        && a.getDescription().equals(b.getDescription())
-        && a.getId().equals(b.getId())
-        && a.getLabels().equals(b.getLabels())
-        && a.getLocation().equals(b.getLocation())
-        && a.getName().equals(b.getName())
-        && a.getOperatingState().equals(b.getOperatingState())
-        && a.getProfile().equals(b.getProfile())
-        && a.getService().equals(b.getService())) {
+        && a.getDescription().equals(b.getDescription()) && a.getId().equals(b.getId())
+        && a.getLabels().equals(b.getLabels()) && a.getLocation().equals(b.getLocation())
+        && a.getName().equals(b.getName()) && a.getOperatingState().equals(b.getOperatingState())
+        && a.getProfile().equals(b.getProfile()) && a.getService().equals(b.getService())) {
       return true;
     }
 
@@ -194,7 +187,7 @@ public class DeviceStore {
     watchers.initialize(id);
     OPCUA.initialize();
     for (Device device : metaDevices) {
-      deviceClient.updateOpState(device.getId(),OperatingState.disabled.name());
+      deviceClient.updateOpState(device.getId(), OperatingState.disabled.name());
       add(device);
     }
 
@@ -205,7 +198,7 @@ public class DeviceStore {
   public List<Device> getMetaDevices() {
     List<Device> metaDevices;
     metaDevices = deviceClient.devicesForServiceByName(serviceName);
-    for (Device metaDevice: metaDevices) {
+    for (Device metaDevice : metaDevices) {
       Device device = devices.get(metaDevice.getName());
 
       if (device != null) {
@@ -224,8 +217,8 @@ public class DeviceStore {
 
   public Device getMetaDeviceById(String deviceId) {
     List<Device> metaDevices = getMetaDevices();
-    Device result = metaDevices.stream().filter(device -> deviceId.equals(device.getId()))
-        .findAny().orElse(null);
+    Device result = metaDevices.stream().filter(device -> deviceId.equals(device.getId())).findAny()
+        .orElse(null);
     return result;
   }
 
@@ -239,8 +232,8 @@ public class DeviceStore {
 
   public Device getDeviceById(String deviceId) {
     if (devices != null) {
-      return devices.values().stream().filter(device -> device.getId().equals(deviceId))
-          .findAny().orElse(null);
+      return devices.values().stream().filter(device -> device.getId().equals(deviceId)).findAny()
+          .orElse(null);
     }
 
     return null;
@@ -278,7 +271,7 @@ public class DeviceStore {
     }
 
     boolean success = true;
-    for (Device device: devices.entrySet().stream().map(d -> d.getValue())
+    for (Device device : devices.entrySet().stream().map(d -> d.getValue())
         .filter(d -> profile.getName().equals(d.getProfile().getName()))
         .collect(Collectors.toList())) {
       // update all devices that use the profile

@@ -65,7 +65,7 @@ public class DeviceProfileGenerator {
     if (deviceProfileClient == null || command == null) {
       return null;
     }
-    
+
     DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(name);
     deviceProfile.addCommand(command);
     return deviceProfile;
@@ -75,7 +75,7 @@ public class DeviceProfileGenerator {
     if (deviceProfileClient == null || deviceObject == null) {
       return null;
     }
-    
+
     DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(name);
     List<DeviceObject> deviceObjectList = deviceProfile.getDeviceResources();
     deviceObjectList.add(deviceObject);
@@ -87,7 +87,7 @@ public class DeviceProfileGenerator {
     if (deviceProfileClient == null || profileResource == null) {
       return null;
     }
-    
+
     DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(name);
     List<ProfileResource> profileResourceList = deviceProfile.getResources();
     profileResourceList.add(profileResource);

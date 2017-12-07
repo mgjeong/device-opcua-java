@@ -28,7 +28,7 @@ public class OPCUAAttribute {
 
   // Replace these attributes with the OPCUA
   // specific metadata needed by the OPCUA Driver
-  
+
   // Add providerKey used in opcua stack
   // @author jeongin.kim@samsung.com
   private String providerKey;

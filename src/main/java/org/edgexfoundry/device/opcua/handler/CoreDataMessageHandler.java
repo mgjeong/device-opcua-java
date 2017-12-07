@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -22,23 +20,17 @@ package org.edgexfoundry.device.opcua.handler;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.command.json.format.EdgeAttribute;
 import org.command.json.format.EdgeElement;
-import org.command.json.format.EdgeFormatIdentifier;
 import org.command.json.format.EdgeJsonFormatter;
 import org.edgexfoundry.controller.DeviceClient;
 import org.edgexfoundry.controller.EventClient;
-import org.edgexfoundry.device.opcua.adapter.OPCUAMessageKeyIdentifier;
-import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.device.opcua.domain.OPCUAObject;
-import org.edgexfoundry.device.opcua.domain.ResponseObject;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.core.Reading;
 import org.edgexfoundry.domain.meta.Device;

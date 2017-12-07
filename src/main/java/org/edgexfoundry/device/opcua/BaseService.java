@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -69,10 +67,10 @@ public class BaseService {
 
   @Autowired
   private AddressableClient addressableClient;
-  
+
   @Autowired
   private OPCUAMetadataGenerateManager metadataGenerateManager;
-  
+
   // service initialization
   @Value("${service.connect.retries}")
   private int initRetries;
@@ -164,10 +162,10 @@ public class BaseService {
     // if both are successful, then we're done
     if (isRegistered() && isInitialized()) {
       logger.info("initialization successful.");
-      
+
       metadataGenerateManager.initMetaData();
 
-      
+
     } else {
       // otherwise see if we need to keep going
       if ((getInitRetries() == 0) || (getInitAttempts() < getInitRetries())) {
@@ -182,8 +180,8 @@ public class BaseService {
 
       } else {
         // here, we've failed and run out of retries, so just be done.
-        logger.info("initialization unsuccessful after " + getInitAttempts()
-            + " attempts.  Giving up.");
+        logger.info(
+            "initialization unsuccessful after " + getInitAttempts() + " attempts.  Giving up.");
         // TODO: what do we do here? exit?
         Application.exit(-1);
       }
@@ -240,13 +238,13 @@ public class BaseService {
         try {
           setService();
         } catch (NotFoundException e) {
-          logger.info("failed to create service " + serviceName + " in metadata: "
-              + e.getMessage());
+          logger
+              .info("failed to create service " + serviceName + " in metadata: " + e.getMessage());
           service = null;
         }
       } catch (Exception e) {
-        logger.error("unable to establish connection to metadata " + e.getCause() + " "
-            + e.getMessage());
+        logger.error(
+            "unable to establish connection to metadata " + e.getCause() + " " + e.getMessage());
         service = null;
       }
     }

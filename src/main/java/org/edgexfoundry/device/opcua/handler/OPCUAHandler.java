@@ -18,25 +18,17 @@
 
 package org.edgexfoundry.device.opcua.handler;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.command.json.format.EdgeAttribute;
 import org.command.json.format.EdgeData;
 import org.command.json.format.EdgeElement;
-import org.command.json.format.EdgeFormatIdentifier;
 import org.command.json.format.EdgeJsonFormatter;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
-import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.data.ObjectStore;
 import org.edgexfoundry.device.opcua.data.ProfileStore;
 import org.edgexfoundry.device.opcua.domain.OPCUAObject;
-import org.edgexfoundry.device.opcua.domain.ResponseObject;
 import org.edgexfoundry.device.opcua.domain.ScanList;
 import org.edgexfoundry.device.opcua.domain.Transaction;
 import org.edgexfoundry.device.opcua.opcua.DeviceDiscovery;
@@ -44,10 +36,8 @@ import org.edgexfoundry.device.opcua.opcua.OPCUADriver;
 import org.edgexfoundry.device.opcua.opcua.ObjectTransform;
 import org.edgexfoundry.domain.core.Reading;
 import org.edgexfoundry.domain.meta.Device;
-import org.edgexfoundry.domain.meta.PropertyValue;
 import org.edgexfoundry.domain.meta.ResourceOperation;
 import org.edgexfoundry.exception.controller.NotFoundException;
-import org.edgexfoundry.exception.controller.ServiceException;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,6 +195,7 @@ public class OPCUAHandler {
 
       /*
        * TODO Add Resource flexibility. Don't used
+       * 
        * @author jeongin.kim@samsung.com
        * 
        * String opResource = operation.getResource();
@@ -219,14 +210,15 @@ public class OPCUAHandler {
 
       /*
        * TODO Add property flexibility. Don't used
+       * 
        * @author jeongin.kim@samsung.com
        * 
        * if (!operation.getProperty().equals("value")) { throw new ServiceException(new
        * UnsupportedOperationException( "Only property of value is implemented for this service!"));
        * }
        */
-      
-      
+
+
       // command operation for client processing
       if (requiresQuery(immediate, method, device, operation)) {
         String opId = transactions.get(transactionId).newOpId();
@@ -298,9 +290,9 @@ public class OPCUAHandler {
   }
 
   /*
-   * TODO When it is decided not to use this function, it is Deleted.
-   *      Don't used
-   *      @author jeongin.kim@samsung.com
+   * TODO When it is decided not to use this function, it is Deleted. Don't used
+   * 
+   * @author jeongin.kim@samsung.com
    * 
    * private String parseArguments(String arguments, ResourceOperation operation, Device device,
    * OPCUAObject object, Map<String, OPCUAObject> objects) {

@@ -36,12 +36,12 @@ public class OPCUAMetadataGenerateManager {
   private final static int startOperationIndex = 1;
 
   public void initMetaData() {
-    
+
     if (deviceEnroller == null || deviceProfileGenerator == null || deviceGenerator == null) {
       logger.error("metadata instacne is invalid");
       return;
     }
-      
+
     String name = OPCUADefaultMetaData.DEVICE_NAME.getValue();
     Addressable addressable = AddressableGenerator.generate(name);
     deviceEnroller.addAddressableToMetaData(addressable);
