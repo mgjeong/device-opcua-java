@@ -114,31 +114,61 @@ public class OPCUAMetaDataGeneratorTest {
 //    logger.info("[PASS] test_device_generate_empty_name");
 //  }
   
-  @Test
-  public void test_deviceobject_generate() throws Exception {
-    logger.info("[TEST] test_deviceobject_generate");
-    String name = "name";
-    String value = "value";
-    DeviceObject deviceobject = DeviceObjectGenerator.generate(name, value);
-    assertNotNull(deviceobject);
-    logger.info("[PASS] test_deviceobject_generate");
-  }
-
-  @Test
-  public void test_deviceobject_generate_without_name() throws Exception {
-    logger.info("[TEST] test_deviceobject_generate_without_name");
-    String value = "value";
-    DeviceObject deviceobject = DeviceObjectGenerator.generate(null, value);
-    assertNull(deviceobject);
-    logger.info("[PASS] test_deviceobject_generate_without_name");
-  }
-
-  @Test
-  public void test_deviceobject_generate_empty_name() throws Exception {
-    logger.info("[TEST] test_deviceobject_generate_empty_name");
-    String value = "value";
-    DeviceObject deviceobject = DeviceObjectGenerator.generate("", value);
-    assertNull(deviceobject);
-    logger.info("[PASS] test_deviceobject_generate_empty_name");
-  }
+//  @Test
+//  public void test_deviceobject_generate() throws Exception {
+//    logger.info("[TEST] test_deviceobject_generate");
+//    String name = "name";
+//    String value = "value";
+//    DeviceObject deviceobject = DeviceObjectGenerator.generate(name, value);
+//    assertNotNull(deviceobject);
+//    logger.info("[PASS] test_deviceobject_generate");
+//  }
+//
+//  @Test
+//  public void test_deviceobject_generate_without_name() throws Exception {
+//    logger.info("[TEST] test_deviceobject_generate_without_name");
+//    String value = "value";
+//    DeviceObject deviceobject = DeviceObjectGenerator.generate(null, value);
+//    assertNull(deviceobject);
+//    logger.info("[PASS] test_deviceobject_generate_without_name");
+//  }
+//
+//  @Test
+//  public void test_deviceobject_generate_empty_name() throws Exception {
+//    logger.info("[TEST] test_deviceobject_generate_empty_name");
+//    String value = "value";
+//    DeviceObject deviceobject = DeviceObjectGenerator.generate("", value);
+//    assertNull(deviceobject);
+//    logger.info("[PASS] test_deviceobject_generate_empty_name");
+//  }
+  
+//  @Test
+//  public void test_deviceProfile_generate() throws Exception {
+//    logger.info("[TEST] test_deviceobject_generate");
+//    String name = "name";
+//    String value = "value";
+//    DeviceObject deviceobject = DeviceProfileGenerator.generate(name, value);
+//    assertNotNull(deviceobject);
+//    logger.info("[PASS] test_deviceobject_generate");
+//  }
+//
+//  @Test
+//  public void test_deviceobject_generate_without_name() throws Exception {
+//    logger.info("[TEST] test_deviceobject_generate_without_name");
+//    String value = "value";
+//    DeviceObject deviceobject = DeviceProfileGenerator.generate(null, value);
+//    assertNull(deviceobject);
+//    logger.info("[PASS] test_deviceobject_generate_without_name");
+//  }
+//
+//  @Test
+//  public void test_deviceobject_generate_empty_name() throws Exception {
+//    logger.info("[TEST] test_deviceobject_generate_empty_name");
+//    String value = "value";
+//    DeviceObject deviceobject = DeviceProfileGenerator.generate("", value);
+//    assertNull(deviceobject);
+//    logger.info("[PASS] test_deviceobject_generate_empty_name");
+//  }
+  
+  
 }
