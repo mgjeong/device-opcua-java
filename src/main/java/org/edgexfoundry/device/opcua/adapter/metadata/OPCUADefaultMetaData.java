@@ -40,7 +40,8 @@ public enum OPCUADefaultMetaData {
   PARAMETER_VALUE(36, "value", "ProfileResource Parameter Value"),
   RESOURCE(37, null, "ProfileResource Resource Value"),
   
-  DEVICE_NAME(40, "opc.tcp:~~localhost:12686~edge-opc-server", "Device Name");
+  DEVICE_NAME(40, "opc.tcp:~~localhost:12686~edge-opc-server", "Device Name"),
+  DEVICESERVICE_NAME(41, "device-opcua-java", "Device Service Name");
   
   public static final int ADDRESSABLE_PORT = 12686;
   public static final long DEFAULT_LAST_CONNECTED = 1000000;
@@ -50,9 +51,11 @@ public enum OPCUADefaultMetaData {
 
   public static final String READ_ONLY = "Read";
   public static final String WRITE_ONLY = "Write";
+  public static final String READ_WRITE = "ReadWrite";
   public static final String INSTANCE = "Instance";
   
-  public static final String REPLACE_DEVICE_NAME = "~";
+  public static final String AFTER_REPLACE_WORD = "~";
+  public static final String BEFORE_REPLACE_WORD = "/";
   
   private int code;
   private String value;

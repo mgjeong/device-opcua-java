@@ -34,12 +34,13 @@ public class DeviceObjectGenerator {
     if (OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true
         || OPCUACommandIdentifier.METHOD_COMMAND.getValue().equals(deviceType) == true) {
       if (id.equals(EdgeMapperCommon.PROPERTYVALUE_READWRITE.name())) {
-        return "readwrite";
+        return OPCUADefaultMetaData.READ_WRITE;
       } else {
         return null;
       }
     }
-    name = name.replaceAll(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
+    name = name.replaceAll(OPCUADefaultMetaData.AFTER_REPLACE_WORD,
+        OPCUADefaultMetaData.BEFORE_REPLACE_WORD);
     try {
       EdgeMapper mapper =
           EdgeServices.getAttributeProvider(name).getAttributeService(name).getMapper();

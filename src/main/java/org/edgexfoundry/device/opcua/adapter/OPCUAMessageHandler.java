@@ -52,7 +52,8 @@ public class OPCUAMessageHandler {
   private final static EdgeXLogger logger =
       EdgeXLoggerFactory.getEdgeXLogger(OPCUAMessageHandler.class);
   private static OPCUAMessageHandler singleton = null;
-
+  private static final String RESPONSE_ERROR = "response error";
+  
   private OPCUAMessageHandler() {}
 
   /**
@@ -118,7 +119,7 @@ public class OPCUAMessageHandler {
     if (status == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(), RESPONSE_ERROR));
     } else {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
@@ -138,7 +139,7 @@ public class OPCUAMessageHandler {
     if (status == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(), RESPONSE_ERROR));
     } else {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
@@ -160,7 +161,7 @@ public class OPCUAMessageHandler {
     if (msg.getResponses() == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(), RESPONSE_ERROR));
     } else {
       for (EdgeResponse res : msg.getResponses()) {
         List<EdgeAttribute> edgeAttributeList = new ArrayList<EdgeAttribute>();
@@ -190,7 +191,7 @@ public class OPCUAMessageHandler {
     if (msg.getResponses() == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(), RESPONSE_ERROR));
     } else {
       for (EdgeResponse res : msg.getResponses()) {
         List<EdgeAttribute> edgeAttributeList = new ArrayList<EdgeAttribute>();
@@ -219,7 +220,7 @@ public class OPCUAMessageHandler {
     if (msg.getResponses() == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(), RESPONSE_ERROR));
     } else {
       for (EdgeResponse res : msg.getResponses()) {
         List<EdgeAttribute> edgeAttributeList = new ArrayList<EdgeAttribute>();
@@ -270,18 +271,25 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForMethod(EdgeMessage msg) {
-    String result = null;
-    if (msg.getResponses() == null) {
-      result = "response empty error";
-    } else {
-      result = msg.getResponses().get(0).getMessage().getValue().toString();
-    }
     EdgeElement edgeElement = new EdgeElement(msg.getCommand().getValue());
-    edgeElement.getEdgeAttributeList()
-        .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-            EdgeFormatIdentifier.STRING_TYPE.getValue(), result));
+    if (msg.getResponses() == null) {
+      edgeElement.getEdgeAttributeList()
+          .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
+              EdgeFormatIdentifier.STRING_TYPE.getValue(), RESPONSE_ERROR));
+    } else {
+      for (EdgeResponse res : msg.getResponses()) {
+        List<EdgeAttribute> edgeAttributeList = new ArrayList<EdgeAttribute>();
+        edgeAttributeList.add(new EdgeAttribute(
+            OPCUAMessageKeyIdentifier.VALUE_DESCRIPTOR.getValue(),
+            EdgeFormatIdentifier.STRING_TYPE.getValue(), res.getEdgeNodeInfo().getValueAlias()));
+        edgeAttributeList.add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
+            EdgeFormatIdentifier.STRING_TYPE.getValue(), res.getMessage().getValue().toString()));
+        edgeElement.getEdgeAttributeList()
+            .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESPONSE_INFO.getValue(),
+                EdgeFormatIdentifier.ATTRIBUTES_TYPE.getValue(), edgeAttributeList));
+      }
+    }
     return EdgeJsonFormatter.encodeEdgeElementToJsonString(edgeElement);
-
   }
 
   /**
@@ -391,8 +399,9 @@ public class OPCUAMessageHandler {
   private EdgeMessage getReadMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
-    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
-        .replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/")) == true) {
+    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().replace(
+        OPCUADefaultMetaData.AFTER_REPLACE_WORD,
+        OPCUADefaultMetaData.BEFORE_REPLACE_WORD)) == true) {
       List<EdgeRequest> requests = new ArrayList<EdgeRequest>();
       getReadRequestDeviceList(element.getEdgeAttributeList(), requests);
 
@@ -424,8 +433,9 @@ public class OPCUAMessageHandler {
   private EdgeMessage getWriteMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
-    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
-        .replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/")) == true) {
+    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().replace(
+        OPCUADefaultMetaData.AFTER_REPLACE_WORD,
+        OPCUADefaultMetaData.BEFORE_REPLACE_WORD)) == true) {
       List<EdgeRequest> requests = new ArrayList<EdgeRequest>();
       getWriteRequestDeviceList(element.getEdgeAttributeList(), requests);
       EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr))

@@ -74,7 +74,8 @@ public class OPCUAMetadataGenerateManager {
         mapper = new EdgeMapper();
       }
 
-      String deviceInfoName = providerKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME);
+      String deviceInfoName = providerKey.replaceAll(OPCUADefaultMetaData.BEFORE_REPLACE_WORD,
+          OPCUADefaultMetaData.AFTER_REPLACE_WORD);
 
       Command command = CommandGenerator.generate(deviceInfoName,
           mapper.getMappingData(EdgeMapperCommon.PROPERTYVALUE_READWRITE.name()));
@@ -96,7 +97,8 @@ public class OPCUAMetadataGenerateManager {
 
   private void updateMethodService(String deviceProfileName, String commandType) {
     for (String providerKey : getMethodProviderKeyList()) {
-      String deviceInfoName = providerKey.replaceAll("/", OPCUADefaultMetaData.REPLACE_DEVICE_NAME);
+      String deviceInfoName = providerKey.replaceAll(OPCUADefaultMetaData.BEFORE_REPLACE_WORD,
+          OPCUADefaultMetaData.AFTER_REPLACE_WORD);
 
       Command command = CommandGenerator.generate(deviceInfoName, null);
       DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
