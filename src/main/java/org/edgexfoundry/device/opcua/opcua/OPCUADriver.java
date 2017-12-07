@@ -106,11 +106,11 @@ public class OPCUADriver {
      * object.getAttributes(), value);
      */
 
-    
+
     // using datamodel-command-java format for request value
     // @author jeongin.kim@samsung.com
     result = processCommand(operation.getOperation(), device.getAddressable(),
-        object.getAttributes(), operation.getParameter(), edgeElement);
+        object.getAttributes(), edgeElement);
 
     objectCache.put(device, operation, result);
     handler.completeTransaction(transactionId, opId, objectCache.getResponses(device, operation));
@@ -119,7 +119,7 @@ public class OPCUADriver {
   // Modify this function as needed to pass necessary metadata from the device
   // and its profile to the driver interface
   public String processCommand(String operation, Addressable addressable, OPCUAAttribute attributes,
-      String parameters, EdgeElement edgeElement) {
+      EdgeElement edgeElement) {
     String address = addressable.getPath();
     String intface = addressable.getAddress();
     logger.debug("ProcessCommand: " + operation + ", interface: " + intface + ", address: "
