@@ -10,8 +10,7 @@ cd $DEP_ROOT
 
 #start package device-service
 cd $PROJECT_ROOT
-mvn clean package
-mvn install -U -Dmaven.test.skip=true
+mvn clean install -U -Dmaven.test.skip=true
 echo "done"
 
 cp /usr/bin/qemu-aarch64-static .
