@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -201,12 +199,13 @@ public class OPCUAHandler {
 
     for (EdgeElement edgeElement : elementList) {
       ResourceOperation operation = operationsMap.get(edgeElement.getElementTitle());
-      if (operation == null){
+      if (operation == null) {
         continue;
       }
 
       /*
-       * TODO Add Resource flexibility
+       * TODO Add Resource flexibility. Don't used
+       * @author jeongin.kim@samsung.com
        * 
        * String opResource = operation.getResource();
        * 
@@ -218,17 +217,22 @@ public class OPCUAHandler {
       String objectName = operation.getObject();
       OPCUAObject object = getOPCUAObject(objects, objectName, transactionId);
 
-      // // TODO Add property flexibility
-      // if (!operation.getProperty().equals("value")) {
-      // throw new ServiceException(new UnsupportedOperationException(
-      // "Only property of value is implemented for this service!"));
-      // }
-
+      /*
+       * TODO Add property flexibility. Don't used
+       * @author jeongin.kim@samsung.com
+       * 
+       * if (!operation.getProperty().equals("value")) { throw new ServiceException(new
+       * UnsupportedOperationException( "Only property of value is implemented for this service!"));
+       * }
+       */
+      
+      
       // command operation for client processing
       if (requiresQuery(immediate, method, device, operation)) {
         String opId = transactions.get(transactionId).newOpId();
-        new Thread(() -> driver.process(operation, device, object, edgeElement, transactionId, opId))
-            .start();;
+        new Thread(
+            () -> driver.process(operation, device, object, edgeElement, transactionId, opId))
+                .start();;
       }
 
     }
@@ -295,6 +299,8 @@ public class OPCUAHandler {
 
   /*
    * TODO When it is decided not to use this function, it is Deleted.
+   *      Don't used
+   *      @author jeongin.kim@samsung.com
    * 
    * private String parseArguments(String arguments, ResourceOperation operation, Device device,
    * OPCUAObject object, Map<String, OPCUAObject> objects) {
