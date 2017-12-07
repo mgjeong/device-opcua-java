@@ -77,31 +77,45 @@ public class OPCUAMessageHandlerTest {
   }
 
   @Test
-  public void test_convertEdgeMessagetoEdgeElement_with_start_EdgeMessage() throws Exception {
-    logger.info("[RUN] test_convertEdgeMessagetoEdgeElement_with_start_EdgeMessage");
+  public void test_getResponseElementForStart_with_status() throws Exception {
+    logger.info("[RUN] test_getResponseElementForStart_with_status");
 
-    EdgeEndpointInfo epInfo =
-        new EdgeEndpointInfo.Builder(EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue()).build();
-    EdgeMessage msg =
-        new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_START_CLIENT).build();
-    String element = OPCUAMessageHandler.getInstance().convertEdgeMessagetoEdgeElement(msg);
+    String element = OPCUAMessageHandler.getInstance()
+        .getResponseElementForStart(EdgeStatusCode.STATUS_CLIENT_STARTED);
     assertNotNull(element);
-    logger.info("[PASS] test_convertEdgeMessagetoEdgeElement_with_start_EdgeMessage");
+    logger.info("[PASS] test_getResponseElementForStart_with_status");
   }
 
   @Test
-  public void test_convertEdgeMessagetoEdgeElement_with_stop_EdgeMessage() throws Exception {
-    logger.info("[RUN] test_convertEdgeMessagetoEdgeElement_with_stop_EdgeMessage");
+  public void test_getResponseElementForStart_without_status() throws Exception {
+    logger.info("[RUN] test_getResponseElementForStart_without_status");
 
-    EdgeEndpointInfo epInfo =
-        new EdgeEndpointInfo.Builder(EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue()).build();
-    EdgeMessage msg =
-        new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_STOP_CLIENT).build();
-    String element = OPCUAMessageHandler.getInstance().convertEdgeMessagetoEdgeElement(msg);
+    String element = OPCUAMessageHandler.getInstance()
+        .getResponseElementForStart(null);
     assertNotNull(element);
-    logger.info("[PASS] test_convertEdgeMessagetoEdgeElement_with_stop_EdgeMessage");
+    logger.info("[PASS] test_getResponseElementForStart_without_status");
+  }
+  
+  @Test
+  public void test_getResponseElementForStop_with_status() throws Exception {
+    logger.info("[RUN] test_getResponseElementForStop_with_status");
+
+    String element = OPCUAMessageHandler.getInstance()
+        .getResponseElementForStop(EdgeStatusCode.STATUS_STOP_CLIENT);
+    assertNotNull(element);
+    logger.info("[PASS] test_getResponseElementForStop_with_status");
   }
 
+  @Test
+  public void test_getResponseElementForStop_without_status() throws Exception {
+    logger.info("[RUN] test_getResponseElementForStop_without_status");
+
+    String element = OPCUAMessageHandler.getInstance()
+        .getResponseElementForStop(null);
+    assertNotNull(element);
+    logger.info("[PASS] test_getResponseElementForStop_without_status");
+  }
+  
   @Test
   public void test_convertEdgeMessagetoEdgeElement_with_read_EdgeMessage() throws Exception {
     logger.info("[RUN] test_convertEdgeMessagetoEdgeElement_with_read_EdgeMessage");

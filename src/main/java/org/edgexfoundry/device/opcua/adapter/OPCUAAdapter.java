@@ -20,6 +20,10 @@ package org.edgexfoundry.device.opcua.adapter;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import org.command.json.format.EdgeAttribute;
+import org.command.json.format.EdgeElement;
+import org.command.json.format.EdgeFormatIdentifier;
+import org.command.json.format.EdgeJsonFormatter;
 import org.edge.protocol.opcua.api.ProtocolManager;
 import org.edge.protocol.opcua.api.ProtocolManager.DiscoveryCallback;
 import org.edge.protocol.opcua.api.ProtocolManager.ReceivedMessageCallback;
@@ -243,6 +247,20 @@ public class OPCUAAdapter {
         List<String> attiributeAliasList, List<String> methodAliasList,
         List<String> viewAliasList) {
       // TODO Auto-generated method stub
+
+      CompletableFuture<String> future = ep.getFuture();
+
+      // TODO
+      // response format based command data model should be generated in this place.
+      String responseFormat = "default_start_res";
+      responseFormat = OPCUAMessageHandler.getInstance()
+          .getResponseElementForStart(status);
+      if (future != null && responseFormat != null) {
+        future.complete(responseFormat);
+      } else {
+        logger.error("EdgeElement data of the onStart callback is invalid");
+      }
+
       logger.info("onStart({})", ep.getEndpointUri());
 
       if (status == EdgeStatusCode.STATUS_CLIENT_STARTED) {
@@ -276,6 +294,18 @@ public class OPCUAAdapter {
      */
     @Override
     public void onStop(EdgeEndpointInfo ep, EdgeStatusCode status) {
+      CompletableFuture<String> future = ep.getFuture();
+
+      // TODO
+      // response format based command data model should be generated in this place.
+      String responseFormat = "default_start_res";
+      responseFormat = OPCUAMessageHandler.getInstance()
+          .getResponseElementForStop(status);
+      if (future != null && responseFormat != null) {
+        future.complete(responseFormat);
+      } else {
+        logger.error("EdgeElement data of the onStop callback is invalid");
+      }
       // TODO Auto-generated method stub
       logger.info("onStop({})", ep.getEndpointUri());
       driverCallback.onDeleteCoreData();

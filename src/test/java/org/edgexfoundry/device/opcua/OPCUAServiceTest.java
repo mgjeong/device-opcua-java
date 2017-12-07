@@ -34,9 +34,11 @@ public class OPCUAServiceTest {
     OPCUAMessageHandlerTest messageHandler = new OPCUAMessageHandlerTest();
     messageHandler.test_convertEdgeDevicetoEdgeElement_with_EdgeDevice();
     messageHandler.test_convertEdgeDevicetoEdgeElement_without_EdgeDevice();
+    messageHandler.test_getResponseElementForStart_with_status();
+    messageHandler.test_getResponseElementForStart_without_status();
+    messageHandler.test_getResponseElementForStop_with_status();
+    messageHandler.test_getResponseElementForStop_without_status();
     messageHandler.test_convertEdgeMessagetoEdgeElement_without_EdgeMessage();
-    messageHandler.test_convertEdgeMessagetoEdgeElement_with_start_EdgeMessage();
-    messageHandler.test_convertEdgeMessagetoEdgeElement_with_stop_EdgeMessage();
     messageHandler.test_convertEdgeMessagetoEdgeElement_with_read_EdgeMessage();
     messageHandler.test_convertEdgeMessagetoEdgeElement_with_write_EdgeMessage();
     messageHandler.test_convertEdgeMessagetoEdgeElement_with_sub_EdgeMessage();
