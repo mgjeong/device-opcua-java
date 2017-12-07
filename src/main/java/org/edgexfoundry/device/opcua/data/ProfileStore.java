@@ -156,6 +156,7 @@ public class ProfileStore {
       /*
        * Add automatically create ValueDescriptor using ObjectDeviceName Because Use
        * ObjectDeviceName as a ValueDescriptor
+       * @Author jeongin.kim@samsung.com  
        */
       
       int removeNum = 0;
@@ -180,6 +181,7 @@ public class ProfileStore {
     /*
      * Delete create ValueDescriptor using operation.parameter Because Not use operation.parameter
      * as a ValueDescriptor
+     * @Author jeongin.kim@samsung.com  
      */
 
   }
@@ -200,8 +202,8 @@ public class ProfileStore {
       }
     } else {
       /* TODO After all event deleted related this valueDescriptor, it is updated
-             So, coredata delete bug is fixed, then add this code  
-      
+             So, coredata delete bug is fixed, then add this code
+             @Author jeongin.kim@samsung.com  
       
       if (compare(descriptor, preDescriptor) == false) {
         
@@ -219,7 +221,8 @@ public class ProfileStore {
   }
   
   /* TODO After all event deleted related this valueDescriptor, it is updated
-  So, coredata delete bug is fixed, then add this code  
+          So, coredata delete bug is fixed, then add this code  
+          @Author jeongin.kim@samsung.com
 
   private boolean compare(ValueDescriptor a, ValueDescriptor b) {
     if (a.getType().equals(b.getType()) && a.getUomLabel().equals(b.getUomLabel())
