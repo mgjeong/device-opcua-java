@@ -25,32 +25,35 @@ import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.core.Reading;
 
 public class EventGenerator {
-  private static Reading createReading(String DeviceName, String value) {
+  private static Reading createReading(String deviceName, String value) {
     Reading reading = new Reading();
     // Guide2: Reading must has name which matched with ValueDescriptor
     // which posted in metadata DB.
-    reading.setName(DeviceName);
+    reading.setName(deviceName);
 
     // Guide3: Value can set with setValue(String) method.
     reading.setValue(value);
     return reading;
   }
 
-  public static List<Reading> createReadingList(String DeviceName, String value) {
+  private static List<Reading> createReadingList(String deviceName, String value) {
     List<Reading> readings = new ArrayList<>();
-    readings.add(createReading(DeviceName, value));
+    readings.add(createReading(deviceName, value));
     return readings;
   }
 
-  public static Event generate(String DeviceName, String value) {
+  public static Event generate(String deviceName, String value) {
+    if (deviceName == null || deviceName.isEmpty()) {
+      return null;
+    }
     // Guide1: To construct event, device identifier required.
     // device identifier can be name of device which posted in metadata DB.
-    List<Reading> readingList = createReadingList(DeviceName, value);
+    List<Reading> readingList = createReadingList(deviceName, value);
 
-    Event event = new Event(DeviceName, readingList);
+    Event event = new Event(deviceName, readingList);
 
     event.markPushed(new Timestamp(System.currentTimeMillis()).getTime());
-    event.setDevice(DeviceName);
+    event.setDevice(deviceName);
     event.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
     return event;
   }

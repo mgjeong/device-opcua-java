@@ -20,10 +20,7 @@ package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.edge.protocol.mapper.api.EdgeMapper;
-import org.edge.protocol.mapper.api.EdgeMapperCommon;
 import org.edge.protocol.mapper.api.EdgeResponseCode;
-import org.edge.protocol.opcua.providers.EdgeServices;
 import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.Get;
 import org.edgexfoundry.domain.meta.Put;
@@ -63,20 +60,24 @@ public class CommandGenerator {
     return put;
   }
 
-  public static Command generate(String deviceInfoKey, String readwrite) {
-    Command command = new Command();
-    command.setName(deviceInfoKey);
+  public static Command generate(String name, String readwrite) {
+    if (name == null || name.isEmpty()) {
+      return null;
+    }
     
+    Command command = new Command();
+    command.setName(name);
+
     Get get = null;
     Put put = null;
     if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.READ_ONLY) == true) {
-        get = CommandGenerator.createGetOperation(deviceInfoKey);
+      get = createGetOperation(name);
     } else if (readwrite != null && readwrite.equals(OPCUADefaultMetaData.WRITE_ONLY) == true) {
-        put = CommandGenerator.createPutOperation(deviceInfoKey);
+      put = createPutOperation(name);
     } else {
-        get = CommandGenerator.createGetOperation(deviceInfoKey);
-        put = CommandGenerator.createPutOperation(deviceInfoKey);
-        }
+      get = createGetOperation(name);
+      put = createPutOperation(name);
+    }
     command.setGet(get);
     command.setPut(put);
     return command;

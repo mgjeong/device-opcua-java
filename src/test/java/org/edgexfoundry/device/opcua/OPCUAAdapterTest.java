@@ -62,7 +62,7 @@ public class OPCUAAdapterTest {
     assertEquals(EdgeStatusCode.STATUS_OK, ret.getStatusCode());
     logger.info("[PASS] test_startAdapter");
   }
-  
+
   @Test
   public void test_startAdapter_without_param() throws Exception {
     logger.info("[TEST] test_startAdapter_without_param");

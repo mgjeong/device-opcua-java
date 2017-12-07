@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class OPCUAServiceTest {
   private final Logger logger = LoggerFactory.getLogger(getClass());
-  
+
   @Before
   public void start() {
     logger.info("start");
@@ -18,7 +18,7 @@ public class OPCUAServiceTest {
   public void stop() throws Exception {
     logger.info("stop");
   }
-  
+
   @Test
   public void testOPCUAdapter() throws Exception {
     logger.info("[TEST] testOPCUAdapter");
@@ -27,7 +27,7 @@ public class OPCUAServiceTest {
     opcuaAdapter.test_startAdapter_without_param();
     logger.info("[PASS] testOPCUAdapter");
   }
-  
+
   @Test
   public void testOPCUAMessageHandler() throws Exception {
     logger.info("[TEST] testOPCUAMessageHandler");
@@ -50,7 +50,7 @@ public class OPCUAServiceTest {
     messageHandler.test_sendMessage_without_EdgeMessage();
     logger.info("[PASS] testOPCUAMessageHandler");
   }
-  
+
   @Test
   public void testEZMQAdapter() throws Exception {
     logger.info("[TEST] testEZMQAdapter");
