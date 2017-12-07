@@ -99,14 +99,6 @@ public class OPCUADriver {
       EdgeElement edgeElement, String transactionId, String opId) {
     String result = "";
 
-    // TODO 2: [Optional] Modify this processCommand call to pass any
-    // additional required metadata from the profile to the driver stack
-    /*
-     * result = processCommand(operation.getOperation(), device.getAddressable(),
-     * object.getAttributes(), value);
-     */
-
-
     // using datamodel-command-java format for request value
     // @author jeongin.kim@samsung.com
     result = processCommand(operation.getOperation(), device.getAddressable(),
@@ -136,7 +128,6 @@ public class OPCUADriver {
       msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(edgeElement,
           operation, attributes.getProviderKey(), addressable, future);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -144,7 +135,6 @@ public class OPCUADriver {
       OPCUAMessageHandler.getInstance().sendMessage(msg);
       result = future.get(10, TimeUnit.SECONDS);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       future.complete(null);
     }
@@ -153,9 +143,7 @@ public class OPCUADriver {
   }
 
   public void initialize() {
-    // TODO 3: [Optional] Initialize the interface(s) here if necessary,
     // runs once on service startup
-
     try {
       OPCUAAdapter.getInstance(callback).testStartServer();
       OPCUAAdapter.getInstance(callback).startAdapter();
@@ -188,25 +176,21 @@ public class OPCUADriver {
 
     @Override
     public void onReceive(Device device, ResourceOperation operation, String result) {
-      // TODO Auto-generated method stub
       objectCache.put(device, operation, result);
     }
 
     @Override
     public void onDeleteCoreData() {
-      // TODO Auto-generated method stub
       deviceEnroller.cleanCoreData();
     }
 
     @Override
     public void onDeleteMetaData(MetaDataType type) {
-      // TODO Auto-generated method stub
       deviceEnroller.cleanMetaData(type);
     }
 
     @Override
     public void onInit() {
-      // TODO Auto-generated method stub
       metadataGenerateManager.updateMetaData(OPCUADefaultMetaData.DEVICE_NAME.getValue());
     }
   };
