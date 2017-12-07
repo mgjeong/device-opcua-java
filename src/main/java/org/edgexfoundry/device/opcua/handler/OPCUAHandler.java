@@ -142,22 +142,7 @@ public class OPCUAHandler {
 
     return processor.sendCoreData(device.getName(), readings,
         profiles.getObjects().get(device.getName()));
-    // return sendTransaction(device.getName(), readings);
   }
-
-  /*
-   * TODO When it is decided not to use this function, it is Deleted.
-   * 
-   * public List<EdgeElement> sendTransaction(String deviceName, List<Reading> readings) {
-   * List<EdgeElement> elementList = processor.sendCoreData(deviceName, readings,
-   * profiles.getObjects().get(deviceName));
-   * 
-   * ArrayList<EdgeElement> elementList = new ArrayList<EdgeElement>(); for (ResponseObject obj :
-   * resps) { EdgeElement element = new EdgeElement(new EdgeAttribute("DeviceObject", "string",
-   * obj.getName())); element.getAttributeList().add(new EdgeAttribute("operation", "string",
-   * obj.getOperation())); element.getAttributeList().add(new EdgeAttribute("result", "string",
-   * obj.getValue())); elementList.add(element); } return elementList; }
-   */
 
   private void executeOperations(Device device, String commandName, String arguments,
       Boolean immediate, String transactionId) {
@@ -193,32 +178,9 @@ public class OPCUAHandler {
         continue;
       }
 
-      /*
-       * TODO Add Resource flexibility. Don't used
-       * 
-       * @author jeongin.kim@samsung.com
-       * 
-       * String opResource = operation.getResource();
-       * 
-       * if (opResource != null) { if (operation.getOperation().equals("get")) {
-       * executeOperations(device, opResource, null, immediate, transactionId); } else {
-       * executeOperations(device, opResource, arguments, immediate, transactionId); } continue; }
-       */
-
       String objectName = operation.getObject();
       OPCUAObject object = getOPCUAObject(objects, objectName, transactionId);
-
-      /*
-       * TODO Add property flexibility. Don't used
-       * 
-       * @author jeongin.kim@samsung.com
-       * 
-       * if (!operation.getProperty().equals("value")) { throw new ServiceException(new
-       * UnsupportedOperationException( "Only property of value is implemented for this service!"));
-       * }
-       */
-
-
+      
       // command operation for client processing
       if (requiresQuery(immediate, method, device, operation)) {
         String opId = transactions.get(transactionId).newOpId();
@@ -289,54 +251,6 @@ public class OPCUAHandler {
     return resource.get(method);
   }
 
-  /*
-   * TODO When it is decided not to use this function, it is Deleted. Don't used
-   * 
-   * @author jeongin.kim@samsung.com
-   * 
-   * private String parseArguments(String arguments, ResourceOperation operation, Device device,
-   * OPCUAObject object, Map<String, OPCUAObject> objects) {
-   * 
-   * PropertyValue value = object.getProperties().getValue(); String val = parseArg(arguments,
-   * operation, value, operation.getParameter());
-   * 
-   * // if the written value is on a multiplexed handle, read the current value and apply // the
-   * mask first // if (!value.mask().equals(BigInteger.ZERO)) { // String result = //
-   * driver.processCommand("get", device.getAddressable(), object.getAttributes(), val); // val =
-   * transform.maskedValue(value, val, result); // if (operation.getSecondary() != null) { // for
-   * (String secondary: operation.getSecondary()) { // if (objects.get(secondary) != null) { //
-   * PropertyValue secondaryValue = objects.get(secondary).getProperties().getValue(); // String
-   * secondVal = parseArg(arguments, operation, secondaryValue, secondary); // val =
-   * transform.maskedValue(secondaryValue, secondVal, "0x" + val); // } // } // } // }
-   * 
-   * while (val.length() < value.size()) { val = "0" + val; }
-   * 
-   * 
-   * return val; }
-   * 
-   * 
-   * private String parseArg(String arguments, ResourceOperation operation, PropertyValue value,
-   * String object) { // parse the argument string and get the "value" parameter JsonObject args;
-   * String val = ""; JsonElement jElem = null; Boolean passed = true;
-   * 
-   * if (value != null) { val = value.getDefaultValue(); } // check for parameters from the command
-   * if (arguments != null) { args = new JsonParser().parse(arguments).getAsJsonObject(); for
-   * (String obj : object.split(",")) { jElem = args.get(obj); if (jElem == null) { passed = false;
-   * } } if (passed == true) { val = args.toString(); } // jElem = args.get(object); }
-   * 
-   * // // if the parameter is passed from the command, use it, otherwise treat parameter // // as
-   * the default // if (jsonElem == null || jsonElem.toString().equals("null")) { // val =
-   * operation.getParameter(); // passed = false; // } else { // val =
-   * jsonElem.toString().replace("\"", ""); // } // // // if no value is specified by argument or
-   * parameter, take the object default from the // profile // if (val == null) { // val =
-   * value.getDefaultValue(); // passed = false; // } // // // if a mapping translation has been
-   * specified in the profile, use it // Map<String,String> mappings = operation.getMappings(); //
-   * if (mappings != null && mappings.containsKey(val)) { // val = mappings.get(val); // passed =
-   * false; // } // // if (!value.mask().equals(BigInteger.ZERO) && passed) { // val =
-   * transform.format(value, val); // }
-   * 
-   * return val; }
-   */
   public void completeTransaction(String transactionId, String opId, List<Reading> readings) {
     synchronized (transactions) {
       transactions.get(transactionId).finishOp(opId, readings);

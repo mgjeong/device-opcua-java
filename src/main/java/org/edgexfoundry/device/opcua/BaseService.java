@@ -58,10 +58,10 @@ public class BaseService {
   @Value("${service.callback}")
   private String callbackUrl;
 
-  // TODO: This should become a service domain object , not a device service domain object
+  //service domain object
   private DeviceService service;
 
-  // TODO: This should become a BaseServiceClient
+  //BaseServiceClient
   @Autowired
   private DeviceServiceClient deviceServiceClient;
 
