@@ -28,7 +28,8 @@ public class DeviceObjectAttributeInfo {
 
     public Builder(String providerKey) {
       if (null != providerKey) {
-        this.providerKey = providerKey.replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/");
+        this.providerKey = providerKey.replace(OPCUADefaultMetaData.AFTER_REPLACE_WORD,
+            OPCUADefaultMetaData.BEFORE_REPLACE_WORD);
       } else {
         this.providerKey = providerKey;
       }

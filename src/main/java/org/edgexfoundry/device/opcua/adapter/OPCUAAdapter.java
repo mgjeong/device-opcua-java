@@ -133,8 +133,8 @@ public class OPCUAAdapter {
       CompletableFuture<String> future = data.getEdgeEndpointInfo().getFuture();
       // TODO
       // response format based command data model should be generated in this place.
-      String responseFormat = "default_response";
-      responseFormat = OPCUAMessageHandler.getInstance().convertEdgeMessagetoEdgeElement(data);
+      String responseFormat =
+          OPCUAMessageHandler.getInstance().convertEdgeMessagetoEdgeElement(data);
       if (future != null && responseFormat != null) {
         future.complete(responseFormat);
       } else {
@@ -204,8 +204,8 @@ public class OPCUAAdapter {
 
       // TODO
       // response format based command data model should be generated in this place.
-      String responseFormat = "default_endpoint_res";
-      responseFormat = OPCUAMessageHandler.getInstance().convertEdgeDevicetoEdgeElement(device);
+      String responseFormat =
+          OPCUAMessageHandler.getInstance().convertEdgeDevicetoEdgeElement(device);
       if (future != null && responseFormat != null) {
         future.complete(responseFormat);
       } else {
@@ -248,8 +248,7 @@ public class OPCUAAdapter {
 
       // TODO
       // response format based command data model should be generated in this place.
-      String responseFormat = "default_start_res";
-      responseFormat = OPCUAMessageHandler.getInstance().getResponseElementForStart(status);
+      String responseFormat = OPCUAMessageHandler.getInstance().getResponseElementForStart(status);
       if (future != null && responseFormat != null) {
         future.complete(responseFormat);
       } else {
@@ -293,8 +292,7 @@ public class OPCUAAdapter {
 
       // TODO
       // response format based command data model should be generated in this place.
-      String responseFormat = "default_start_res";
-      responseFormat = OPCUAMessageHandler.getInstance().getResponseElementForStop(status);
+      String responseFormat = OPCUAMessageHandler.getInstance().getResponseElementForStop(status);
       if (future != null && responseFormat != null) {
         future.complete(responseFormat);
       } else {
@@ -373,10 +371,12 @@ public class OPCUAAdapter {
         .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
     ProtocolManager.getProtocolManagerInstance().send(msg);
   }
+  
+  private static final String TEST_SERVICE_NAME = "/1/cnc14";
 
   private void testRead() throws Exception {
     logger.info("testRead()");
-    EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();
+    EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().setValueAlias(TEST_SERVICE_NAME).build();
 
     EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(
         OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable))
@@ -399,7 +399,7 @@ public class OPCUAAdapter {
     logger.info("testSub()");
     EdgeSubRequest sub = new EdgeSubRequest.Builder(EdgeNodeIdentifier.Edge_Create_Sub)
         .setSamplingInterval(100.0).build();
-    EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias("/1/cnc14").build();
+    EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(TEST_SERVICE_NAME).build();
     EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(
         OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable))
             .setFuture(null).build();

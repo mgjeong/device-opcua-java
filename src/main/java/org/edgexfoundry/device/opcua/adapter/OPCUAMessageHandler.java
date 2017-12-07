@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.command.json.format.EdgeAttribute;
 import org.command.json.format.EdgeElement;
+import org.command.json.format.EdgeErrorIdentifier;
 import org.command.json.format.EdgeFormatIdentifier;
 import org.command.json.format.EdgeJsonFormatter;
 import org.edge.protocol.opcua.api.ProtocolManager;
@@ -118,7 +119,8 @@ public class OPCUAMessageHandler {
     if (status == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(),
+              EdgeErrorIdentifier.EDGE_DS_ERROR_RESPONSE_NULL.getValue()));
     } else {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
@@ -138,7 +140,8 @@ public class OPCUAMessageHandler {
     if (status == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(),
+              EdgeErrorIdentifier.EDGE_DS_ERROR_RESPONSE_NULL.getValue()));
     } else {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
@@ -160,7 +163,8 @@ public class OPCUAMessageHandler {
     if (msg.getResponses() == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(),
+              EdgeErrorIdentifier.EDGE_DS_ERROR_RESPONSE_NULL.getValue()));
     } else {
       for (EdgeResponse res : msg.getResponses()) {
         List<EdgeAttribute> edgeAttributeList = new ArrayList<EdgeAttribute>();
@@ -190,7 +194,8 @@ public class OPCUAMessageHandler {
     if (msg.getResponses() == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(),
+              EdgeErrorIdentifier.EDGE_DS_ERROR_RESPONSE_NULL.getValue()));
     } else {
       for (EdgeResponse res : msg.getResponses()) {
         List<EdgeAttribute> edgeAttributeList = new ArrayList<EdgeAttribute>();
@@ -219,7 +224,8 @@ public class OPCUAMessageHandler {
     if (msg.getResponses() == null) {
       edgeElement.getEdgeAttributeList()
           .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), "response error"));
+              EdgeFormatIdentifier.STRING_TYPE.getValue(),
+              EdgeErrorIdentifier.EDGE_DS_ERROR_RESPONSE_NULL.getValue()));
     } else {
       for (EdgeResponse res : msg.getResponses()) {
         List<EdgeAttribute> edgeAttributeList = new ArrayList<EdgeAttribute>();
@@ -272,7 +278,7 @@ public class OPCUAMessageHandler {
   private String getResponseElementForMethod(EdgeMessage msg) {
     String result = null;
     if (msg.getResponses() == null) {
-      result = "response empty error";
+      result = EdgeErrorIdentifier.EDGE_DS_ERROR_RESPONSE_NULL.getValue();
     } else {
       result = msg.getResponses().get(0).getMessage().getValue().toString();
     }
@@ -391,8 +397,9 @@ public class OPCUAMessageHandler {
   private EdgeMessage getReadMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
-    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
-        .replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/")) == true) {
+    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().replace(
+        OPCUADefaultMetaData.AFTER_REPLACE_WORD,
+        OPCUADefaultMetaData.BEFORE_REPLACE_WORD)) == true) {
       List<EdgeRequest> requests = new ArrayList<EdgeRequest>();
       getReadRequestDeviceList(element.getEdgeAttributeList(), requests);
 
@@ -424,8 +431,9 @@ public class OPCUAMessageHandler {
   private EdgeMessage getWriteMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
     EdgeMessage msg = null;
-    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
-        .replace(OPCUADefaultMetaData.REPLACE_DEVICE_NAME, "/")) == true) {
+    if (providerKey.equals(OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue().replace(
+        OPCUADefaultMetaData.AFTER_REPLACE_WORD,
+        OPCUADefaultMetaData.BEFORE_REPLACE_WORD)) == true) {
       List<EdgeRequest> requests = new ArrayList<EdgeRequest>();
       getWriteRequestDeviceList(element.getEdgeAttributeList(), requests);
       EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr))
