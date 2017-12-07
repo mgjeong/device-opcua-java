@@ -116,6 +116,8 @@ public class CoreDataMessageHandler {
     }
   }
 
+  // using datamodel-command-java format for result
+  // @author jeongin.kim@samsung.com
   public List<EdgeElement> sendCoreData(String deviceName, List<Reading> readings,
       Map<String, OPCUAObject> objects) {
     try {
