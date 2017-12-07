@@ -273,7 +273,7 @@ public class OPCUAMessageHandler {
   private String getResponseElementForMethod(EdgeMessage msg) {
     String result = null;
     if (msg.getResponses() == null) {
-      result = "response empty error";
+      result = RESPONSE_ERROR;
     } else {
       result = msg.getResponses().get(0).getMessage().getValue().toString();
     }
