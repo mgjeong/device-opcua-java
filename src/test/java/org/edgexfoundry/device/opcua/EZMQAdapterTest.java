@@ -116,7 +116,7 @@ public class EZMQAdapterTest {
     assertEquals(EMFErrorCode.EMF_OK, code);
     logger.info("[PASS] test_publisher_publishEvent_with_topic");
   }
-  
+
   @Test
   public void test_publisher_publishEvent_with_topics() throws Exception {
     logger.info("[TEST] test_publisher_publishEvent_with_topics");
@@ -131,7 +131,7 @@ public class EZMQAdapterTest {
     assertEquals(EMFErrorCode.EMF_OK, code);
     logger.info("[PASS] test_publisher_publishEvent_with_topics");
   }
-  
+
   private Event getTestEvent() {
     List<Reading> readings = null;
     readings = new ArrayList<Reading>();

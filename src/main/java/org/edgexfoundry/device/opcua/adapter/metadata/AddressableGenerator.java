@@ -25,14 +25,15 @@ public class AddressableGenerator {
 
   private AddressableGenerator() {}
 
-  public static Addressable generate(String addressableName) {
-    // addressableName = deviceName
-    // TODO generate randomly
-    Addressable addressable = new Addressable(addressableName, Protocol.TCP,
-        OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
-        OPCUADefaultMetaData.ADDRESSABLE_PORT);
+  public static Addressable generate(String name) {
+    if (name == null || name.isEmpty()) {
+      return null;
+    }
+    Addressable addressable =
+        new Addressable(name, Protocol.TCP, OPCUADefaultMetaData.ADDRESS.getValue(),
+            OPCUADefaultMetaData.PATH.getValue(), OPCUADefaultMetaData.ADDRESSABLE_PORT);
     return addressable;
   }
-  
-  
+
+
 }

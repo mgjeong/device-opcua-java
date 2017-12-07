@@ -24,20 +24,24 @@ import org.edgexfoundry.domain.common.ValueDescriptor;
 
 public class ValueDescriptorGenerator {
 
-  private ValueDescriptorGenerator() {}
+	private ValueDescriptorGenerator() {
+	}
 
-  public static ValueDescriptor generate(String DeviceName) {
-    ValueDescriptor valueDescriptor = new ValueDescriptor();
-    valueDescriptor.setName(DeviceName);
-    valueDescriptor.setMin(OPCUADefaultMetaData.MIN.getValue());
-    valueDescriptor.setMax(OPCUADefaultMetaData.MAX.getValue());
-    valueDescriptor.setType(IoTType.J);
-    valueDescriptor.setUomLabel(OPCUADefaultMetaData.UOMLABEL.getValue());
-    valueDescriptor.setDefaultValue(OPCUADefaultMetaData.DEFAULTVALUE.getValue());
-    valueDescriptor.setFormatting("%s");
-    String[] labels =
-        {OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue()};
-    valueDescriptor.setLabels(labels);
-    return valueDescriptor;
-  }
+	public static ValueDescriptor generate(String deviceName) {
+		if (deviceName == null || deviceName.isEmpty()) {
+			return null;
+		}
+
+		ValueDescriptor valueDescriptor = new ValueDescriptor();
+		valueDescriptor.setName(deviceName);
+		valueDescriptor.setMin(OPCUADefaultMetaData.MIN.getValue());
+		valueDescriptor.setMax(OPCUADefaultMetaData.MAX.getValue());
+		valueDescriptor.setType(IoTType.J);
+		valueDescriptor.setUomLabel(OPCUADefaultMetaData.UOMLABEL.getValue());
+		valueDescriptor.setDefaultValue(OPCUADefaultMetaData.DEFAULTVALUE.getValue());
+		valueDescriptor.setFormatting("%s");
+		String[] labels = { OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue() };
+		valueDescriptor.setLabels(labels);
+		return valueDescriptor;
+	}
 }

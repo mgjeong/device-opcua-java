@@ -20,10 +20,6 @@ package org.edgexfoundry.device.opcua.adapter;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import org.command.json.format.EdgeAttribute;
-import org.command.json.format.EdgeElement;
-import org.command.json.format.EdgeFormatIdentifier;
-import org.command.json.format.EdgeJsonFormatter;
 import org.edge.protocol.opcua.api.ProtocolManager;
 import org.edge.protocol.opcua.api.ProtocolManager.DiscoveryCallback;
 import org.edge.protocol.opcua.api.ProtocolManager.ReceivedMessageCallback;

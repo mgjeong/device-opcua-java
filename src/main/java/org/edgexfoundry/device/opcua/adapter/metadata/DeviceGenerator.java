@@ -50,26 +50,30 @@ public class DeviceGenerator {
   @Autowired
   private DeviceProfileClient deviceProfileClient;
 
-  private DeviceGenerator() {}
+  public DeviceGenerator() {}
 
-  public Device generate(String deviceName) {
+  @SuppressWarnings("deprecation")
+  public Device generate(String name) {
+    if (name == null || name.isEmpty()) {
+      return null;
+    }
+
     Device device = new Device();
     device.setAdminState(AdminState.unlocked);
     device.setDescription(OPCUADefaultMetaData.DESCRIPTION_DEVICE.getValue());
     device.setLastConnected(OPCUADefaultMetaData.DEFAULT_LAST_CONNECTED);
     device.setLastReported(OPCUADefaultMetaData.DEFAULT_LAST_REPORTED);
     device.setLocation(OPCUADefaultMetaData.LOCATION.getValue());
-    device.setName(deviceName);
+    device.setName(name);
     device.setOperatingState(OperatingState.enabled);
     device.setOrigin(OPCUADefaultMetaData.DEFAULT_ORIGIN);
-    device.setProfile(deviceProfileClient.deviceProfileForName(deviceName));
+    device.setProfile(deviceProfileClient.deviceProfileForName(name));
     String[] labels =
         {OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue()};
     device.setLabels(labels);
 
     try {
-      device.setAddressable(
-          addressableClient.addressableForName(deviceName));
+      device.setAddressable(addressableClient.addressableForName(name));
     } catch (Exception e) {
       logger.debug("Could not set Addressable for device msg: " + e.getMessage());
       return null;

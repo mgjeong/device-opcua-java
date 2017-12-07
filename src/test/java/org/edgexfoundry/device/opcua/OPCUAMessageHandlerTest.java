@@ -90,12 +90,11 @@ public class OPCUAMessageHandlerTest {
   public void test_getResponseElementForStart_without_status() throws Exception {
     logger.info("[RUN] test_getResponseElementForStart_without_status");
 
-    String element = OPCUAMessageHandler.getInstance()
-        .getResponseElementForStart(null);
+    String element = OPCUAMessageHandler.getInstance().getResponseElementForStart(null);
     assertNotNull(element);
     logger.info("[PASS] test_getResponseElementForStart_without_status");
   }
-  
+
   @Test
   public void test_getResponseElementForStop_with_status() throws Exception {
     logger.info("[RUN] test_getResponseElementForStop_with_status");
@@ -110,12 +109,11 @@ public class OPCUAMessageHandlerTest {
   public void test_getResponseElementForStop_without_status() throws Exception {
     logger.info("[RUN] test_getResponseElementForStop_without_status");
 
-    String element = OPCUAMessageHandler.getInstance()
-        .getResponseElementForStop(null);
+    String element = OPCUAMessageHandler.getInstance().getResponseElementForStop(null);
     assertNotNull(element);
     logger.info("[PASS] test_getResponseElementForStop_without_status");
   }
-  
+
   @Test
   public void test_convertEdgeMessagetoEdgeElement_with_read_EdgeMessage() throws Exception {
     logger.info("[RUN] test_convertEdgeMessagetoEdgeElement_with_read_EdgeMessage");
