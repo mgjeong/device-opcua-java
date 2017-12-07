@@ -47,10 +47,6 @@ import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.reflect.TypeToken;
 
 public class OPCUAMessageHandler {
   private final static EdgeXLogger logger =

@@ -19,7 +19,6 @@
 package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import org.edgexfoundry.controller.DeviceProfileClient;
 import org.edgexfoundry.domain.meta.Command;
@@ -35,14 +34,18 @@ public class DeviceProfileGenerator {
   @Autowired
   private DeviceProfileClient deviceProfileClient;
 
-  private DeviceProfileGenerator() {}
+  public DeviceProfileGenerator() {}
 
-  public DeviceProfile generate(String deviceProfileName, List<DeviceObject> deviceObjectList,
+  public DeviceProfile generate(String name, List<DeviceObject> deviceObjectList,
       List<ProfileResource> profileResourceList, List<Command> commandList) {
+    if (name == null || name.isEmpty()) {
+      return null;
+    }
+
     DeviceProfile deviceProfile = new DeviceProfile();
     deviceProfile.setOrigin(new Timestamp(System.currentTimeMillis()).getTime());
     deviceProfile.setCreated(new Timestamp(System.currentTimeMillis()).getTime());
-    deviceProfile.setName(deviceProfileName);
+    deviceProfile.setName(name);
     deviceProfile.setManufacturer(OPCUADefaultMetaData.MANUFACTURER.getValue());
     deviceProfile.setModel(OPCUADefaultMetaData.MODEL.getValue());
     deviceProfile.setDescription(OPCUADefaultMetaData.DESCRIPTION_DEVICEPROFILE.getValue());
@@ -58,22 +61,34 @@ public class DeviceProfileGenerator {
     return deviceProfile;
   }
 
-  public DeviceProfile update(String deviceProfileName, Command command) {
-    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
+  public DeviceProfile update(String name, Command command) {
+    if (deviceProfileClient == null || command == null) {
+      return null;
+    }
+    
+    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(name);
     deviceProfile.addCommand(command);
     return deviceProfile;
   }
 
-  public DeviceProfile update(String deviceProfileName, DeviceObject deviceObject) {
-    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
+  public DeviceProfile update(String name, DeviceObject deviceObject) {
+    if (deviceProfileClient == null || deviceObject == null) {
+      return null;
+    }
+    
+    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(name);
     List<DeviceObject> deviceObjectList = deviceProfile.getDeviceResources();
     deviceObjectList.add(deviceObject);
     deviceProfile.setDeviceResources(deviceObjectList);
     return deviceProfile;
   }
 
-  public DeviceProfile update(String deviceProfileName, ProfileResource profileResource) {
-    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(deviceProfileName);
+  public DeviceProfile update(String name, ProfileResource profileResource) {
+    if (deviceProfileClient == null || profileResource == null) {
+      return null;
+    }
+    
+    DeviceProfile deviceProfile = deviceProfileClient.deviceProfileForName(name);
     List<ProfileResource> profileResourceList = deviceProfile.getResources();
     profileResourceList.add(profileResource);
     deviceProfile.setResources(profileResourceList);

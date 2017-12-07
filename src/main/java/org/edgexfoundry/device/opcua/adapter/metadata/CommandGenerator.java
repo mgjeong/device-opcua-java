@@ -64,7 +64,7 @@ public class CommandGenerator {
     if (name == null || name.isEmpty()) {
       return null;
     }
-    
+
     Command command = new Command();
     command.setName(name);
 

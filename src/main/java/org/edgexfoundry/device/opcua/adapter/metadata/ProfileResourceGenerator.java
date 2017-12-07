@@ -21,27 +21,34 @@ package org.edgexfoundry.device.opcua.adapter.metadata;
 import java.util.List;
 import org.edgexfoundry.domain.meta.ProfileResource;
 import org.edgexfoundry.domain.meta.ResourceOperation;
-import org.springframework.stereotype.Component;
 
 public class ProfileResourceGenerator {
 
   private ProfileResourceGenerator() {}
 
-  public static ResourceOperation createGetOperation(String deviceInfoKey, String operation, int index) {
+  public static ResourceOperation createGetOperation(String object, String operation, int index) {
+    if (object == null || object.isEmpty()) {
+      return null;
+    }
+    
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
     resourceOperation.setOperation(operation);
-    resourceOperation.setObject(deviceInfoKey);
+    resourceOperation.setObject(object);
     resourceOperation.setProperty(OPCUADefaultMetaData.PROPERTY_GET.getValue());
     resourceOperation.setResource(OPCUADefaultMetaData.RESOURCE.getValue());
     return resourceOperation;
   }
 
-  public static ResourceOperation createPutOperation(String deviceInfoKey, String operation, int index) {
+  public static ResourceOperation createPutOperation(String object, String operation, int index) {
+    if (object == null || object.isEmpty()) {
+      return null;
+    }
+    
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
     resourceOperation.setOperation(operation);
-    resourceOperation.setObject(deviceInfoKey);
+    resourceOperation.setObject(object);
     resourceOperation.setProperty(OPCUADefaultMetaData.PROPERTY_SET.getValue());
     resourceOperation.setParameter(OPCUADefaultMetaData.PARAMETER_OPERATION.getValue() + ","
         + OPCUADefaultMetaData.PARAMETER_VALUE.getValue());
@@ -49,10 +56,14 @@ public class ProfileResourceGenerator {
     return resourceOperation;
   }
 
-  public static ProfileResource generate(String deviceInfoKey, List<ResourceOperation> getList,
+  public static ProfileResource generate(String name, List<ResourceOperation> getList,
       List<ResourceOperation> setList) {
+    if (name == null || name.isEmpty()) {
+      return null;
+    }
+    
     ProfileResource profileResource = new ProfileResource();
-    profileResource.setName(deviceInfoKey);
+    profileResource.setName(name);
     profileResource.setGet(getList);
     profileResource.setSet(setList);
     return profileResource;
