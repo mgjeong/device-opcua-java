@@ -249,8 +249,7 @@ public class OPCUAAdapter {
       // TODO
       // response format based command data model should be generated in this place.
       String responseFormat = "default_start_res";
-      responseFormat = OPCUAMessageHandler.getInstance()
-          .getResponseElementForStart(status);
+      responseFormat = OPCUAMessageHandler.getInstance().getResponseElementForStart(status);
       if (future != null && responseFormat != null) {
         future.complete(responseFormat);
       } else {
@@ -295,8 +294,7 @@ public class OPCUAAdapter {
       // TODO
       // response format based command data model should be generated in this place.
       String responseFormat = "default_start_res";
-      responseFormat = OPCUAMessageHandler.getInstance()
-          .getResponseElementForStop(status);
+      responseFormat = OPCUAMessageHandler.getInstance().getResponseElementForStop(status);
       if (future != null && responseFormat != null) {
         future.complete(responseFormat);
       } else {

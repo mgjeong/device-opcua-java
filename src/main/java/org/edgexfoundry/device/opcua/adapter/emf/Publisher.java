@@ -110,7 +110,7 @@ public class Publisher {
 
   /**
    * @fn EMFErrorCode publishEvent(Event event)
-   * @brief publish Event Data 
+   * @brief publish Event Data
    * @param [in] event publish data based Event Class
    */
   public EMFErrorCode publishEvent(Event event) {
@@ -128,7 +128,7 @@ public class Publisher {
    * @fn EMFErrorCode publishEvent(String topic, Event event)
    * @brief publish Event Data
    * @param [in] topic topic
-   * @param [in] event publish data based Event Class 
+   * @param [in] event publish data based Event Class
    */
   public EMFErrorCode publishEvent(String topic, Event event) {
     EMFErrorCode ret = EMFErrorCode.EMF_ERROR;
@@ -145,7 +145,7 @@ public class Publisher {
    * @fn EMFErrorCode publishEvent(List<String> topics, Event event)
    * @brief publish Event Data
    * @param [in] topics topic list
-   * @param [in] event publish data based Event Class 
+   * @param [in] event publish data based Event Class
    */
   public EMFErrorCode publishEvent(List<String> topics, Event event) {
     EMFErrorCode ret = EMFErrorCode.EMF_ERROR;

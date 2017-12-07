@@ -26,9 +26,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.edgexfoundry.controller.DeviceProfileClient;
-import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.controller.ValueDescriptorClient;
-import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.domain.OPCUAObject;
 import org.edgexfoundry.domain.common.IoTType;
 import org.edgexfoundry.domain.common.ValueDescriptor;
@@ -156,20 +154,21 @@ public class ProfileStore {
       /*
        * Add automatically create ValueDescriptor using ObjectDeviceName Because Use
        * ObjectDeviceName as a ValueDescriptor
-       * @Author jeongin.kim@samsung.com  
+       * 
+       * @Author jeongin.kim@samsung.com
        */
-      
+
       int removeNum = 0;
-      for(ValueDescriptor valueDescriptor : valueDescriptors){
-        if(valueDescriptor.getName().equals(object.getName()) == true){
+      for (ValueDescriptor valueDescriptor : valueDescriptors) {
+        if (valueDescriptor.getName().equals(object.getName()) == true) {
           break;
         }
         removeNum++;
       }
 
       ValueDescriptor descriptor = createDescriptor(object.getName(), object, device);
-      
-      if(removeNum < valueDescriptors.size()){
+
+      if (removeNum < valueDescriptors.size()) {
         valueDescriptors.remove(removeNum);
       }
       valueDescriptors.add(descriptor);
@@ -181,7 +180,8 @@ public class ProfileStore {
     /*
      * Delete create ValueDescriptor using operation.parameter Because Not use operation.parameter
      * as a ValueDescriptor
-     * @Author jeongin.kim@samsung.com  
+     * 
+     * @Author jeongin.kim@samsung.com
      */
 
   }
@@ -201,47 +201,39 @@ public class ProfileStore {
             + e.getMessage());
       }
     } else {
-      /* TODO After all event deleted related this valueDescriptor, it is updated
-             So, coredata delete bug is fixed, then add this code
-             @Author jeongin.kim@samsung.com  
-      
-      if (compare(descriptor, preDescriptor) == false) {
-        
-        try {
-          update(preDescriptor, descriptor);
-          valueDescriptorClient.update(preDescriptor);
-        } catch (Exception e) {
-          logger.error("Update Value descriptor: " + descriptor.getName() + " failed with error "
-              + e.getMessage());
-        }
-      }*/
+      /*
+       * TODO After all event deleted related this valueDescriptor, it is updated So, coredata
+       * delete bug is fixed, then add this code
+       * 
+       * @Author jeongin.kim@samsung.com
+       * 
+       * if (compare(descriptor, preDescriptor) == false) {
+       * 
+       * try { update(preDescriptor, descriptor); valueDescriptorClient.update(preDescriptor); }
+       * catch (Exception e) { logger.error("Update Value descriptor: " + descriptor.getName() +
+       * " failed with error " + e.getMessage()); } }
+       */
       descriptor = preDescriptor;
     }
     return descriptor;
   }
-  
-  /* TODO After all event deleted related this valueDescriptor, it is updated
-          So, coredata delete bug is fixed, then add this code  
-          @Author jeongin.kim@samsung.com
 
-  private boolean compare(ValueDescriptor a, ValueDescriptor b) {
-    if (a.getType().equals(b.getType()) && a.getUomLabel().equals(b.getUomLabel())
-        && a.getFormatting().equals(b.getFormatting()) && a.getName().equals(b.getName())) {
-      return true;
-    }
-    return false;
-  }
-
-  private void update(ValueDescriptor a, ValueDescriptor b) {
-    a.setMax(b.getMax());
-    a.setMin(b.getMin());
-    a.setType(b.getType());
-    a.setDescription(b.getDescription());
-    a.setDefaultValue(b.getDefaultValue());
-    a.setFormatting(b.getFormatting());
-    a.setLabels(b.getLabels());
-    a.setUomLabel(b.getUomLabel());
-  }*/
+  /*
+   * TODO After all event deleted related this valueDescriptor, it is updated So, coredata delete
+   * bug is fixed, then add this code
+   * 
+   * @Author jeongin.kim@samsung.com
+   * 
+   * private boolean compare(ValueDescriptor a, ValueDescriptor b) { if
+   * (a.getType().equals(b.getType()) && a.getUomLabel().equals(b.getUomLabel()) &&
+   * a.getFormatting().equals(b.getFormatting()) && a.getName().equals(b.getName())) { return true;
+   * } return false; }
+   * 
+   * private void update(ValueDescriptor a, ValueDescriptor b) { a.setMax(b.getMax());
+   * a.setMin(b.getMin()); a.setType(b.getType()); a.setDescription(b.getDescription());
+   * a.setDefaultValue(b.getDefaultValue()); a.setFormatting(b.getFormatting());
+   * a.setLabels(b.getLabels()); a.setUomLabel(b.getUomLabel()); }
+   */
 
   public List<ValueDescriptor> getValueDescriptors() {
     return valueDescriptors;

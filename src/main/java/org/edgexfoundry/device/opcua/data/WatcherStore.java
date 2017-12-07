@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -23,7 +21,6 @@ package org.edgexfoundry.device.opcua.data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.edgexfoundry.controller.DeviceProfileClient;
 import org.edgexfoundry.controller.DeviceServiceClient;
 import org.edgexfoundry.controller.ProvisionWatcherClient;
@@ -63,7 +60,7 @@ public class WatcherStore {
     List<ProvisionWatcher> metaWatchers =
         provisionClient.provisionWatcherForService(deviceServiceId);
 
-    for (ProvisionWatcher watcher: metaWatchers) {
+    for (ProvisionWatcher watcher : metaWatchers) {
       add(watcher);
     }
 
@@ -87,8 +84,8 @@ public class WatcherStore {
         try {
           watcher.setId(provisionClient.add(watcher));
         } catch (Exception e) {
-          logger.error("Error adding new provision watcher " + watcher.getName()
-              + " error is: " + e.getMessage());
+          logger.error("Error adding new provision watcher " + watcher.getName() + " error is: "
+              + e.getMessage());
         }
       }
 
@@ -185,7 +182,7 @@ public class WatcherStore {
     }
 
     boolean success = true;
-    for (ProvisionWatcher watcher: watchers.stream()
+    for (ProvisionWatcher watcher : watchers.stream()
         .filter(w -> profile.getName().equals(w.getProfile().getName()))
         .collect(Collectors.toList())) {
 

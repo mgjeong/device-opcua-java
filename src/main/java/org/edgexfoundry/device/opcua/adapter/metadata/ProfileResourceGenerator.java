@@ -30,7 +30,7 @@ public class ProfileResourceGenerator {
     if (object == null || object.isEmpty()) {
       return null;
     }
-    
+
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
     resourceOperation.setOperation(operation);
@@ -44,7 +44,7 @@ public class ProfileResourceGenerator {
     if (object == null || object.isEmpty()) {
       return null;
     }
-    
+
     ResourceOperation resourceOperation = new ResourceOperation();
     resourceOperation.setIndex(String.valueOf(index));
     resourceOperation.setOperation(operation);
@@ -61,7 +61,7 @@ public class ProfileResourceGenerator {
     if (name == null || name.isEmpty()) {
       return null;
     }
-    
+
     ProfileResource profileResource = new ProfileResource();
     profileResource.setName(name);
     profileResource.setGet(getList);

@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -29,7 +27,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.LinkedHashMap;
-
 import org.edgexfoundry.domain.meta.Schedule;
 import org.edgexfoundry.domain.meta.ScheduleEvent;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
@@ -74,7 +71,7 @@ public class ScheduleContext {
   @Override
   public boolean equals(Object o) {
     if (o instanceof ScheduleContext) {
-      ScheduleContext sc = (ScheduleContext)o;
+      ScheduleContext sc = (ScheduleContext) o;
       return schedule.getId() == sc.getId();
     }
 
@@ -96,7 +93,7 @@ public class ScheduleContext {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Schedule.DATETIME_FORMATS[0])
           .withZone(ZoneId.systemDefault());
 
-      start  = formatter.format(Instant.now());
+      start = formatter.format(Instant.now());
     }
 
     this.startTime = parseTime(start);
@@ -106,7 +103,7 @@ public class ScheduleContext {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Schedule.DATETIME_FORMATS[0])
           .withZone(ZoneId.systemDefault());
 
-      end  = formatter.format(ZonedDateTime.of(LocalDateTime.MAX, ZoneId.systemDefault()));
+      end = formatter.format(ZonedDateTime.of(LocalDateTime.MAX, ZoneId.systemDefault()));
     }
 
     this.endTime = parseTime(end);
@@ -122,8 +119,8 @@ public class ScheduleContext {
 
   private ZonedDateTime parseTime(String time) {
     // TODO : may support more than one format at some point
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern(Schedule.DATETIME_FORMATS[0])
-        .withZone(ZoneId.systemDefault());
+    DateTimeFormatter dtf =
+        DateTimeFormatter.ofPattern(Schedule.DATETIME_FORMATS[0]).withZone(ZoneId.systemDefault());
     ZonedDateTime zdt = null;
 
     try {
@@ -143,8 +140,8 @@ public class ScheduleContext {
     // if the start time is in the past, increment until we find the next time to execute
     // cannot call isComplete() here as it depends on nextTime
     if (startTime.compareTo(now) <= 0 && !schedule.getRunOnce()) {
-      // TODO: Look to optimize.  Consider a one-second timer, it would take too long
-      // For example if only a single unit, e.g. only minutes, then can optimize relative to start 
+      // TODO: Look to optimize. Consider a one-second timer, it would take too long
+      // For example if only a single unit, e.g. only minutes, then can optimize relative to start
       // if there are more than one unit, then the loop may be best as it will be difficult
       while (next.compareTo(now) <= 0) {
         next = next.plus(p);
@@ -167,7 +164,7 @@ public class ScheduleContext {
     try {
       // If there is a duration 'T', remove it
       if (timeStart != -1) {
-        s = frequency.substring(periodStart,timeStart);
+        s = frequency.substring(periodStart, timeStart);
       }
 
       this.period = Period.parse(s);
@@ -248,8 +245,8 @@ public class ScheduleContext {
   @Override
   public String toString() {
     return "ScheduleContext [id =" + getId() + " name=" + getName() + ", start="
-        + startTime.toString() + ", end=" + endTime.toString()
-        + ", next=" + nextTime.toString() + ", complete=" + isComplete() + "]";
+        + startTime.toString() + ", end=" + endTime.toString() + ", next=" + nextTime.toString()
+        + ", complete=" + isComplete() + "]";
   }
 
   public boolean addScheduleEvent(ScheduleEvent scheduleEvent) {
@@ -257,8 +254,8 @@ public class ScheduleContext {
         + "' to schedule " + getInfo());
 
     if (scheduleEvents.containsKey(scheduleEvent.getId())) {
-      logger.error("schedule event " + scheduleEvent.getId() + " " + scheduleEvent.getName()
-          + " exists.");
+      logger.error(
+          "schedule event " + scheduleEvent.getId() + " " + scheduleEvent.getName() + " exists.");
 
       return false;
     }

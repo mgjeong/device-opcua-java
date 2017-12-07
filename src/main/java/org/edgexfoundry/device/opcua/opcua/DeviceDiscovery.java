@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -23,7 +21,6 @@ package org.edgexfoundry.device.opcua.opcua;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.edgexfoundry.device.opcua.data.DeviceStore;
 import org.edgexfoundry.device.opcua.data.WatcherStore;
 import org.edgexfoundry.device.opcua.domain.ScanList;
@@ -49,11 +46,11 @@ public class DeviceDiscovery {
   @Autowired
   private DeviceStore devices;
 
-  //TODO Generate protocol dynamically
+  // TODO Generate protocol dynamically
   private Protocol protocol = Protocol.MAC;
 
   private ProvisionWatcher deviceMatches(Map<String, String> device) {
-    for (ProvisionWatcher watcher: watchers.getWatchers()) {
+    for (ProvisionWatcher watcher : watchers.getWatchers()) {
       Map<String, String> identifiers = watcher.getIdentifiers();
       boolean found = true;
 
@@ -88,8 +85,8 @@ public class DeviceDiscovery {
 
   private Device deviceExists(Map<String, String> device) {
     return devices.getMetaDevices().stream()
-        .filter(d -> device.get("address").equals(d.getAddressable().getPath()))
-        .findFirst().orElse(null);
+        .filter(d -> device.get("address").equals(d.getAddressable().getPath())).findFirst()
+        .orElse(null);
   }
 
   private Device createDevice(Map<String, String> device, ProvisionWatcher watcher) {
@@ -117,7 +114,7 @@ public class DeviceDiscovery {
 
   public void provision(ScanList availableList) {
     if (availableList != null && availableList.getScan().size() > 0) {
-      for (Map<String,String> device : availableList.getScan()) {
+      for (Map<String, String> device : availableList.getScan()) {
         Device matchingDevice = deviceExists(device);
 
         if (matchingDevice != null) {

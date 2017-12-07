@@ -1,17 +1,15 @@
 /*******************************************************************************
  * Copyright 2016-2017 Dell Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
  * @microservice: device-opcua-java
  * @author: Tyler Cox, Dell
@@ -63,18 +61,18 @@ public class ScheduleEventHttpExecutor {
         con.setConnectTimeout(timeout);
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("Content-Length", "" + body.length());
-        
+
         try (OutputStream os = con.getOutputStream()) {
           os.write(body.getBytes());
           returnCode = con.getResponseCode();
         }
 
-        logger.debug("executed event " + event.getId() + " '" + event.getName()
-            + "' response code " + returnCode + " url '" + url + "' body '" + body + "'");
-      } 
+        logger.debug("executed event " + event.getId() + " '" + event.getName() + "' response code "
+            + returnCode + " url '" + url + "' body '" + body + "'");
+      }
     } catch (Exception e) {
-      logger.error("exception executing event " + event.getId() + " '" + event.getName()
-          + "' url '" + url + "' body '" + body + "' exception " + e.getMessage());
+      logger.error("exception executing event " + event.getId() + " '" + event.getName() + "' url '"
+          + url + "' body '" + body + "' exception " + e.getMessage());
       e.printStackTrace();
     }
   }
