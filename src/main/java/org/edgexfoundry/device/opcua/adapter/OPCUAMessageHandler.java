@@ -271,25 +271,18 @@ public class OPCUAMessageHandler {
    * @return String format based @EdgeElement
    */
   private String getResponseElementForMethod(EdgeMessage msg) {
-    EdgeElement edgeElement = new EdgeElement(msg.getCommand().getValue());
+    String result = null;
     if (msg.getResponses() == null) {
-      edgeElement.getEdgeAttributeList()
-          .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-              EdgeFormatIdentifier.STRING_TYPE.getValue(), RESPONSE_ERROR));
+      result = "response empty error";
     } else {
-      for (EdgeResponse res : msg.getResponses()) {
-        List<EdgeAttribute> edgeAttributeList = new ArrayList<EdgeAttribute>();
-        edgeAttributeList.add(new EdgeAttribute(
-            OPCUAMessageKeyIdentifier.VALUE_DESCRIPTOR.getValue(),
-            EdgeFormatIdentifier.STRING_TYPE.getValue(), res.getEdgeNodeInfo().getValueAlias()));
-        edgeAttributeList.add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
-            EdgeFormatIdentifier.STRING_TYPE.getValue(), res.getMessage().getValue().toString()));
-        edgeElement.getEdgeAttributeList()
-            .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESPONSE_INFO.getValue(),
-                EdgeFormatIdentifier.ATTRIBUTES_TYPE.getValue(), edgeAttributeList));
-      }
+      result = msg.getResponses().get(0).getMessage().getValue().toString();
     }
+    EdgeElement edgeElement = new EdgeElement(msg.getCommand().getValue());
+    edgeElement.getEdgeAttributeList()
+        .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.RESULT.getValue(),
+            EdgeFormatIdentifier.STRING_TYPE.getValue(), result));
     return EdgeJsonFormatter.encodeEdgeElementToJsonString(edgeElement);
+
   }
 
   /**
