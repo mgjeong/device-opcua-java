@@ -40,7 +40,7 @@ public enum OPCUADefaultMetaData {
   PARAMETER_VALUE(36, "value", "ProfileResource Parameter Value"),
   RESOURCE(37, null, "ProfileResource Resource Value"),
   
-  DEVICE_NAME(40, "opc.tcp:~~localhost:12686~edge-opc-server", "Device Name"),
+  DEVICE_NAME(40, "opc.tcp://localhost:12686/edge-opc-server", "Device Name"),
   DEVICESERVICE_NAME(41, "device-opcua-java", "Device Service Name");
   
   public static final int ADDRESSABLE_PORT = 12686;

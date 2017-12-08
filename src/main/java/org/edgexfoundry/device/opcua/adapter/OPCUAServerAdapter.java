@@ -29,8 +29,6 @@ import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 
 public class OPCUAServerAdapter {
-  private final static EdgeXLogger logger =
-      EdgeXLoggerFactory.getEdgeXLogger(OPCUAServerAdapter.class);
   private EdgeEmulator opcUaEmulator;
   private static OPCUAServerAdapter singleton = null;
   private String endpointUri = null;

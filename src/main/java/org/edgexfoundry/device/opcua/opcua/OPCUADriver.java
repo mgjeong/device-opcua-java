@@ -191,7 +191,9 @@ public class OPCUADriver {
 
     @Override
     public void onInit() {
-      metadataGenerateManager.updateMetaData(OPCUADefaultMetaData.DEVICE_NAME.getValue());
+      String name = OPCUADefaultMetaData.DEVICE_NAME.getValue().replaceAll(
+          OPCUADefaultMetaData.BEFORE_REPLACE_WORD, OPCUADefaultMetaData.AFTER_REPLACE_WORD);
+      metadataGenerateManager.updateMetaData(name);
     }
   };
 

@@ -47,7 +47,9 @@ public class OPCUAMetadataGenerateManager {
       return;
     }
 
-    String name = OPCUADefaultMetaData.DEVICE_NAME.getValue();
+    String name = OPCUADefaultMetaData.DEVICE_NAME.getValue().replaceAll(
+        OPCUADefaultMetaData.BEFORE_REPLACE_WORD, OPCUADefaultMetaData.AFTER_REPLACE_WORD);
+    
     Addressable addressable = AddressableGenerator.generate(name);
     deviceEnroller.addAddressableToMetaData(addressable);
 
@@ -166,7 +168,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn ArrayList<String> getMethodProviderKeyList()
-   * @brief Get MethodProvider Key Name List from OPCUA
+   * @brief Get key list of the MethodProvider from OPCUA stack
    * @return @ArrayList<String>
    */
   private static ArrayList<String> getMethodProviderKeyList() {
@@ -179,7 +181,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn List<ResourceOperation> createWellKnownSetList(String deviceInfoKey)
-   * @brief Create WellKnownCommand Set List
+   * @brief Create Well-Known Command such as group read/write, start, stop, getEndpoint
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createWellKnownSetList(String deviceInfoKey) {
@@ -203,7 +205,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn List<ResourceOperation> createAttributeGetResourceOperation(String deviceInfoKey)
-   * @brief Create GetResourceOperation for Attribute Service
+   * @brief create ResourceOperation related Get for read command
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createAttributeGetResourceOperation(String deviceInfoKey) {
@@ -217,7 +219,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn List<ResourceOperation> createAttributeSetResourceOperation(String deviceInfoKey)
-   * @brief Create SetResourceOperation for Attribute Service
+   * @brief create ResourceOperation related Set for write / subscription command
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createAttributeSetResourceOperation(String deviceInfoKey) {
@@ -233,7 +235,7 @@ public class OPCUAMetadataGenerateManager {
   
   /**
    * @fn List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey)
-   * @brief Create GetResourceOperation for Method Service
+   * @brief create ResourceOperation related Get for method types of the opcua
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey) {
@@ -247,7 +249,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey)
-   * @brief Create SetResourceOperation for Method Service
+   * @brief create ResourceOperation related Set for method types of the opcua 
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey) {
@@ -262,7 +264,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey)
-   * @brief Create ResourceOperation for Group Service
+   * @brief create ResourceOperation related Set for group access 
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey) {
@@ -280,7 +282,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn List<ResourceOperation> createStartServiceOperation(String deviceInfoKey)
-   * @brief Create ResourceOperation for Start Command
+   * @brief create ResourceOperation related Set for start command
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createStartServiceOperation(String deviceInfoKey) {
@@ -294,7 +296,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn List<ResourceOperation> createStopServiceOperation(String deviceInfoKey)
-   * @brief Create ResourceOperation for Stop Command
+   * @brief create ResourceOperation related Set for stop command
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createStopServiceOperation(String deviceInfoKey) {
@@ -308,7 +310,7 @@ public class OPCUAMetadataGenerateManager {
 
   /**
    * @fn List<ResourceOperation> createGetEndpointServiceOperation(String deviceInfoKey)
-   * @brief Create ResourceOperation for GetEndpoint Command
+   * @brief create ResourceOperation related Set for getEndpoint command
    * @return @List<ResourceOperation>
    */
   private List<ResourceOperation> createGetEndpointServiceOperation(String deviceInfoKey) {
