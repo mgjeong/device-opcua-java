@@ -232,7 +232,7 @@ public class ProfileStore {
    * descriptor.setLabels(null); descriptor.setDescription(object.getDescription());
    * 
    * try { valueDescriptorClient.update(descriptor); } catch (Exception e) {
-   * logger.error("Adding Value descriptor: " + descriptor.getName() + " failed with error " +
+   * logger.error("Update Value descriptor: " + descriptor.getName() + " failed with error " +
    * e.getMessage()); }
    * 
    * return descriptor; }
