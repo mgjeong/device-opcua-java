@@ -16,7 +16,7 @@
  *
  ******************************************************************/
 
-package org.edgexfoundry.device.opcua.adapter;
+package org.edgexfoundry.device.opcua;
 
 import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
@@ -25,12 +25,10 @@ import org.edge.protocol.opcua.example.EdgeEmulator;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
-import org.edgexfoundry.support.logging.client.EdgeXLogger;
-import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 
-public class OPCUAServerAdapter {
+public class OPCUAServerAdapter2 {
   private EdgeEmulator opcUaEmulator;
-  private static OPCUAServerAdapter singleton = null;
+  private static OPCUAServerAdapter2 singleton = null;
   private String endpointUri = null;
   private Addressable addressable = null;
 
@@ -38,7 +36,7 @@ public class OPCUAServerAdapter {
    * @fn OPCUAServerAdapter()
    * @brief constructor
    */
-  private OPCUAServerAdapter() {
+  private OPCUAServerAdapter2() {
     opcUaEmulator = new EdgeEmulator();
   }
 
@@ -47,10 +45,10 @@ public class OPCUAServerAdapter {
    * @brief Get OPCUAServerAdapter Instance (singleton)
    * @return @OPCUAServerAdapter
    */
-  public synchronized static OPCUAServerAdapter getInstance() {
+  public synchronized static OPCUAServerAdapter2 getInstance() {
 
     if (singleton == null) {
-      singleton = new OPCUAServerAdapter();
+      singleton = new OPCUAServerAdapter2();
     }
 
     return singleton;

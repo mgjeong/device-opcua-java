@@ -272,7 +272,7 @@ public class OPCUAAdapter {
         // TODO
         // run server
         try {
-          OPCUAServerAdapter.getInstance().runServer();
+//          OPCUAServerAdapter.getInstance().runServer();
         } catch (Exception e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -325,7 +325,7 @@ public class OPCUAAdapter {
   public void testStartServer() throws Exception {
     // TODO
     // start server
-    OPCUAServerAdapter.getInstance().startOPCUAAdapter();
+//    OPCUAServerAdapter.getInstance().startOPCUAAdapter();
   }
 
   /**

@@ -18,20 +18,30 @@
 package org.edgexfoundry.device.opcua;
 
 import static org.junit.Assert.assertEquals;
+import org.edge.protocol.opcua.api.ProtocolManager;
+import org.edge.protocol.opcua.api.common.EdgeCommandType;
+import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
+import org.edge.protocol.opcua.api.common.EdgeMessage;
+import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
+import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeResult;
 import org.edge.protocol.opcua.api.common.EdgeStatusCode;
 import org.edgexfoundry.device.opcua.adapter.OPCUAAdapter;
+import org.edgexfoundry.device.opcua.adapter.OPCUAMessageHandler;
 import org.edgexfoundry.device.opcua.adapter.metadata.MetaDataType;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.opcua.OPCUADriver.DriverCallback;
+import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Device;
+import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.domain.meta.ResourceOperation;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OPCUAAdapterTest {
   private final Logger logger = LoggerFactory.getLogger(getClass());
-
   DriverCallback callback = new DriverCallback() {
 
     @Override
@@ -54,6 +64,40 @@ public class OPCUAAdapterTest {
       // TODO Auto-generated method stub
     }
   };
+
+  @Before
+  public void start() {
+    logger.info("IN - start");
+    try {
+      OPCUAServerAdapter opcua = new OPCUAServerAdapter();
+      opcua.init();
+      opcua.startServer();
+      Thread.sleep(1000);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    logger.info("OUT - start");
+  }
+
+  @Test
+  public void test_a() throws Exception {
+    logger.info("[TEST] test_startAdapter");
+    logger.info("testGetEndpoint()");
+    
+    Addressable addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
+        OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
+        OPCUADefaultMetaData.ADDRESSABLE_PORT);
+    
+    EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(
+        OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable))
+            .setFuture(null).build();
+    EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
+    EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_GET_ENDPOINTS)
+        .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
+    ProtocolManager.getProtocolManagerInstance().send(msg);
+    logger.info("[PASS] test_startAdapter");
+  }
 
   @Test
   public void test_startAdapter() throws Exception {
