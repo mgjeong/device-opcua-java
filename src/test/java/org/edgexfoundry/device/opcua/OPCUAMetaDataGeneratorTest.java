@@ -368,4 +368,16 @@ public class OPCUAMetaDataGeneratorTest {
     logger.info("[PASS] test_metadataGenerator_updateAttributeService");
   }
   
+  @Test
+  public void test_metadataGenerator_updateMethodService() throws Exception {
+    logger.info("[TEST] test_metadataGenerator_updateMethodService");
+    OPCUAMetadataGenerateManager manager = new OPCUAMetadataGenerateManager();
+    ArrayList<String> list = new ArrayList<String>();
+    list.add("list1");
+    list.add("list2");
+    list.add("list3");
+    manager.updateMethodService("name", "read", list); 
+    logger.info("[PASS] test_metadataGenerator_updateMethodService");
+  }
+  
 }

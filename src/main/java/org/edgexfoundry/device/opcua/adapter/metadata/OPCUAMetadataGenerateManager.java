@@ -6,6 +6,7 @@ import org.edge.protocol.mapper.api.EdgeMapper;
 import org.edge.protocol.mapper.api.EdgeMapperCommon;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
+import org.edge.protocol.opcua.providers.EdgeAttributeProvider;
 import org.edge.protocol.opcua.providers.EdgeServices;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Command;
@@ -84,6 +85,7 @@ public class OPCUAMetadataGenerateManager {
    *        CommandList (Attribute Service) Add this to DeviceProfile and MetaData
    * @param [in] deviceProfileName @String
    * @param [in] commandType @String
+   * @param [in] keyList Attribute Provider List
    */
   public void updateAttributeService(String deviceProfileName, String commandType,
       ArrayList<String> keyList) {
@@ -91,8 +93,11 @@ public class OPCUAMetadataGenerateManager {
       return;
     }
     for (String providerKey : keyList) {
-      EdgeMapper mapper = EdgeServices.getAttributeProvider(providerKey)
-          .getAttributeService(providerKey).getMapper();
+      EdgeAttributeProvider provider = EdgeServices.getAttributeProvider(providerKey);
+      EdgeMapper mapper = null;
+      if (provider != null) {
+        mapper = provider.getAttributeService(providerKey).getMapper();
+      }
       if (mapper == null) {
         mapper = new EdgeMapper();
       }
@@ -129,6 +134,7 @@ public class OPCUAMetadataGenerateManager {
    *        CommandList (Method Service) Add this to DeviceProfile and MetaData
    * @param [in] deviceProfileName @String
    * @param [in] commandType @String
+   * @param [in] keyList Method Provider List
    */
   public void updateMethodService(String deviceProfileName, String commandType,
       ArrayList<String> keyList) {
@@ -140,19 +146,24 @@ public class OPCUAMetadataGenerateManager {
       String deviceInfoName = providerKey.replaceAll(OPCUADefaultMetaData.BEFORE_REPLACE_WORD,
           OPCUADefaultMetaData.AFTER_REPLACE_WORD);
 
-      Command command = CommandGenerator.generate(deviceInfoName, null);
-      DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
-      DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
       List<ResourceOperation> getList = createMethodGetResourceOperation(deviceInfoName);
       List<ResourceOperation> setList = createMethodSetResourceOperation(deviceInfoName);
       ProfileResource profileResource =
           ProfileResourceGenerator.generate(deviceInfoName, getList, setList);
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, profileResource);
+      
+      if (deviceProfileGenerator == null || deviceEnroller == null) {
+        return;
+      }
+      DeviceProfile deviceProfile =
+          deviceProfileGenerator.update(deviceProfileName, profileResource);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+      Command command = CommandGenerator.generate(deviceInfoName, null);
+      deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
+      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+      DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
+      deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
       deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
     }
   }
