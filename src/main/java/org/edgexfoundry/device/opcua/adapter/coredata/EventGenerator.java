@@ -25,6 +25,14 @@ import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.core.Reading;
 
 public class EventGenerator {
+
+  /**
+   * @fn Reading createReading(String deviceName, String value)
+   * @brief create reading
+   * @param [in] deviceName @String
+   * @param [in] value @String
+   * @return @Reading
+   */
   private static Reading createReading(String deviceName, String value) {
     Reading reading = new Reading();
     // Guide2: Reading must has name which matched with ValueDescriptor
@@ -36,12 +44,26 @@ public class EventGenerator {
     return reading;
   }
 
+  /**
+   * @fn List<Reading> createReadingList(String deviceName, String value)
+   * @brief create List of reading
+   * @param [in] deviceName @String
+   * @param [in] value @String
+   * @return @List<Reading>
+   */
   private static List<Reading> createReadingList(String deviceName, String value) {
     List<Reading> readings = new ArrayList<>();
     readings.add(createReading(deviceName, value));
     return readings;
   }
 
+  /**
+   * @fn Event generate(String name, String value)
+   * @brief create event
+   * @param [in] name @String
+   * @param [in] value @String
+   * @return @Event
+   */
   public static Event generate(String name, String value) {
     if (name == null || name.isEmpty()) {
       return null;

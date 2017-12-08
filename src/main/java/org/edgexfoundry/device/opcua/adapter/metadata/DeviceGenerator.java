@@ -50,8 +50,18 @@ public class DeviceGenerator {
   @Autowired
   private DeviceProfileClient deviceProfileClient;
 
+  /**
+   * @fn DeviceGenerator()
+   * @brief constructor
+   */
   public DeviceGenerator() {}
 
+  /**
+   * @fn Device generate(String name)
+   * @brief generate Device
+   * @param [in] name @String
+   * @return @Device
+   */
   @SuppressWarnings("deprecation")
   public Device generate(String name) {
     if (name == null || name.isEmpty() || deviceProfileClient == null) {

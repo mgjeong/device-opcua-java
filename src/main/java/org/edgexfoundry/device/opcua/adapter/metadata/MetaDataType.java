@@ -23,6 +23,11 @@ public enum MetaDataType {
 
   private int code;
 
+  /**
+   * @fn MetaDataType(int code)
+   * @brief constructor
+   * @param [in] code @int
+   */
   private MetaDataType(int code) {
     this.code = code;
   }

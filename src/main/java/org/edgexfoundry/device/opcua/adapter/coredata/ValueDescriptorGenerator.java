@@ -24,8 +24,18 @@ import org.edgexfoundry.domain.common.ValueDescriptor;
 
 public class ValueDescriptorGenerator {
 
+  /**
+   * @fn ValueDescriptorGenerator()
+   * @brief constructor
+   */
   private ValueDescriptorGenerator() {}
 
+  /**
+   * @fn ValueDescriptor generate(String name)
+   * @brief generate ValueDescriptor
+   * @param [in] name @String
+   * @return @ValueDescriptor
+   */
   public static ValueDescriptor generate(String name) {
     if (name == null || name.isEmpty()) {
       return null;

@@ -28,8 +28,20 @@ import org.edgexfoundry.domain.meta.Units;
 
 public class DeviceObjectGenerator {
 
+  /**
+   * @fn DeviceObjectGenerator()
+   * @brief constructor
+   */
   private DeviceObjectGenerator() {}
 
+  /**
+   * @fn String getAttributeInfo(String name, String id, String deviceType)
+   * @brief Get Attribute information
+   * @param [in] name @String
+   * @param [in] id @String
+   * @param [in] deviceType @String
+   * @return @String
+   */
   private static String getAttributeInfo(String name, String id, String deviceType) {
     if (OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true
         || OPCUACommandIdentifier.METHOD_COMMAND.getValue().equals(deviceType) == true) {
@@ -54,6 +66,13 @@ public class DeviceObjectGenerator {
     }
   }
 
+  /**
+   * @fn PropertyValue createPropertyValue(String deviceInfoKey, String deviceType)
+   * @brief Create PropertyValue
+   * @param [in] deviceInfoKey @String
+   * @param [in] deviceType @String
+   * @return @PropertyValue
+   */
   private static PropertyValue createPropertyValue(String deviceInfoKey, String deviceType) {
     PropertyValue propertyValue = new PropertyValue();
     propertyValue.setType(OPCUADefaultMetaData.TYPE.getValue());
@@ -78,6 +97,13 @@ public class DeviceObjectGenerator {
     return propertyValue;
   }
 
+  /**
+   * @fn Units createUnits(String deviceInfoKey, String deviceType)
+   * @brief Create Units
+   * @param [in] deviceInfoKey @String
+   * @param [in] deviceType @String
+   * @return @Units
+   */
   private static Units createUnits(String deviceInfoKey, String deviceType) {
     Units units = new Units();
     units.setType(OPCUADefaultMetaData.TYPE.getValue());
@@ -87,6 +113,13 @@ public class DeviceObjectGenerator {
     return units;
   }
 
+  /**
+   * @fn ProfileProperty createProfileProperty(String deviceInfoKey, String deviceType)
+   * @brief Create ProfileProperty
+   * @param [in] deviceInfoKey @String
+   * @param [in] deviceType @String
+   * @return @ProfileProperty
+   */
   private static ProfileProperty createProfileProperty(String deviceInfoKey, String deviceType) {
     ProfileProperty profileProperty = new ProfileProperty();
     PropertyValue propertyValue = createPropertyValue(deviceInfoKey, deviceType);
@@ -96,6 +129,13 @@ public class DeviceObjectGenerator {
     return profileProperty;
   }
 
+  /**
+   * @fn DeviceObject generate(String name, String deviceType)
+   * @brief Generate DeviceObject
+   * @param [in] name @String
+   * @param [in] deviceType @String
+   * @return @DeviceObject
+   */
   public static DeviceObject generate(String name, String deviceType) {
     if (name == null || name.isEmpty()) {
       return null;
