@@ -44,6 +44,4 @@ public class AddressableGenerator {
             OPCUADefaultMetaData.PATH.getValue(), OPCUADefaultMetaData.ADDRESSABLE_PORT);
     return addressable;
   }
-
-
 }
