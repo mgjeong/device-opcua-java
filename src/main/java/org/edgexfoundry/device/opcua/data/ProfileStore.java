@@ -152,26 +152,39 @@ public class ProfileStore {
         deviceOperations.put(object.getName().toLowerCase(), operations);
       }
       /*
-       * Add automatically create ValueDescriptor using ObjectDeviceName Because Use
+       * Add automatically create and update ValueDescriptor using ObjectDeviceName Because Use
        * ObjectDeviceName as a ValueDescriptor
        * 
        * @Author jeongin.kim@samsung.com
        */
 
-      int removeNum = 0;
-      for (ValueDescriptor valueDescriptor : valueDescriptors) {
-        if (valueDescriptor.getName().equals(object.getName()) == true) {
-          break;
+      ValueDescriptor descriptor = descriptors.stream()
+          .filter(d -> d.getName().equals(object.getName())).findAny().orElse(null);
+
+      if (descriptor == null) {
+        descriptor = createDescriptor(object.getName(), object, device);
+        valueDescriptors.add(descriptor);
+        descriptors.add(descriptor);
+      } else {
+        /*
+         * TODO After all event deleted related this valueDescriptor, it is updated /* So, coredata
+         * delete bug is fixed, then add this code
+         * 
+         * descriptor = updateDescriptor(descriptor, object, device);
+         */
+
+        int removeNum = 0;
+        for (ValueDescriptor valueDescriptor : valueDescriptors) {
+          if (valueDescriptor.getName().equals(descriptor.getName()) == true) {
+            break;
+          }
+          removeNum++;
         }
-        removeNum++;
+        if (removeNum < valueDescriptors.size()) {
+          valueDescriptors.remove(removeNum);
+        }
+        valueDescriptors.add(descriptor);
       }
-
-      ValueDescriptor descriptor = createDescriptor(object.getName(), object, device);
-
-      if (removeNum < valueDescriptors.size()) {
-        valueDescriptors.remove(removeNum);
-      }
-      valueDescriptors.add(descriptor);
     }
     objects.put(device.getName(), deviceObjects);
     commands.put(device.getName(), deviceOperations);
@@ -192,47 +205,38 @@ public class ProfileStore {
     ValueDescriptor descriptor = new ValueDescriptor(name, value.getMinimum(), value.getMaximum(),
         IoTType.valueOf(value.getType().substring(0, 1)), units.getDefaultValue(),
         value.getDefaultValue(), "%s", null, object.getDescription());
-    ValueDescriptor preDescriptor = valueDescriptorClient.valueDescriptorByName(name);
-    if (preDescriptor == null) {
-      try {
-        descriptor.setId(valueDescriptorClient.add(descriptor));
-      } catch (Exception e) {
-        logger.error("Adding Value descriptor: " + descriptor.getName() + " failed with error "
-            + e.getMessage());
-      }
-    } else {
-      /*
-       * TODO After all event deleted related this valueDescriptor, it is updated So, coredata
-       * delete bug is fixed, then add this code
-       * 
-       * @Author jeongin.kim@samsung.com
-       * 
-       * if (compare(descriptor, preDescriptor) == false) {
-       * 
-       * try { update(preDescriptor, descriptor); valueDescriptorClient.update(preDescriptor); }
-       * catch (Exception e) { logger.error("Update Value descriptor: " + descriptor.getName() +
-       * " failed with error " + e.getMessage()); } }
-       */
-      descriptor = preDescriptor;
+
+    try {
+      descriptor.setId(valueDescriptorClient.add(descriptor));
+    } catch (Exception e) {
+      logger.error("Adding Value descriptor: " + descriptor.getName() + " failed with error "
+          + e.getMessage());
     }
+
     return descriptor;
   }
 
   /*
-   * TODO After all event deleted related this valueDescriptor, it is updated So, coredata delete
-   * bug is fixed, then add this code
+   * TODO After all event deleted related this valueDescriptor, it is updated 
+   * So, coredata delete bug is fixed, then add this code
    * 
-   * @Author jeongin.kim@samsung.com
    * 
-   * private boolean compare(ValueDescriptor a, ValueDescriptor b) { if
-   * (a.getType().equals(b.getType()) && a.getUomLabel().equals(b.getUomLabel()) &&
-   * a.getFormatting().equals(b.getFormatting()) && a.getName().equals(b.getName())) { return true;
-   * } return false; }
+   * @SuppressWarnings("unused") private ValueDescriptor updateDescriptor(ValueDescriptor
+   * descriptor, DeviceObject object, Device device) { PropertyValue value =
+   * object.getProperties().getValue(); Units units = object.getProperties().getUnits();
    * 
-   * private void update(ValueDescriptor a, ValueDescriptor b) { a.setMax(b.getMax());
-   * a.setMin(b.getMin()); a.setType(b.getType()); a.setDescription(b.getDescription());
-   * a.setDefaultValue(b.getDefaultValue()); a.setFormatting(b.getFormatting());
-   * a.setLabels(b.getLabels()); a.setUomLabel(b.getUomLabel()); }
+   * descriptor.setMin(value.getMinimum()); descriptor.setMax(value.getMaximum());
+   * descriptor.setType(IoTType.valueOf(value.getType().substring(0, 1)));
+   * descriptor.setUomLabel(units.getDefaultValue());
+   * descriptor.setDefaultValue(value.getDefaultValue()); descriptor.setFormatting("%s");
+   * descriptor.setLabels(null); descriptor.setDescription(object.getDescription());
+   * 
+   * try { valueDescriptorClient.update(descriptor); } catch (Exception e) {
+   * logger.error("Update Value descriptor: " + descriptor.getName() + " failed with error " +
+   * e.getMessage()); }
+   * 
+   * return descriptor; }
+   * 
    */
 
   public List<ValueDescriptor> getValueDescriptors() {
