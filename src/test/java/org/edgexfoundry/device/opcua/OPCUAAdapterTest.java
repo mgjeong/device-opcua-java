@@ -65,40 +65,6 @@ public class OPCUAAdapterTest {
     }
   };
 
-  @Before
-  public void start() {
-    logger.info("IN - start");
-    try {
-      OPCUAServerAdapter opcua = new OPCUAServerAdapter();
-      opcua.init();
-      opcua.startServer();
-      Thread.sleep(1000);
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    logger.info("OUT - start");
-  }
-
-  @Test
-  public void test_a() throws Exception {
-    logger.info("[TEST] test_startAdapter");
-    logger.info("testGetEndpoint()");
-    
-    Addressable addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
-        OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
-        OPCUADefaultMetaData.ADDRESSABLE_PORT);
-    
-    EdgeEndpointInfo ep = new EdgeEndpointInfo.Builder(
-        OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable))
-            .setFuture(null).build();
-    EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
-    EdgeMessage msg = new EdgeMessage.Builder(ep).setCommand(EdgeCommandType.CMD_GET_ENDPOINTS)
-        .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
-    ProtocolManager.getProtocolManagerInstance().send(msg);
-    logger.info("[PASS] test_startAdapter");
-  }
-
   @Test
   public void test_startAdapter() throws Exception {
     logger.info("[TEST] test_startAdapter");

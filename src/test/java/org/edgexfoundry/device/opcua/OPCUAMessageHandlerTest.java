@@ -137,7 +137,7 @@ public class OPCUAMessageHandlerTest {
     assertNotNull(element);
     logger.info("[PASS] test_convertEdgeMessagetoEdgeElement_with_read_EdgeMessage");
   }
-  
+
   @Test
   public void test_convertEdgeMessagetoEdgeElement_with_read_responses() throws Exception {
     logger.info("[RUN] test_convertEdgeMessagetoEdgeElement_with_read_responses");
@@ -391,6 +391,8 @@ public class OPCUAMessageHandlerTest {
 
     String operation = EdgeCommandType.CMD_METHOD.getValue();
     EdgeElement element = new EdgeElement(operation);
+    element.getEdgeAttributeList()
+        .add(new EdgeAttribute("input_argument", EdgeFormatIdentifier.STRING_TYPE.getValue(), 100));
 
     CompletableFuture<String> future = null;
     EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
