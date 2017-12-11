@@ -25,8 +25,6 @@ import org.edge.protocol.opcua.example.EdgeEmulator;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
-import org.edgexfoundry.support.logging.client.EdgeXLogger;
-import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 
 public class OPCUAServerAdapter {
   private EdgeEmulator opcUaEmulator;

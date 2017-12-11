@@ -21,6 +21,8 @@ import javax.annotation.PostConstruct;
 import javax.ws.rs.NotFoundException;
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceServiceClient;
+import org.edgexfoundry.device.opcua.adapter.metadata.AddressableGenerator;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUAMetadataGenerateManager;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.AdminState;
@@ -162,8 +164,10 @@ public class BaseService {
     // if both are successful, then we're done
     if (isRegistered() && isInitialized()) {
       logger.info("initialization successful.");
-
-      metadataGenerateManager.initMetaData();
+      String name = OPCUADefaultMetaData.DEVICE_NAME.getValue().replaceAll(
+          OPCUADefaultMetaData.BEFORE_REPLACE_WORD, OPCUADefaultMetaData.AFTER_REPLACE_WORD);
+      metadataGenerateManager.initAddressable(name);
+      metadataGenerateManager.initMetaData(name);
 
 
     } else {

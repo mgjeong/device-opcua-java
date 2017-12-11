@@ -25,6 +25,7 @@ import org.edgexfoundry.device.opcua.adapter.metadata.CommandGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceObjectGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceProfileGenerator;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUAMetadataGenerateManager;
 import org.edgexfoundry.device.opcua.adapter.metadata.ProfileResourceGenerator;
 import org.edgexfoundry.domain.meta.Addressable;
@@ -94,33 +95,33 @@ public class OPCUAMetaDataGeneratorTest {
     logger.info("[PASS] test_command_generate_empty_name");
   }
 
-   @Test
-   public void test_device_generate_without_deviceProfileClient() throws Exception {
-   logger.info("[TEST] test_device_generate_without_deviceProfileClient");
-   String name = "name";
-   DeviceGenerator generator = new DeviceGenerator();
-   Device device = generator.generate(name);
-   assertNull(device);
-   logger.info("[PASS] test_device_generate_without_deviceProfileClient");
-   }
-  
-   @Test
-   public void test_device_generate_without_name() throws Exception {
-   logger.info("[TEST] test_device_generate_without_name");
-   DeviceGenerator generator = new DeviceGenerator();
-   Device device = generator.generate(null);
-   assertNull(device);
-   logger.info("[PASS] test_device_generate_without_name");
-   }
-  
-   @Test
-   public void test_device_generate_empty_name() throws Exception {
-   logger.info("[TEST] test_device_generate_empty_name");
-   DeviceGenerator generator = new DeviceGenerator();
-   Device device = generator.generate("");
-   assertNull(device);
-   logger.info("[PASS] test_device_generate_empty_name");
-   }
+  @Test
+  public void test_device_generate_without_deviceProfileClient() throws Exception {
+    logger.info("[TEST] test_device_generate_without_deviceProfileClient");
+    String name = "name";
+    DeviceGenerator generator = new DeviceGenerator();
+    Device device = generator.generate(name);
+    assertNull(device);
+    logger.info("[PASS] test_device_generate_without_deviceProfileClient");
+  }
+
+  @Test
+  public void test_device_generate_without_name() throws Exception {
+    logger.info("[TEST] test_device_generate_without_name");
+    DeviceGenerator generator = new DeviceGenerator();
+    Device device = generator.generate(null);
+    assertNull(device);
+    logger.info("[PASS] test_device_generate_without_name");
+  }
+
+  @Test
+  public void test_device_generate_empty_name() throws Exception {
+    logger.info("[TEST] test_device_generate_empty_name");
+    DeviceGenerator generator = new DeviceGenerator();
+    Device device = generator.generate("");
+    assertNull(device);
+    logger.info("[PASS] test_device_generate_empty_name");
+  }
 
   @Test
   public void test_deviceobject_generate() throws Exception {
@@ -260,7 +261,7 @@ public class OPCUAMetaDataGeneratorTest {
     assertNull(resource);
     logger.info("[PASS] test_resourceOperation_update_without_name");
   }
-  
+
   @Test
   public void test_resourceOperation_update_without_lists() throws Exception {
     logger.info("[TEST] test_resourceOperation_update_without_lists");
@@ -294,7 +295,7 @@ public class OPCUAMetaDataGeneratorTest {
     assertNull(resource);
     logger.info("[PASS] test_resourceOperation_createGetOperation_with_empty_object");
   }
-  
+
   @Test
   public void test_resourceOperation_createPutOperation_with_params() throws Exception {
     logger.info("[TEST] test_resourceOperation_createPutOperation_with_params");
@@ -311,7 +312,7 @@ public class OPCUAMetaDataGeneratorTest {
     assertNull(resource);
     logger.info("[PASS] test_resourceOperation_createPutOperation_without_object");
   }
-  
+
   @Test
   public void test_resourceOperation_createPutOperation_with_empty_object() throws Exception {
     logger.info("[TEST] test_resourceOperation_createPutOperation_with_empty_object");
@@ -319,15 +320,17 @@ public class OPCUAMetaDataGeneratorTest {
     assertNull(resource);
     logger.info("[PASS] test_resourceOperation_createPutOperation_with_empty_object");
   }
-  
+
   @Test
   public void test_metadataGenerator_initMetadata_without_spring_instaces() throws Exception {
     logger.info("[TEST] test_metadataGenerator_initMetadata_without_spring_instaces");
     OPCUAMetadataGenerateManager manager = new OPCUAMetadataGenerateManager();
-    manager.initMetaData();
+    String name = OPCUADefaultMetaData.DEVICE_NAME.getValue().replaceAll(
+        OPCUADefaultMetaData.BEFORE_REPLACE_WORD, OPCUADefaultMetaData.AFTER_REPLACE_WORD);
+    manager.initMetaData(name);
     logger.info("[PASS] test_metadataGenerator_initMetadata_without_spring_instaces");
   }
-  
+
   @Test
   public void test_metadataGenerator_updateMetadata_without_spring_instaces() throws Exception {
     logger.info("[TEST] test_metadataGenerator_updateMetadata_without_spring_instaces");
@@ -336,7 +339,7 @@ public class OPCUAMetaDataGeneratorTest {
     manager.updateMetaData(deviceProfileName);
     logger.info("[PASS] test_metadataGenerator_updateMetadata_without_spring_instaces");
   }
-  
+
   @Test
   public void test_metadataGenerator_updateMetadata_without_name() throws Exception {
     logger.info("[TEST] test_metadataGenerator_updateMetadata_without_name");
@@ -344,7 +347,7 @@ public class OPCUAMetaDataGeneratorTest {
     manager.updateMetaData(null);
     logger.info("[PASS] test_metadataGenerator_updateMetadata_without_name");
   }
-  
+
   @Test
   public void test_metadataGenerator_updateMetadata_with_empty_name() throws Exception {
     logger.info("[TEST] test_metadataGenerator_updateMetadata_with_empty_name");
@@ -352,4 +355,29 @@ public class OPCUAMetaDataGeneratorTest {
     manager.updateMetaData("");
     logger.info("[PASS] test_metadataGenerator_updateMetadata_with_empty_name");
   }
+  
+  @Test
+  public void test_metadataGenerator_updateAttributeService() throws Exception {
+    logger.info("[TEST] test_metadataGenerator_updateAttributeService");
+    OPCUAMetadataGenerateManager manager = new OPCUAMetadataGenerateManager();
+    ArrayList<String> list = new ArrayList<String>();
+    list.add("list1");
+    list.add("list2");
+    list.add("list3");
+    manager.updateAttributeService("name", "read", list); 
+    logger.info("[PASS] test_metadataGenerator_updateAttributeService");
+  }
+  
+  @Test
+  public void test_metadataGenerator_updateMethodService() throws Exception {
+    logger.info("[TEST] test_metadataGenerator_updateMethodService");
+    OPCUAMetadataGenerateManager manager = new OPCUAMetadataGenerateManager();
+    ArrayList<String> list = new ArrayList<String>();
+    list.add("list1");
+    list.add("list2");
+    list.add("list3");
+    manager.updateMethodService("name", "read", list); 
+    logger.info("[PASS] test_metadataGenerator_updateMethodService");
+  }
+  
 }

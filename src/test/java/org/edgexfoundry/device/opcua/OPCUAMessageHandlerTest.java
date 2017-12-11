@@ -19,6 +19,11 @@ package org.edgexfoundry.device.opcua;
 
 import static org.junit.Assert.*;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import org.command.json.format.EdgeAttribute;
+import org.command.json.format.EdgeElement;
+import org.command.json.format.EdgeFormatIdentifier;
+import org.edge.protocol.opcua.api.client.EdgeResponse;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
 import org.edge.protocol.opcua.api.common.EdgeDevice;
 import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
@@ -29,7 +34,10 @@ import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeResult;
 import org.edge.protocol.opcua.api.common.EdgeStatusCode;
+import org.edge.protocol.opcua.api.common.EdgeVersatility;
+import org.edge.protocol.opcua.example.EdgeSampleCommon;
 import org.edgexfoundry.device.opcua.adapter.OPCUAMessageHandler;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUACommandIdentifier;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Protocol;
@@ -39,6 +47,10 @@ import org.slf4j.LoggerFactory;
 
 public class OPCUAMessageHandlerTest {
   private final Logger logger = LoggerFactory.getLogger(getClass());
+  Addressable addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
+      OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
+      OPCUADefaultMetaData.ADDRESSABLE_PORT);
+  String providerKey = "/1/cnc100";
 
   @Test
   public void test_convertEdgeDevicetoEdgeElement_without_EdgeDevice() throws Exception {
@@ -125,6 +137,24 @@ public class OPCUAMessageHandlerTest {
     assertNotNull(element);
     logger.info("[PASS] test_convertEdgeMessagetoEdgeElement_with_read_EdgeMessage");
   }
+  
+  @Test
+  public void test_convertEdgeMessagetoEdgeElement_with_read_responses() throws Exception {
+    logger.info("[RUN] test_convertEdgeMessagetoEdgeElement_with_read_responses");
+
+    EdgeEndpointInfo epInfo =
+        new EdgeEndpointInfo.Builder(EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue()).build();
+    EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().setValueAlias(providerKey).build();
+    EdgeResponse res = new EdgeResponse.Builder(nodeInfo, EdgeOpcUaCommon.DEFAULT_REQUEST_ID)
+        .setMessage(new EdgeVersatility.Builder(100).build()).build();
+    ArrayList<EdgeResponse> responses = new ArrayList<EdgeResponse>();
+    responses.add(res);
+    EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_READ)
+        .setResponses(responses).build();
+    String element = OPCUAMessageHandler.getInstance().convertEdgeMessagetoEdgeElement(msg);
+    assertNotNull(element);
+    logger.info("[PASS] test_convertEdgeMessagetoEdgeElement_with_read_responses");
+  }
 
   @Test
   public void test_convertEdgeMessagetoEdgeElement_with_write_EdgeMessage() throws Exception {
@@ -148,6 +178,24 @@ public class OPCUAMessageHandlerTest {
     String element = OPCUAMessageHandler.getInstance().convertEdgeMessagetoEdgeElement(msg);
     assertNotNull(element);
     logger.info("[PASS] test_convertEdgeMessagetoEdgeElement_with_sub_EdgeMessage");
+  }
+
+  @Test
+  public void test_convertEdgeMessagetoEdgeElement_with_sub_responses() throws Exception {
+    logger.info("[RUN] test_convertEdgeMessagetoEdgeElement_with_sub_responses");
+
+    EdgeEndpointInfo epInfo =
+        new EdgeEndpointInfo.Builder(EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue()).build();
+    EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().setValueAlias(providerKey).build();
+    EdgeResponse res = new EdgeResponse.Builder(nodeInfo, EdgeOpcUaCommon.DEFAULT_REQUEST_ID)
+        .setMessage(new EdgeVersatility.Builder(100).build()).build();
+    ArrayList<EdgeResponse> responses = new ArrayList<EdgeResponse>();
+    responses.add(res);
+    EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_SUB)
+        .setResponses(responses).build();
+    String element = OPCUAMessageHandler.getInstance().convertEdgeMessagetoEdgeElement(msg);
+    assertNotNull(element);
+    logger.info("[PASS] test_convertEdgeMessagetoEdgeElement_with_sub_responses");
   }
 
   @Test
@@ -180,10 +228,6 @@ public class OPCUAMessageHandlerTest {
   public void test_getEndpointUrifromAddressable_with_Addressable() throws Exception {
     logger.info("[RUN] test_getEndpointUrifromAddressable_with_Addressable");
 
-    Addressable addressable = new Addressable(OPCUADefaultMetaData.NAME.getValue(), Protocol.TCP,
-        OPCUADefaultMetaData.ADDRESS.getValue(), OPCUADefaultMetaData.PATH.getValue(),
-        OPCUADefaultMetaData.ADDRESSABLE_PORT);
-
     String endpointURI =
         OPCUAMessageHandler.getInstance().getEndpointUrifromAddressable(addressable);
     assertNotNull(endpointURI);
@@ -206,11 +250,11 @@ public class OPCUAMessageHandlerTest {
   public void test_sendMessage_with_EdgeMessage() throws Exception {
     logger.info("[RUN] test_sendMessage_with_EdgeMessage");
 
-    EdgeNodeInfo endpoint = new EdgeNodeInfo.Builder().build();
+    EdgeNodeInfo nodeInfo = new EdgeNodeInfo.Builder().build();
     EdgeEndpointInfo epInfo =
         new EdgeEndpointInfo.Builder(EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue()).build();
     EdgeMessage msg = new EdgeMessage.Builder(epInfo).setCommand(EdgeCommandType.CMD_START_CLIENT)
-        .setRequest(new EdgeRequest.Builder(endpoint).build()).build();
+        .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
     EdgeResult ret = OPCUAMessageHandler.getInstance().sendMessage(msg);
     assertEquals(EdgeStatusCode.STATUS_OK, ret.getStatusCode());
     logger.info("[PASS] test_sendMessage_with_EdgeMessage");
@@ -225,4 +269,166 @@ public class OPCUAMessageHandlerTest {
     assertEquals(EdgeStatusCode.STATUS_PARAM_INVALID, ret.getStatusCode());
     logger.info("[PASS] test_sendMessage_without_EdgeMessage");
   }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_read() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_read");
+
+    String operation = EdgeCommandType.CMD_READ.getValue();
+    EdgeElement element = new EdgeElement(operation);
+    element.getEdgeAttributeList().add(new EdgeAttribute("value_descriptor",
+        EdgeFormatIdentifier.STRING_TYPE.getValue(), providerKey));
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_read");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_group_read() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_group_read");
+
+    String operation = EdgeCommandType.CMD_READ.getValue();
+    String providerKey = OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
+        .replace(OPCUADefaultMetaData.AFTER_REPLACE_WORD, OPCUADefaultMetaData.BEFORE_REPLACE_WORD);
+    EdgeElement element = new EdgeElement(operation);
+    element.getEdgeAttributeList().add(new EdgeAttribute("value_descriptor",
+        EdgeFormatIdentifier.STRING_TYPE.getValue(), providerKey));
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_group_read");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_write() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_write");
+
+    String operation = EdgeCommandType.CMD_WRITE.getValue();
+    EdgeElement element = new EdgeElement(operation);
+    element.getEdgeAttributeList().add(new EdgeAttribute("value_descriptor",
+        EdgeFormatIdentifier.STRING_TYPE.getValue(), providerKey));
+    element.getEdgeAttributeList().add(
+        new EdgeAttribute("input_argument", EdgeFormatIdentifier.INTEGER_TYPE.getValue(), 100));
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_write");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_group_write() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_group_write");
+
+    String operation = EdgeCommandType.CMD_WRITE.getValue();
+    String providerKey = OPCUACommandIdentifier.WELLKNOWN_COMMAND_GROUP.getValue()
+        .replace(OPCUADefaultMetaData.AFTER_REPLACE_WORD, OPCUADefaultMetaData.BEFORE_REPLACE_WORD);
+
+    EdgeElement element = new EdgeElement(operation);
+    element.getEdgeAttributeList().add(new EdgeAttribute("value_descriptor",
+        EdgeFormatIdentifier.STRING_TYPE.getValue(), providerKey));
+    element.getEdgeAttributeList().add(
+        new EdgeAttribute("input_argument", EdgeFormatIdentifier.INTEGER_TYPE.getValue(), 100));
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_group_write");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_sub() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_sub");
+
+    String operation = EdgeCommandType.CMD_SUB.getValue();
+    EdgeElement element = new EdgeElement(operation);
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_sub");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_start() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_start");
+
+    String operation = EdgeCommandType.CMD_START_CLIENT.getValue();
+    EdgeElement element = new EdgeElement(operation);
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_start");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_stop() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_stop");
+
+    String operation = EdgeCommandType.CMD_STOP_CLIENT.getValue();
+    EdgeElement element = new EdgeElement(operation);
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_stop");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_method() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_method");
+
+    String operation = EdgeCommandType.CMD_METHOD.getValue();
+    EdgeElement element = new EdgeElement(operation);
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_method");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_getEndpoint() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_getEndpoint");
+
+    String operation = EdgeCommandType.CMD_GET_ENDPOINTS.getValue();
+    EdgeElement element = new EdgeElement(operation);
+    element.getEdgeAttributeList().add(new EdgeAttribute("value_descriptor",
+        EdgeFormatIdentifier.STRING_TYPE.getValue(), providerKey));
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNotNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_getEndpoint");
+  }
+
+  @Test
+  public void test_convertEdgeElementToEdgeMessage_invalid_operation() throws Exception {
+    logger.info("[RUN] test_convertEdgeElementToEdgeMessage_invalid_operation");
+
+    String operation = "unknown";
+    EdgeElement element = new EdgeElement(operation);
+    element.getEdgeAttributeList().add(new EdgeAttribute("value_descriptor",
+        EdgeFormatIdentifier.STRING_TYPE.getValue(), providerKey));
+
+    CompletableFuture<String> future = null;
+    EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
+        operation, providerKey, addressable, future);
+    assertNull(msg);
+    logger.info("[PASS] test_convertEdgeElementToEdgeMessage_invalid_operation");
+  }
+
 }
