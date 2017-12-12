@@ -20,7 +20,7 @@ package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.edge.protocol.mapper.api.EdgeResponseCode;
+import org.command.json.format.EdgeErrorIdentifier;
 import org.edgexfoundry.domain.meta.Command;
 import org.edgexfoundry.domain.meta.Get;
 import org.edgexfoundry.domain.meta.Put;
@@ -37,16 +37,24 @@ public class CommandGenerator {
   /**
    * @fn Get createGetOperation(String deviceInfoKey)
    * @brief create Get Operation
-   * @param [in] deviceInfoKey @String
-   * @return @Get
+   * @param [in] deviceInfoKey command name for get operation
+   * @return generated Get operation
    */
   private static Get createGetOperation(String deviceInfoKey) {
     Get get = new Get();
     get.setPath(OPCUADefaultMetaData.DEFAULT_ROOT_PATH + deviceInfoKey);
-    for (EdgeResponseCode code : EdgeResponseCode.values()) {
+
+    // TODO this error codes should be updated with provisioning service.
+    /*
+     * for (EdgeResponseCode code : EdgeResponseCode.values()) { List<String> expected = new
+     * ArrayList<>(); expected.add(String.valueOf(code.getValue())); get.addResponse(new
+     * Response(code.getCode(), code.getDescription(), expected)); }
+     */
+
+    for (EdgeErrorIdentifier code : EdgeErrorIdentifier.values()) {
       List<String> expected = new ArrayList<>();
-      expected.add(String.valueOf(code.getValue()));
-      get.addResponse(new Response(code.getCode(), code.getDescription(), expected));
+      expected.add(code.getValue());
+      get.addResponse(new Response(code.toString(), code.getDescription(), expected));
     }
     return get;
   }
@@ -54,8 +62,8 @@ public class CommandGenerator {
   /**
    * @fn Put createPutOperation(String deviceInfoKey)
    * @brief create Put Operation
-   * @param [in] deviceInfoKey @String
-   * @return @Put
+   * @param [in] deviceInfoKey command name for put operation
+   * @return generated Put operation
    */
   private static Put createPutOperation(String deviceInfoKey) {
     List<String> parametNames = new ArrayList<>();
@@ -66,10 +74,17 @@ public class CommandGenerator {
     put.setPath(OPCUADefaultMetaData.DEFAULT_ROOT_PATH + deviceInfoKey);
     put.setParameterNames(parametNames);
 
-    for (EdgeResponseCode code : EdgeResponseCode.values()) {
+    // TODO this error codes should be updated with provisioning service.
+    /*
+     * for (EdgeResponseCode code : EdgeResponseCode.values()) { List<String> expected = new
+     * ArrayList<>(); expected.add(String.valueOf(code.getValue())); put.addResponse(new
+     * Response(code.getCode(), code.getDescription(), expected)); }
+     */
+
+    for (EdgeErrorIdentifier code : EdgeErrorIdentifier.values()) {
       List<String> expected = new ArrayList<>();
-      expected.add(String.valueOf(code.getValue()));
-      put.addResponse(new Response(code.getCode(), code.getDescription(), expected));
+      expected.add(code.getValue());
+      put.addResponse(new Response(code.toString(), code.getDescription(), expected));
     }
     return put;
   }
@@ -77,9 +92,9 @@ public class CommandGenerator {
   /**
    * @fn Command generate(String name, String readwrite)
    * @brief generate Command
-   * @param [in] name @String
-   * @param [in] readwrite @String
-   * @return @Command
+   * @param [in] name command name for generate
+   * @param [in] readwrite command's read/write type
+   * @return generated Command
    */
   public static Command generate(String name, String readwrite) {
     if (name == null || name.isEmpty()) {
