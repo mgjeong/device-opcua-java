@@ -349,7 +349,9 @@ public class OPCUAMessageHandlerTest {
 
     String operation = EdgeCommandType.CMD_SUB.getValue();
     EdgeElement element = new EdgeElement(operation);
-
+    element.getEdgeAttributeList().add(
+        new EdgeAttribute("sampling_interval", EdgeFormatIdentifier.DOUBLE_TYPE.getValue(), 1000.0));
+    
     CompletableFuture<String> future = null;
     EdgeMessage msg = OPCUAMessageHandler.getInstance().convertEdgeElementToEdgeMessage(element,
         operation, providerKey, addressable, future);
