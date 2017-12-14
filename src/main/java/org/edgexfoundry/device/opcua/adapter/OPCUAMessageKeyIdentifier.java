@@ -9,7 +9,7 @@ public enum OPCUAMessageKeyIdentifier {
   SAMPLING_INTERVAL(5, "sampling_interval", "sampling interval"), 
   APPLICATION_NAME(6, "application_name", "application name for server"),
   APPLICATION_URI(7, "application_uri", "application uri for server"),
-  SECURITYPOLICY_URI(8, "security_policy_uri", "security policy uri for server"),
+  SECURITY_POLICY_URI (8, "security_policy_uri", "security policy uri for server"),
   ENDPOINT_URI(9, "endpoint_uri", "endpoint uri for server"), 
   ENDPOINT_INFOMATION(10, "endpoint_information", "endpoint infomation for server"), 
   RESPONSE_INFO(11,"response_information", "response infomation");
