@@ -3,7 +3,7 @@ package org.edgexfoundry.device.opcua.adapter;
 public enum OPCUAMessageKeyIdentifier {
   OPERATION(0, "operation", "command operation"),
   INPUT_ARGUMENT(1, "input_argument", "input value in put command operation"),
-  RESULT(2, "result", "command result value"),
+  VALUE(2, "value", "command result value"),
   VALUE_DESCRIPTOR(3, "value_descriptor", "command valuedescriptor name"),
   SAMPLING_INTERVAL(4, "sampling_interval", "sampling interval"), 
   APPLICATION_NAME(5, "application_name", "application name for server"),
