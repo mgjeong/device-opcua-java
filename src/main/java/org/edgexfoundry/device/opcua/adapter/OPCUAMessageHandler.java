@@ -211,7 +211,7 @@ public class OPCUAMessageHandler {
       edgeAttributeList.add(new EdgeAttribute(OPCUAMessageKeyIdentifier.APPLICATION_URI.getValue(),
           EdgeFormatIdentifier.STRING_TYPE.getValue(), ep.getConfig().getApplicationUri()));
       edgeAttributeList
-          .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.SECURITYPOLICY_URI.getValue(),
+          .add(new EdgeAttribute(OPCUAMessageKeyIdentifier.SECURITY_POLICY_URI.getValue(),
               EdgeFormatIdentifier.STRING_TYPE.getValue(), ep.getConfig().getSecurityPolicyUri()));
 
       edgeElement.getEdgeAttributeList()
