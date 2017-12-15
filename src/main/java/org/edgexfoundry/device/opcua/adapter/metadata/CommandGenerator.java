@@ -29,16 +29,16 @@ import org.edgexfoundry.domain.meta.Response;
 public class CommandGenerator {
 
   /**
-   * @fn AddressableGenerator()
-   * @brief constructor
+   * construct CommandGenerator <br>
    */
   private CommandGenerator() {}
 
   /**
-   * @fn Get createGetOperation(String deviceInfoKey)
-   * @brief create Get Operation
-   * @param [in] deviceInfoKey command name for get operation
-   * @return generated Get operation
+   * Create Get Operation <br>
+   * Use {@link org.edgexfoundry.domain.meta.Get#Get()} to Get Operation instance
+   * 
+   * @param deviceInfoKey deviceInfoKey which matched with opcua node
+   * @return created Get Operation
    */
   private static Get createGetOperation(String deviceInfoKey) {
     Get get = new Get();
@@ -60,10 +60,11 @@ public class CommandGenerator {
   }
 
   /**
-   * @fn Put createPutOperation(String deviceInfoKey)
-   * @brief create Put Operation
-   * @param [in] deviceInfoKey command name for put operation
-   * @return generated Put operation
+   * Create Put Operation <br>
+   * Use {@link org.edgexfoundry.domain.meta.Put#Put()} to Put Operation instance
+   * 
+   * @param deviceInfoKey deviceInfoKey which matched with opcua node
+   * @return created Put Operation
    */
   private static Put createPutOperation(String deviceInfoKey) {
     List<String> parametNames = new ArrayList<>();
@@ -90,10 +91,13 @@ public class CommandGenerator {
   }
 
   /**
-   * @fn Command generate(String name, String readwrite)
-   * @brief generate Command
-   * @param [in] name command name for generate
-   * @param [in] readwrite command's read/write type
+   * generate Command <br>
+   * Use {@link org.edgexfoundry.domain.meta.Command#Command()} to Command instance <br>
+   * Use {@link #createGetOperation(String)} to create Get Operation<br>
+   * Use {@link #createPutOperation(String)} to create Put Operation
+   * 
+   * @param name command name which matched with DeviceObject and ProfileResource
+   * @param readwrite read/write access authority
    * @return generated Command
    */
   public static Command generate(String name, String readwrite) {

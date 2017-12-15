@@ -24,16 +24,18 @@ import org.edgexfoundry.domain.meta.Protocol;
 public class AddressableGenerator {
 
   /**
-   * @fn AddressableGenerator()
-   * @brief constructor
+   * construct AddressableGenerator <br>
    */
   private AddressableGenerator() {}
 
   /**
-   * @fn Addressable generate(String name)
-   * @brief generate Addressable
-   * @param [in] name @String
-   * @return @Addressable
+   * generate Addressable <br>
+   * Use
+   * {@link org.edgexfoundry.domain.meta.Addressable#Addressable(String, Protocol, String, String, int)}
+   * to generate Addressable
+   * 
+   * @param name Name which matched with Device
+   * @return created Addressable
    */
   public static Addressable generate(String name) {
     if (name == null || name.isEmpty()) {

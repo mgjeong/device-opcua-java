@@ -27,9 +27,9 @@ public class DeviceObjectAttributeInfo {
     private String dataType;
 
     /**
-     * @fn Builder(String providerKey)
-     * @brief constructor
-     * @param [in] providerKey @String
+     * DeviceObjectAttributeInfo Builder
+     * 
+     * @param providerKey key of opcua client provider
      */
     public Builder(String providerKey) {
       if (null != providerKey) {
@@ -41,10 +41,10 @@ public class DeviceObjectAttributeInfo {
     }
 
     /**
-     * @fn Builder setDataType(String dataType)
-     * @brief set Data Type
-     * @param [in] dataType @String
-     * @return @Builder
+     * Set DataType of DeviceObjectAttributeInfo
+     * 
+     * @param dataType dataType of DeviceObjectAttributeInfo
+     * @return Builder
      */
     public Builder setDataType(String dataType) {
       this.dataType = dataType;
@@ -52,8 +52,8 @@ public class DeviceObjectAttributeInfo {
     }
 
     /**
-     * @fn DeviceObjectAttributeInfo build()
-     * @brief create DeviceObjectAttributeInfo instance (builder)
+     * create DeviceObjectAttributeInfo instance (builder)
+     * 
      * @return DeviceObjectAttributeInfo instance
      */
     public DeviceObjectAttributeInfo build() {
@@ -62,9 +62,9 @@ public class DeviceObjectAttributeInfo {
   }
 
   /**
-   * @fn DeviceObjectAttributeInfo(Builder builder)
-   * @brief constructor
-   * @param [in] builder @Builder
+   * construct DeviceObjectAttributeInfo
+   * 
+   * @param builder Builder of DeviceObjectAttributeInfo
    */
   DeviceObjectAttributeInfo(Builder builder) {
     this.providerKey = builder.providerKey;
@@ -72,18 +72,18 @@ public class DeviceObjectAttributeInfo {
   }
 
   /**
-   * @fn String getProviderKey()
-   * @brief get ProviderKey
-   * @return @String
+   * Get ProviderKey of DeviceObjectAttributeInfo 
+   * 
+   * @return providerkey of DeviceObjectAttributeInfo
    */
   public String getProviderKey() {
     return providerKey;
   }
 
   /**
-   * @fn String getDataType()
-   * @brief get DataType
-   * @return @String
+   * Get DataType of DeviceObjectAttributeInfo 
+   * 
+   * @return DataType of DeviceObjectAttributeInfo
    */
   public String getDataType() {
     return dataType;

@@ -25,16 +25,17 @@ import org.edgexfoundry.domain.common.ValueDescriptor;
 public class ValueDescriptorGenerator {
 
   /**
-   * @fn ValueDescriptorGenerator()
-   * @brief constructor
+   * construct ValueDescriptorGenerator <br>
    */
   private ValueDescriptorGenerator() {}
 
   /**
-   * @fn ValueDescriptor generate(String name)
-   * @brief generate ValueDescriptor
-   * @param [in] name @String
-   * @return @ValueDescriptor
+   * generate ValueDescriptor <br>
+   * Use {@link org.edgexfoundry.domain.common.ValueDescriptor#ValueDescriptor()} to generate
+   * ValueDescriptor instance
+   * 
+   * @param name Name which matched with DeviceObject or Parameter of ResourceOperation
+   * @return created ValueDescriptor
    */
   public static ValueDescriptor generate(String name) {
     if (name == null || name.isEmpty()) {

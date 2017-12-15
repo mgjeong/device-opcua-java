@@ -27,11 +27,12 @@ import org.edgexfoundry.domain.core.Reading;
 public class EventGenerator {
 
   /**
-   * @fn Reading createReading(String deviceName, String value)
-   * @brief create reading
-   * @param [in] deviceName @String
-   * @param [in] value @String
-   * @return @Reading
+   * Create Reading <br>
+   * Use {@link org.edgexfoundry.domain.core.Reading#Reading()} to generate reading instance
+   * 
+   * @param deviceName Name which matched with ValueDescriptor
+   * @param value data of reading
+   * @return created reading
    */
   private static Reading createReading(String deviceName, String value) {
     Reading reading = new Reading();
@@ -45,11 +46,12 @@ public class EventGenerator {
   }
 
   /**
-   * @fn List<Reading> createReadingList(String deviceName, String value)
-   * @brief create List of reading
-   * @param [in] deviceName @String
-   * @param [in] value @String
-   * @return @List<Reading>
+   * Create list of Reading <br>
+   * Use {@link #createReading(String, String)} to create Reading
+   * 
+   * @param deviceName Name which matched with ValueDescriptor
+   * @param value data of reading
+   * @return created list of Reading
    */
   private static List<Reading> createReadingList(String deviceName, String value) {
     List<Reading> readings = new ArrayList<>();
@@ -58,11 +60,12 @@ public class EventGenerator {
   }
 
   /**
-   * @fn Event generate(String name, String value)
-   * @brief create event
-   * @param [in] name @String
-   * @param [in] value @String
-   * @return @Event
+   * Generate Event <br>
+   * Use {@link org.edgexfoundry.domain.core.Event#Event(String, List)} to generate Event
+   * 
+   * @param name name of device which posted in metadata DB.
+   * @param value data of reading
+   * @return generated Event
    */
   public static Event generate(String name, String value) {
     if (name == null || name.isEmpty()) {

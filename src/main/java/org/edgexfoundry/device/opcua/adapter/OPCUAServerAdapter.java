@@ -18,6 +18,7 @@
 
 package org.edgexfoundry.device.opcua.adapter;
 
+import org.edge.protocol.opcua.api.common.EdgeConfigure;
 import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
@@ -33,17 +34,17 @@ public class OPCUAServerAdapter {
   private Addressable addressable = null;
 
   /**
-   * @fn OPCUAServerAdapter()
-   * @brief constructor
+   * construct OPCUAServerAdapter <br>
+   * @see org.edge.protocol.opcua.example.EdgeEmulator
    */
   private OPCUAServerAdapter() {
     opcUaEmulator = new EdgeEmulator();
   }
 
   /**
-   * @fn OPCUAServerAdapter getInstance()
-   * @brief Get OPCUAServerAdapter Instance (singleton)
-   * @return @OPCUAServerAdapter
+   * Get OPCUAServerAdapter instance (singleton)<br>
+   * 
+   * @return OPCUAServerAdapter instance
    */
   public synchronized static OPCUAServerAdapter getInstance() {
 
@@ -55,8 +56,8 @@ public class OPCUAServerAdapter {
   }
 
   /**
-   * @fn void runServer() throws Exception
-   * @brief Run OPCUA Server
+   * Run OPCUA Server<br>
+   * @throws Exception if it is fail to run server
    */
   public void runServer() throws Exception {
     // Create Namespace and nodes
@@ -65,8 +66,9 @@ public class OPCUAServerAdapter {
   }
 
   /**
-   * @fn void startOPCUAAdapter() throws Exception
-   * @brief Start OPCUA Adapter
+   * Start OPCUA Adapter<br>
+   * Use {@link #getEndpointUrifromAddressable(Addressable)} to get addressable
+   * @throws Exception if start adapter fail
    */
   public void startOPCUAAdapter() throws Exception {
     // 1. run discovery device
@@ -91,10 +93,11 @@ public class OPCUAServerAdapter {
   }
 
   /**
-   * @fn String getEndpointUrifromAddressable(Addressable addressable)
-   * @brief Get EndpointUri from Addressable 
-   * @param [in] addressable @Addressable
-   * @return @String
+   * Get endpoint URI from Addressable object<br>
+   * Use {@link org.edgexfoundry.domain.meta.Addressable} to generate endpoint URI
+   * 
+   * @param addressable Device's addressable
+   * @return Endpoint URI
    */
   private String getEndpointUrifromAddressable(Addressable addressable) {
     String endpointUri = "";

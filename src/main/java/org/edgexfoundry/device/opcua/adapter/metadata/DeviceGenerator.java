@@ -24,6 +24,7 @@ import org.edgexfoundry.controller.DeviceServiceClient;
 import org.edgexfoundry.domain.meta.AdminState;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.OperatingState;
+import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,16 +52,16 @@ public class DeviceGenerator {
   private DeviceProfileClient deviceProfileClient;
 
   /**
-   * @fn DeviceGenerator()
-   * @brief constructor
+   * construct AddressableGenerator <br>
    */
   public DeviceGenerator() {}
 
   /**
-   * @fn Device generate(String name)
-   * @brief generate Device
-   * @param [in] name @String
-   * @return @Device
+   * generate Device <br>
+   * Use {@link org.edgexfoundry.domain.meta.Device#Device()} to generate Device instance
+   * 
+   * @param name Device name
+   * @return created Device
    */
   @SuppressWarnings("deprecation")
   public Device generate(String name) {
