@@ -34,8 +34,9 @@ public class Publisher {
   private static EMFErrorCode result = EMFErrorCode.EMF_ERROR;
 
   /**
+   * handling callback related ezmq.
+   * 
    * @fn void callbackFactory()
-   * @brief handling callback related ezmq.
    */
   private static void callbackFactory() {
     mCallback = new EMFCallback() {
@@ -55,8 +56,9 @@ public class Publisher {
   }
 
   /**
+   * construct publisher
+   * 
    * @fn Publisher()
-   * @brief construct
    */
   private Publisher() {
     apiInstance = EMFAPI.getInstance();
@@ -68,8 +70,9 @@ public class Publisher {
   }
 
   /**
+   * get instance of publisher class based singleton.
+   * 
    * @fn Publisher getInstance()
-   * @brief get instance of publisher class based singleton.
    */
   public synchronized static Publisher getInstance() {
     if (singleton == null) {
@@ -79,9 +82,10 @@ public class Publisher {
   }
 
   /**
+   * start publisher
+   * 
    * @fn EMFErrorCode startPublisher(int port)
-   * @brief start publisher
-   * @param [in] port subscriber port
+   * @param port subscriber port
    */
   public EMFErrorCode startPublisher(int port) {
     pubInstance = new EMFPublisher(port, mCallback);
@@ -95,8 +99,9 @@ public class Publisher {
   }
 
   /**
+   * stop publisher
+   * 
    * @fn EMFErrorCode stopPublisher()
-   * @brief stop publisher
    */
   public EMFErrorCode stopPublisher() {
     result = pubInstance.stop();
@@ -109,9 +114,10 @@ public class Publisher {
   }
 
   /**
+   * publish Event Data
+   * 
    * @fn EMFErrorCode publishEvent(Event event)
-   * @brief publish Event Data
-   * @param [in] event publish data based Event Class
+   * @param event publish data based Event Class
    */
   public EMFErrorCode publishEvent(Event event) {
     EMFErrorCode ret = EMFErrorCode.EMF_ERROR;
@@ -125,10 +131,12 @@ public class Publisher {
   }
 
   /**
+   * publish Event Data
+   * 
    * @fn EMFErrorCode publishEvent(String topic, Event event)
-   * @brief publish Event Data
-   * @param [in] topic topic
-   * @param [in] event publish data based Event Class
+   * 
+   * @param topic topic
+   * @param event publish data based Event Class
    */
   public EMFErrorCode publishEvent(String topic, Event event) {
     EMFErrorCode ret = EMFErrorCode.EMF_ERROR;
@@ -142,10 +150,12 @@ public class Publisher {
   }
 
   /**
+   * publish Event Data
+   * 
    * @fn EMFErrorCode publishEvent(List<String> topics, Event event)
-   * @brief publish Event Data
-   * @param [in] topics topic list
-   * @param [in] event publish data based Event Class
+   * 
+   * @param topics topic list
+   * @param event publish data based Event Class
    */
   public EMFErrorCode publishEvent(List<String> topics, Event event) {
     EMFErrorCode ret = EMFErrorCode.EMF_ERROR;

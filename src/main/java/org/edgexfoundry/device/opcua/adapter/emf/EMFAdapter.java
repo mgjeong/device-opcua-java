@@ -40,8 +40,9 @@ public class EMFAdapter {
   }
 
   /**
+   * get EMFAdapter instance
+   * 
    * @fn EMFAdapter getInstance()
-   * @brief get EMFAdapter instance
    * @return EMFAdapter instance based singleton
    */
   public synchronized static EMFAdapter getInstance() {
@@ -52,8 +53,9 @@ public class EMFAdapter {
   }
 
   /**
+   * publish data related EdgeMessage.
+   * 
    * @fn void publish(EdgeMessage data)
-   * @brief publish data related @EdgeMessage.
    */
   public void publish(EdgeMessage data) {
     if (null == data) {
@@ -72,9 +74,10 @@ public class EMFAdapter {
   }
 
   /**
+   * get Event Object. Name is set as provider key called ValueAlias. And Device is set as
+   * endpointUri of opcua server. And others will be set as default value.
+   * 
    * @fn Event getEvent(EdgeMessage data)
-   * @brief get Event Object. Name is set as provider key called ValueAlias. And Device is set as
-   *        endpointUri of opcua server. And others will be set as default value.
    */
   private Event getEvent(EdgeMessage data) {
     if (null == data) {
