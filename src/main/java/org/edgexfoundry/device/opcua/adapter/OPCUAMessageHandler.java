@@ -602,7 +602,7 @@ public class OPCUAMessageHandler {
           .equals(EdgeFormatIdentifier.ATTRIBUTES_TYPE.getValue()) == true) {
         if (edgeAttr.getValue() instanceof List) {
           getReadRequestDeviceList(
-              EdgeJsonFormatter.convertEdgeAttrubiteListFromObject(edgeAttr.getValue()),
+              EdgeJsonFormatter.convertEdgeAttributeListFromObject(edgeAttr.getValue()),
               requestList);
         }
       }
@@ -632,7 +632,7 @@ public class OPCUAMessageHandler {
           .equals(EdgeFormatIdentifier.ATTRIBUTES_TYPE.getValue()) == true) {
         if (edgeAttr.getValue() instanceof List) {
           getWriteRequestDeviceList(
-              EdgeJsonFormatter.convertEdgeAttrubiteListFromObject(edgeAttr.getValue()),
+              EdgeJsonFormatter.convertEdgeAttributeListFromObject(edgeAttr.getValue()),
               requestList);
         }
       }
