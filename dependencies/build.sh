@@ -3,13 +3,14 @@ DEP_ROOT=$(pwd)
 
 #start clone dependencies git repo and maven install
 cd $DEP_ROOT
-git clone https://github.com/mgjeong/messaging-zmq.git
-if [ ! -d "messaging-zmq" ]
+#git clone https://github.com/mgjeong/messaging-zmq.git
+git clone git@github.sec.samsung.net:RS7-EdgeComputing/protocol-ezmq-java.git
+if [ ! -d "protocol-ezmq-java" ]
 then
     echo "build fail"
     exit;
 else
-    cd messaging-zmq/java/edgex-emf
+    cd protocol-ezmq-java/edgex-ezmq
     ./build.sh
 fi
 

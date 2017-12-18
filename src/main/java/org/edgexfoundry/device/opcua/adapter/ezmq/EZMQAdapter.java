@@ -16,7 +16,7 @@
  *
  ******************************************************************/
 
-package org.edgexfoundry.device.opcua.adapter.emf;
+package org.edgexfoundry.device.opcua.adapter.ezmq;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -28,13 +28,13 @@ import org.edgexfoundry.domain.core.Reading;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 
-public class EMFAdapter {
-  private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(EMFAdapter.class);
-  private static EMFAdapter singleton = null;
+public class EZMQAdapter {
+  private final static EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(EZMQAdapter.class);
+  private static EZMQAdapter singleton = null;
   private static final int mPort = 5562;
   private static Publisher pub = null;
 
-  private EMFAdapter() {
+  private EZMQAdapter() {
     pub = Publisher.getInstance();
     pub.startPublisher(mPort);
   }
@@ -45,9 +45,9 @@ public class EMFAdapter {
    * @fn EMFAdapter getInstance()
    * @return EMFAdapter instance based singleton
    */
-  public synchronized static EMFAdapter getInstance() {
+  public synchronized static EZMQAdapter getInstance() {
     if (singleton == null) {
-      singleton = new EMFAdapter();
+      singleton = new EZMQAdapter();
     }
     return singleton;
   }

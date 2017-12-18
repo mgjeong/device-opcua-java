@@ -145,8 +145,7 @@ public class OPCUADriver {
   public void initialize() {
     // runs once on service startup
     try {
-      OPCUAAdapter.getInstance(callback).testStartServer();
-      OPCUAAdapter.getInstance(callback).startAdapter();
+      OPCUAAdapter.getInstance(callback);
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

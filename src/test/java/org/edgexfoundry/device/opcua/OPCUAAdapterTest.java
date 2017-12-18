@@ -18,6 +18,7 @@
 package org.edgexfoundry.device.opcua;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.edge.protocol.opcua.api.ProtocolManager;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
@@ -68,16 +69,16 @@ public class OPCUAAdapterTest {
   @Test
   public void test_startAdapter() throws Exception {
     logger.info("[TEST] test_startAdapter");
-    EdgeResult ret = OPCUAAdapter.getInstance(callback).startAdapter();
-    assertEquals(EdgeStatusCode.STATUS_OK, ret.getStatusCode());
+    OPCUAAdapter adapter = OPCUAAdapter.getInstance(callback);
+    assertNotNull(adapter);
     logger.info("[PASS] test_startAdapter");
   }
 
   @Test
   public void test_startAdapter_without_param() throws Exception {
     logger.info("[TEST] test_startAdapter_without_param");
-    EdgeResult ret = OPCUAAdapter.getInstance(null).startAdapter();
-    assertEquals(EdgeStatusCode.STATUS_OK, ret.getStatusCode());
+    OPCUAAdapter adapter = OPCUAAdapter.getInstance(null);
+    assertNotNull(adapter);
     logger.info("[PASS] test_startAdapter_without_param");
   }
 }
