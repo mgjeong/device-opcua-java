@@ -27,15 +27,15 @@ import org.edge.protocol.opcua.api.common.EdgeMessage;
 import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
 import org.edge.protocol.opcua.api.common.EdgeOpcUaCommon;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
-import org.edgexfoundry.device.opcua.adapter.emf.EMFAdapter;
-import org.edgexfoundry.device.opcua.adapter.emf.Publisher;
+import org.edgexfoundry.device.opcua.adapter.ezmq.EZMQAdapter;
+import org.edgexfoundry.device.opcua.adapter.ezmq.Publisher;
 import org.edgexfoundry.device.opcua.adapter.metadata.MetaDataType;
 import org.edgexfoundry.device.opcua.opcua.OPCUADriver.DriverCallback;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.ResourceOperation;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.core.Reading;
-import org.edgexfoundry.emf.EMFErrorCode;
+import org.edgexfoundry.ezmq.EZMQErrorCode;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +78,7 @@ public class EZMQAdapterTest {
     EdgeEndpointInfo epInfo =
         new EdgeEndpointInfo.Builder(EdgeOpcUaCommon.DEFAULT_ENDPOINT.getValue()).build();
     EdgeMessage data = new EdgeMessage.Builder(epInfo).setResponses(responses).build();
-    EMFAdapter.getInstance().publish(data);
+    EZMQAdapter.getInstance().publish(data);
     logger.info("[PASS] test_publish_with_EdgeMessage");
   }
 
@@ -86,19 +86,19 @@ public class EZMQAdapterTest {
   public void test_publish_without_EdgeMessage() throws Exception {
     logger.info("[TEST] test_publish_with_EdgeMessage");
     EdgeMessage data = null;
-    EMFAdapter.getInstance().publish(data);
+    EZMQAdapter.getInstance().publish(data);
     logger.info("[PASS] test_publish_with_EdgeMessage");
   }
 
   @Test
   public void test_publisher_publishEvent() throws Exception {
     logger.info("[TEST] test_publisher_publishEvent");
-    EMFErrorCode code = Publisher.getInstance().startPublisher(0);
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    EZMQErrorCode code = Publisher.getInstance().startPublisher(0);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     code = Publisher.getInstance().publishEvent(getTestEvent());
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     code = Publisher.getInstance().stopPublisher();
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     logger.info("[PASS] test_publisher_publishEvent");
   }
 
@@ -106,12 +106,12 @@ public class EZMQAdapterTest {
   public void test_publisher_publishEvent_with_topic() throws Exception {
     logger.info("[TEST] test_publisher_publishEvent_with_topic");
     String topic = "topic";
-    EMFErrorCode code = Publisher.getInstance().startPublisher(0);
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    EZMQErrorCode code = Publisher.getInstance().startPublisher(0);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     code = Publisher.getInstance().publishEvent(topic, getTestEvent());
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     code = Publisher.getInstance().stopPublisher();
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     logger.info("[PASS] test_publisher_publishEvent_with_topic");
   }
 
@@ -121,12 +121,12 @@ public class EZMQAdapterTest {
     List<String> topics = new ArrayList<String>();
     topics.add("topic1");
     topics.add("topic2");
-    EMFErrorCode code = Publisher.getInstance().startPublisher(0);
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    EZMQErrorCode code = Publisher.getInstance().startPublisher(0);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     code = Publisher.getInstance().publishEvent(topics, getTestEvent());
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     code = Publisher.getInstance().stopPublisher();
-    assertEquals(EMFErrorCode.EMF_OK, code);
+    assertEquals(EZMQErrorCode.EZMQ_OK, code);
     logger.info("[PASS] test_publisher_publishEvent_with_topics");
   }
 

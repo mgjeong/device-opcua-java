@@ -16,22 +16,23 @@
  *
  ******************************************************************/
 
-package org.edgexfoundry.device.opcua.adapter.emf;
+package org.edgexfoundry.device.opcua.adapter.ezmq;
 
 import java.util.List;
 import org.edgexfoundry.domain.core.Event;
-import org.edgexfoundry.emf.EMFAPI;
-import org.edgexfoundry.emf.EMFCallback;
-import org.edgexfoundry.emf.EMFErrorCode;
-import org.edgexfoundry.emf.EMFPublisher;
-import org.edgexfoundry.emf.EMFStatusCode;
+import org.edgexfoundry.ezmq.EZMQAPI;
+import org.edgexfoundry.ezmq.EZMQCallback;
+import org.edgexfoundry.ezmq.EZMQErrorCode;
+import org.edgexfoundry.ezmq.EZMQPublisher;
+import org.edgexfoundry.ezmq.EZMQStatusCode;
+import org.edgexfoundry.ezmq.EZMQAPI;
 
 public class Publisher {
   private static Publisher singleton;
-  private static EMFAPI apiInstance;
-  private static EMFPublisher pubInstance;
-  private static EMFCallback mCallback;
-  private static EMFErrorCode result = EMFErrorCode.EMF_ERROR;
+  private static EZMQAPI apiInstance;
+  private static EZMQPublisher pubInstance;
+  private static EZMQCallback mCallback;
+  private static EZMQErrorCode result = EZMQErrorCode.EZMQ_ERROR;
 
   /**
    * handling callback related ezmq.
@@ -39,17 +40,17 @@ public class Publisher {
    * @fn void callbackFactory()
    */
   private static void callbackFactory() {
-    mCallback = new EMFCallback() {
+    mCallback = new EZMQCallback() {
 
-      public void onStopCB(EMFErrorCode code) {
+      public void onStopCB(EZMQErrorCode code) {
         System.out.println("onStopCB Called Code: " + code);
       }
 
-      public void onStartCB(EMFErrorCode code) {
+      public void onStartCB(EZMQErrorCode code) {
         System.out.println("onStartCB Called Code: " + code);
       }
 
-      public void onErrorCB(EMFErrorCode code) {
+      public void onErrorCB(EZMQErrorCode code) {
         System.out.println("onErrorCB Called Code: " + code);
       }
     };
@@ -61,9 +62,9 @@ public class Publisher {
    * @fn Publisher()
    */
   private Publisher() {
-    apiInstance = EMFAPI.getInstance();
-    EMFStatusCode status = apiInstance.getStatus();
-    if (status != EMFStatusCode.EMF_Initialized) {
+    apiInstance = EZMQAPI.getInstance();
+    EZMQStatusCode status = apiInstance.getStatus();
+    if (status != EZMQStatusCode.EZMQ_Initialized) {
       apiInstance.initialize();
     }
     callbackFactory();
@@ -84,16 +85,16 @@ public class Publisher {
   /**
    * start publisher
    * 
-   * @fn EMFErrorCode startPublisher(int port)
+   * @fn EZMQErrorCode startPublisher(int port)
    * @param port subscriber port
    */
-  public EMFErrorCode startPublisher(int port) {
-    pubInstance = new EMFPublisher(port, mCallback);
+  public EZMQErrorCode startPublisher(int port) {
+    pubInstance = new EZMQPublisher(port, mCallback);
     result = pubInstance.start();
 
-    if (result != EMFErrorCode.EMF_OK) {
+    if (result != EZMQErrorCode.EZMQ_OK) {
       pubInstance = null;
-      System.out.println("Could not start EMF...");
+      System.out.println("Could not start EZMQ...");
     }
     return result;
   }
@@ -101,12 +102,12 @@ public class Publisher {
   /**
    * stop publisher
    * 
-   * @fn EMFErrorCode stopPublisher()
+   * @fn EZMQErrorCode stopPublisher()
    */
-  public EMFErrorCode stopPublisher() {
+  public EZMQErrorCode stopPublisher() {
     result = pubInstance.stop();
 
-    if (result != EMFErrorCode.EMF_OK) {
+    if (result != EZMQErrorCode.EZMQ_OK) {
       pubInstance = null;
       System.out.println("Publisher already stopped");
     }
@@ -116,11 +117,11 @@ public class Publisher {
   /**
    * publish Event Data
    * 
-   * @fn EMFErrorCode publishEvent(Event event)
+   * @fn EZMQErrorCode publishEvent(Event event)
    * @param event publish data based Event Class
    */
-  public EMFErrorCode publishEvent(Event event) {
-    EMFErrorCode ret = EMFErrorCode.EMF_ERROR;
+  public EZMQErrorCode publishEvent(Event event) {
+    EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;
     if (event == null) {
       System.out.println("Delivered argument is null");
     } else {
@@ -133,13 +134,13 @@ public class Publisher {
   /**
    * publish Event Data
    * 
-   * @fn EMFErrorCode publishEvent(String topic, Event event)
+   * @fn EZMQErrorCode publishEvent(String topic, Event event)
    * 
    * @param topic topic
    * @param event publish data based Event Class
    */
-  public EMFErrorCode publishEvent(String topic, Event event) {
-    EMFErrorCode ret = EMFErrorCode.EMF_ERROR;
+  public EZMQErrorCode publishEvent(String topic, Event event) {
+    EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;
     if (event == null || topic == null) {
       System.out.println("Delivered arguments is null");
     } else {
@@ -152,13 +153,13 @@ public class Publisher {
   /**
    * publish Event Data
    * 
-   * @fn EMFErrorCode publishEvent(List<String> topics, Event event)
+   * @fn EZMQErrorCode publishEvent(List<String> topics, Event event)
    * 
    * @param topics topic list
    * @param event publish data based Event Class
    */
-  public EMFErrorCode publishEvent(List<String> topics, Event event) {
-    EMFErrorCode ret = EMFErrorCode.EMF_ERROR;
+  public EZMQErrorCode publishEvent(List<String> topics, Event event) {
+    EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;
     if (event == null || topics == null) {
       System.out.println("Delivered arguments is null");
     } else {
