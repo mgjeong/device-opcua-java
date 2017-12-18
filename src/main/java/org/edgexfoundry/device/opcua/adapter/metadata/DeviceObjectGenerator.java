@@ -137,14 +137,6 @@ public class DeviceObjectGenerator {
     profileProperty.setUnits(units);
     return profileProperty;
   }
-
-  /**
-   * @fn DeviceObject generate(String name, String deviceType)
-   * @brief Generate DeviceObject
-   * @param [in] name @String
-   * @param [in] deviceType @String
-   * @return @DeviceObject
-   */
   
   /**
    * Generate DeviceObject<br>

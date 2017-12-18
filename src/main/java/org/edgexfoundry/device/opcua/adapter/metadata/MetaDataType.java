@@ -24,18 +24,18 @@ public enum MetaDataType {
   private int code;
 
   /**
-   * @fn MetaDataType(int code)
-   * @brief constructor
-   * @param [in] code @int
+   * construct MetaDataType
+   * 
+   * @param code code number of MetaDataType
    */
   private MetaDataType(int code) {
     this.code = code;
   }
 
   /**
-   * @fn int getCode()
-   * @brief get enum code
-   * @return code
+   * Get code number of MetaDataType
+   * 
+   * @return code number of MetaDataType
    */
   public int getCode() {
     return code;

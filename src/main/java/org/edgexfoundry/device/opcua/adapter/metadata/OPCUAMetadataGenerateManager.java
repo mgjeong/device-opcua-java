@@ -37,10 +37,20 @@ public class OPCUAMetadataGenerateManager {
   private final static int startOperationIndex = 1;
 
   /**
-   * @fn void initMetaData()
-   * @brief Initialize MetaData Generate DeviceObjcetList, ProfileResourceList, CommandList
-   *        (Wellknown Command) Add this to DeviceProfile and MetaData
-   * @param [in] name metadata name
+   * Initialize MetaData<br>
+   * Use {@link DeviceObjectGenerator#generate(String, String)} to generate DeviceObject<br>
+   * Use {@link #createWellKnownSetList(String)} to create list of wellknown command<br>
+   * Use {@link ProfileResourceGenerator#generate(String, List, List)} to generate
+   * ProfileResource<br>
+   * Use {@link CommandGenerator#generate(String, String)} to generate Command<br>
+   * Use {@link DeviceProfileGenerator#generate(String, List, List, List)} to generate
+   * DeviceProfile<br>
+   * Use {@link DeviceEnroller#addDeviceProfileToMetaData(DeviceProfile)} to add DeviceProfile to
+   * MetaData<br>
+   * Use {@link DeviceGenerator#generate(String)} to generate Device<br>
+   * Use {@link DeviceEnroller#addDeviceToMetaData(Device)} to add Device to MetaData
+   * 
+   * @param name name of Device
    */
   public void initMetaData(String name) {
     List<DeviceObject> deviceObjectList = new ArrayList<DeviceObject>();
@@ -69,9 +79,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn void initAddressable()
-   * @brief Initialize Addressable
-   * @param [in] name metadata name
+   * Initialize Addressable<br>
+   * Use {@link AddressableGenerator#generate(String)} to generate DeviceObject<br>
+   * Use {@link DeviceEnroller#addAddressableToMetaData(Addressable)} to add Addressable to MetaData
+   * 
+   * @param name name of Addressable
    */
   public void initAddressable(String name) {
     Addressable addressable = AddressableGenerator.generate(name);
@@ -80,12 +92,29 @@ public class OPCUAMetadataGenerateManager {
 
 
   /**
-   * @fn void updateAttributeService(String deviceProfileName, String commandType)
-   * @brief Get Attribute Service List from opcua Generate DeviceObjcetList, ProfileResourceList,
-   *        CommandList (Attribute Service) Add this to DeviceProfile and MetaData
-   * @param [in] deviceProfileName @String
-   * @param [in] commandType @String
-   * @param [in] keyList Attribute Provider List
+   * Add Attribute Service to DeviecProfile<br>
+   * Use {@link org.edge.protocol.opcua.providers.EdgeServices#getAttributeProvider(String)} to get
+   * EdgeAttribute Provider<br>
+   * Use {@link #createAttributeGetResourceOperation(String)} to EdgeAttribute
+   * GetResourceOperation<br>
+   * Use {@link #createAttributeSetResourceOperation(String)} to EdgeAttribute
+   * GetResourceOperation<br>
+   * Use {@link ProfileResourceGenerator#generate(String, List, List)} to generate
+   * ProfileResource<br>
+   * Use {@link DeviceProfileGenerator#update(String, ProfileResource)} to update ProfileResource to
+   * DeviceProfile<br>
+   * Use {@link CommandGenerator#generate(String, String)} to generate Command<br>
+   * Use {@link DeviceProfileGenerator#update(String, Command)} to update Comand to
+   * DeviceProfile<br>
+   * Use {@link DeviceObjectGenerator#generate(String, String)} to generate DeviceObject<br>
+   * Use {@link DeviceProfileGenerator#update(String, DeviceObject)} to update DeviceObject to
+   * DeviceProfile<br>
+   * Use {@link DeviceEnroller#updateDeviceProfileToMetaData(DeviceProfile)} to update DeviceProfile
+   * to MetaData
+   * 
+   * @param deviceProfileName name of DeviceProfile
+   * @param commandType Type of Command ( attribute or method or wellknown )
+   * @param keyList list of provider key
    */
   public void updateAttributeService(String deviceProfileName, String commandType,
       ArrayList<String> keyList) {
@@ -129,12 +158,27 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn void updateMethodService(String deviceProfileName, String commandType)
-   * @brief Get Method Service List from opcua Generate DeviceObjcetList, ProfileResourceList,
-   *        CommandList (Method Service) Add this to DeviceProfile and MetaData
-   * @param [in] deviceProfileName @String
-   * @param [in] commandType @String
-   * @param [in] keyList Method Provider List
+   * Add method Service to DeviecProfile<br>
+   * Use {@link #createAttributeGetResourceOperation(String)} to EdgeAttribute
+   * GetResourceOperation<br>
+   * Use {@link #createAttributeSetResourceOperation(String)} to EdgeAttribute
+   * GetResourceOperation<br>
+   * Use {@link ProfileResourceGenerator#generate(String, List, List)} to generate
+   * ProfileResource<br>
+   * Use {@link DeviceProfileGenerator#update(String, ProfileResource)} to update ProfileResource to
+   * DeviceProfile<br>
+   * Use {@link CommandGenerator#generate(String, String)} to generate Command<br>
+   * Use {@link DeviceProfileGenerator#update(String, Command)} to update Comand to
+   * DeviceProfile<br>
+   * Use {@link DeviceObjectGenerator#generate(String, String)} to generate DeviceObject<br>
+   * Use {@link DeviceProfileGenerator#update(String, DeviceObject)} to update DeviceObject to
+   * DeviceProfile<br>
+   * Use {@link DeviceEnroller#updateDeviceProfileToMetaData(DeviceProfile)} to update DeviceProfile
+   * to MetaData
+   * 
+   * @param deviceProfileName name of DeviceProfile
+   * @param commandType Type of Command ( attribute or method or wellknown )
+   * @param keyList list of provider key
    */
   public void updateMethodService(String deviceProfileName, String commandType,
       ArrayList<String> keyList) {
@@ -150,7 +194,7 @@ public class OPCUAMetadataGenerateManager {
       List<ResourceOperation> setList = createMethodSetResourceOperation(deviceInfoName);
       ProfileResource profileResource =
           ProfileResourceGenerator.generate(deviceInfoName, getList, setList);
-      
+
       if (deviceProfileGenerator == null || deviceEnroller == null) {
         return;
       }
@@ -169,9 +213,14 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn void updateMetaData(String deviceProfileName)
-   * @brief Update MetaData
-   * @param [in] deviceProfileName @String
+   * update MetaData<br>
+   * Use {@link #getAttributeProviderKeyList()} to get list of method provider key from opcua<br>
+   * Use {@link #updateAttributeService(String, String, ArrayList)} to update EdgeAttribute
+   * Service<br>
+   * Use {@link #getMethodProviderKeyList()} to get list of method provider key from opcua<br>
+   * Use {@link #updateMethodService(String, String, ArrayList)} to update EdgeAttribute Service
+   * 
+   * @param deviceProfileName name of DeviceProfile
    */
   public void updateMetaData(String deviceProfileName) {
     updateAttributeService(deviceProfileName, OPCUACommandIdentifier.ATTRIBUTE_COMMAND.getValue(),
@@ -181,9 +230,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn ArrayList<String> getAttributeProviderKeyList()
-   * @brief Get AttributeProvider Key Name List from OPCUA
-   * @return @ArrayList<String>
+   * get list of EdgeAttribute provider key from opcua<br>
+   * Use {@link org.edge.protocol.opcua.providers.EdgeServices#getAttributeProviderKeyList()} to get
+   * list of EdgeAttribute provider key from opcua<br>
+   * 
+   * @param list of EdgeAttribute provider key
    */
   private static ArrayList<String> getAttributeProviderKeyList() {
     ArrayList<String> attributeProviderKeyList = new ArrayList<String>();
@@ -197,9 +248,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn ArrayList<String> getMethodProviderKeyList()
-   * @brief Get key list of the MethodProvider from OPCUA stack
-   * @return @ArrayList<String>
+   * get list of method provider key from opcua<br>
+   * Use {@link org.edge.protocol.opcua.providers.EdgeServices#getMethodProviderKeyList()} to get
+   * list of method provider key from opcua<br>
+   * 
+   * @param list of method provider key
    */
   private static ArrayList<String> getMethodProviderKeyList() {
     ArrayList<String> methodProviderKeyList = new ArrayList<String>();
@@ -209,10 +262,19 @@ public class OPCUAMetadataGenerateManager {
     return methodProviderKeyList;
   }
 
+
   /**
-   * @fn List<ResourceOperation> createWellKnownSetList(String deviceInfoKey)
-   * @brief Create Well-Known Command such as group read/write, start, stop, getEndpoint
-   * @return @List<ResourceOperation>
+   * Create Well-Known Command such as group read/write, start, stop, getEndpoint<br>
+   * Use {@link #createGroupResourceOperation(String)} to create ResourceOperation for Group
+   * command<br>
+   * Use {@link #createStartServiceOperation(String)} to create ResourceOperation for Start
+   * command<br>
+   * Use {@link #createStopServiceOperation(String)} to create ResourceOperation for Stop
+   * command<br>
+   * Use {@link #createGetEndpointServiceOperation(String)} to create ResourceOperation for
+   * GetEndpoint command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createWellKnownSetList(String deviceInfoKey) {
     List<ResourceOperation> setList = null;
@@ -234,9 +296,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn List<ResourceOperation> createAttributeGetResourceOperation(String deviceInfoKey)
-   * @brief create ResourceOperation related Get for read command
-   * @return @List<ResourceOperation>
+   * create ResourceOperation related Get for read command<br>
+   * Use {@link ProfileResourceGenerator#createGetOperation(String, String, int)} to create
+   * ResourceOperation for get command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createAttributeGetResourceOperation(String deviceInfoKey) {
     int getOperationIndex = startOperationIndex;
@@ -248,9 +312,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn List<ResourceOperation> createAttributeSetResourceOperation(String deviceInfoKey)
-   * @brief create ResourceOperation related Set for write / subscription command
-   * @return @List<ResourceOperation>
+   * create ResourceOperation related Set for write / subscription command<br>
+   * Use {@link ProfileResourceGenerator#createPutOperation(String, String, int)} to create
+   * ResourceOperation for put command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createAttributeSetResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
@@ -264,9 +330,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey)
-   * @brief create ResourceOperation related Get for method types of the opcua
-   * @return @List<ResourceOperation>
+   * create ResourceOperation related Get for method types of the opcua<br>
+   * Use {@link ProfileResourceGenerator#createGetOperation(String, String, int)} to create
+   * ResourceOperation for get command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createMethodGetResourceOperation(String deviceInfoKey) {
     int getOperationIndex = startOperationIndex;
@@ -278,9 +346,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey)
-   * @brief create ResourceOperation related Set for method types of the opcua
-   * @return @List<ResourceOperation>
+   * create ResourceOperation related Set for method types of the opcua<br>
+   * Use {@link ProfileResourceGenerator#createPutOperation(String, String, int)} to create
+   * ResourceOperation for put command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createMethodSetResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
@@ -291,11 +361,12 @@ public class OPCUAMetadataGenerateManager {
     return setList;
   }
 
-
   /**
-   * @fn List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey)
-   * @brief create ResourceOperation related Set for group access
-   * @return @List<ResourceOperation>
+   * create ResourceOperation related Set for group access<br>
+   * Use {@link ProfileResourceGenerator#createPutOperation(String, String, int)} to create
+   * ResourceOperation for put command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createGroupResourceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
@@ -311,9 +382,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn List<ResourceOperation> createStartServiceOperation(String deviceInfoKey)
-   * @brief create ResourceOperation related Set for start command
-   * @return @List<ResourceOperation>
+   * create ResourceOperation related Set for start command<br>
+   * Use {@link ProfileResourceGenerator#createPutOperation(String, String, int)} to create
+   * ResourceOperation for put command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createStartServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
@@ -325,9 +398,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn List<ResourceOperation> createStopServiceOperation(String deviceInfoKey)
-   * @brief create ResourceOperation related Set for stop command
-   * @return @List<ResourceOperation>
+   * create ResourceOperation related Set for stop command<br>
+   * Use {@link ProfileResourceGenerator#createPutOperation(String, String, int)} to create
+   * ResourceOperation for put command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createStopServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
@@ -339,9 +414,11 @@ public class OPCUAMetadataGenerateManager {
   }
 
   /**
-   * @fn List<ResourceOperation> createGetEndpointServiceOperation(String deviceInfoKey)
-   * @brief create ResourceOperation related Set for getEndpoint command
-   * @return @List<ResourceOperation>
+   * create ResourceOperation related Set for getEndpoint command<br>
+   * Use {@link ProfileResourceGenerator#createPutOperation(String, String, int)} to create
+   * ResourceOperation for put command<br>
+   * 
+   * @param list of ResourceOperation
    */
   private List<ResourceOperation> createGetEndpointServiceOperation(String deviceInfoKey) {
     List<ResourceOperation> setList = new ArrayList<ResourceOperation>();
