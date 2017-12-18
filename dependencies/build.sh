@@ -33,7 +33,7 @@ then
     echo "build fail"
     exit;
 else
-    cd datamodel-command-java/command-json-format
+    cd datamodel-command-java
     ./build.sh
 fi
 
