@@ -35,20 +35,20 @@ public class DeviceProfileGenerator {
   private DeviceProfileClient deviceProfileClient;
 
   /**
-   * @fn DeviceProfileGenerator()
-   * @brief constructor
+   * construct DeviceProfileGenerator <br>
    */
   public DeviceProfileGenerator() {}
 
   /**
-   * @fn DeviceProfile generate(String name, List<DeviceObject> deviceObjectList,
-   *     List<ProfileResource> profileResourceList, List<Command> commandList)
-   * @brief Generate DeviceProfile
-   * @param [in] name @String
-   * @param [in] deviceObjectList @List<DeviceObject>
-   * @param [in] profileResourceList @List<ProfileResource>
-   * @param [in] commandList @List<Command>
-   * @return @DeviceProfile
+   * generate DeviceProfile<br>
+   * Use {@link org.edgexfoundry.domain.meta.DeviceProfile#DeviceProfile()} to generate DeviceProfile
+   * 
+   * @param name name which matched with Device and addressable
+   * @param deviceObjectList list of DeviceObject
+   * @param profileResourceList list of ProfileResource
+   * @param commandList list of Command
+   * 
+   * @return generated DeviceProfile
    */
   public DeviceProfile generate(String name, List<DeviceObject> deviceObjectList,
       List<ProfileResource> profileResourceList, List<Command> commandList) {
@@ -76,11 +76,12 @@ public class DeviceProfileGenerator {
   }
 
   /**
-   * @fn DeviceProfile update(String name, Command command)
-   * @brief Update DeviceProfile (Changed Command)
-   * @param [in] name @String
-   * @param [in] command @Command
-   * @return @DeviceProfile
+   * update Command in DeviceProfile
+   * 
+   * @param name name which matched with Device and addressable
+   * @param command updated Command
+   * 
+   * @return updated DeviceProfile
    */
   public DeviceProfile update(String name, Command command) {
     if (deviceProfileClient == null || command == null) {
@@ -93,11 +94,12 @@ public class DeviceProfileGenerator {
   }
 
   /**
-   * @fn DeviceProfile update(String name, DeviceObject deviceObject)
-   * @brief Update DeviceProfile (Changed DeviceObject)
-   * @param [in] name @String
-   * @param [in] deviceObject @DeviceObject
-   * @return @DeviceProfile
+   * update DeviceObject in DeviceProfile
+   * 
+   * @param name name which matched with Device and addressable
+   * @param deviceObject updated DeviceObject
+   * 
+   * @return updated DeviceProfile
    */
   public DeviceProfile update(String name, DeviceObject deviceObject) {
     if (deviceProfileClient == null || deviceObject == null) {
@@ -112,11 +114,12 @@ public class DeviceProfileGenerator {
   }
 
   /**
-   * @fn DeviceProfile update(String name, ProfileResource profileResource)
-   * @brief Update DeviceProfile (Changed ProfileResource)
-   * @param [in] name @String
-   * @param [in] profileResource @ProfileResource
-   * @return @DeviceProfile
+   * update DeviceProfile in DeviceProfile
+   * 
+   * @param name name which matched with Device and addressable
+   * @param profileResource updated ProfileResource
+   * 
+   * @return updated DeviceProfile
    */
   public DeviceProfile update(String name, ProfileResource profileResource) {
     if (deviceProfileClient == null || profileResource == null) {

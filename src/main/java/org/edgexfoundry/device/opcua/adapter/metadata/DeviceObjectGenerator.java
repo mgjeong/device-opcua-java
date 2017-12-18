@@ -29,18 +29,20 @@ import org.edgexfoundry.domain.meta.Units;
 public class DeviceObjectGenerator {
 
   /**
-   * @fn DeviceObjectGenerator()
-   * @brief constructor
+   * construct DeviceObjectGenerator <br>
    */
   private DeviceObjectGenerator() {}
 
+  
   /**
-   * @fn String getAttributeInfo(String name, String id, String deviceType)
-   * @brief Get Attribute information
-   * @param [in] name @String
-   * @param [in] id @String
-   * @param [in] deviceType @String
-   * @return @String
+   * Get Attribute information from opcua device<br>
+   * Use {@link org.edge.protocol.mapper.api.EdgeMappe} to get attribute information
+   * 
+   * @param name key of opcua client provider service
+   * @param id mapping id in EdgeMapper
+   * @param deviceType type of command (wellknown/method/attribute)
+   * 
+   * @return attribute information
    */
   private static String getAttributeInfo(String name, String id, String deviceType) {
     if (OPCUACommandIdentifier.WELLKNOWN_COMMAND.getValue().equals(deviceType) == true
@@ -67,11 +69,13 @@ public class DeviceObjectGenerator {
   }
 
   /**
-   * @fn PropertyValue createPropertyValue(String deviceInfoKey, String deviceType)
-   * @brief Create PropertyValue
-   * @param [in] deviceInfoKey @String
-   * @param [in] deviceType @String
-   * @return @PropertyValue
+   * Create PropertyValue<br>
+   * Use {@link #getAttributeInfo(String, String, String)} to get attribute information
+   * 
+   * @param deviceInfoKey key of opcua client provider service
+   * @param deviceType type of command (wellknown/method/attribute)
+   * 
+   * @return created PropertyValue
    */
   private static PropertyValue createPropertyValue(String deviceInfoKey, String deviceType) {
     PropertyValue propertyValue = new PropertyValue();
@@ -98,11 +102,13 @@ public class DeviceObjectGenerator {
   }
 
   /**
-   * @fn Units createUnits(String deviceInfoKey, String deviceType)
-   * @brief Create Units
-   * @param [in] deviceInfoKey @String
-   * @param [in] deviceType @String
-   * @return @Units
+   * Create Units<br>
+   * Use {@link #getAttributeInfo(String, String, String)} to get attribute information
+   * 
+   * @param deviceInfoKey key of opcua client provider service
+   * @param deviceType type of command (wellknown/method/attribute)
+   * 
+   * @return created Units
    */
   private static Units createUnits(String deviceInfoKey, String deviceType) {
     Units units = new Units();
@@ -114,11 +120,14 @@ public class DeviceObjectGenerator {
   }
 
   /**
-   * @fn ProfileProperty createProfileProperty(String deviceInfoKey, String deviceType)
-   * @brief Create ProfileProperty
-   * @param [in] deviceInfoKey @String
-   * @param [in] deviceType @String
-   * @return @ProfileProperty
+   * Create ProfileProperty<br>
+   * Use {@link #createPropertyValue(String, String)} to create PropertyValue
+   * Use {@link #createUnits(String, String)} to create Units
+   * 
+   * @param deviceInfoKey key of opcua client provider service
+   * @param deviceType type of command (wellknown/method/attribute)
+   * 
+   * @return created ProfileProperty
    */
   private static ProfileProperty createProfileProperty(String deviceInfoKey, String deviceType) {
     ProfileProperty profileProperty = new ProfileProperty();
@@ -128,13 +137,15 @@ public class DeviceObjectGenerator {
     profileProperty.setUnits(units);
     return profileProperty;
   }
-
+  
   /**
-   * @fn DeviceObject generate(String name, String deviceType)
-   * @brief Generate DeviceObject
-   * @param [in] name @String
-   * @param [in] deviceType @String
-   * @return @DeviceObject
+   * Generate DeviceObject<br>
+   * Use {@link #createProfileProperty(String, String)} to create ProfileProperty
+   * 
+   * @param name name which matched with Command and ProfileResource
+   * @param deviceType type of command (wellknown/method/attribute)
+   * 
+   * @return generated DeviceObject
    */
   public static DeviceObject generate(String name, String deviceType) {
     if (name == null || name.isEmpty()) {

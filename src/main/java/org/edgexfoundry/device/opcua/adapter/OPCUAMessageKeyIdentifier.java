@@ -18,6 +18,13 @@ public enum OPCUAMessageKeyIdentifier {
   private String value;
   private String description;
 
+  /**
+   * construct OPCUAMessageKeyIdentifier
+   * 
+   * @param code code number of OPCUAMessageKeyIdentifier
+   * @param value message of OPCUAMessageKeyIdentifier
+   * @param description description of OPCUAMessageKeyIdentifier
+   */
   private OPCUAMessageKeyIdentifier(int code, String value, String description) {
     this.code = code;
     this.value = value;
@@ -25,27 +32,27 @@ public enum OPCUAMessageKeyIdentifier {
   }
 
   /**
-   * @fn int getCode()
-   * @brief get enum code
-   * @return code
+   * Get code number of OPCUAMessageKeyIdentifier
+   * 
+   * @return code number of OPCUAMessageKeyIdentifier
    */
   public int getCode() {
     return code;
   }
 
   /**
-   * @fn String getValue()
-   * @brief get enum value
-   * @return value
+   * Get value of OPCUAMessageKeyIdentifier
+   * 
+   * @return value of OPCUAMessageKeyIdentifier
    */
   public String getValue() {
     return value;
   }
 
   /**
-   * @fn String getDescription()
-   * @brief get description
-   * @return description
+   * Get description of OPCUAMessageKeyIdentifier
+   * 
+   * @return description of OPCUAMessageKeyIdentifier
    */
   public String getDescription() {
     return description;

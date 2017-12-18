@@ -22,10 +22,10 @@ public enum OPCUACommandIdentifier {
   private String value;
 
   /**
-   * @fn OPCUACommandIdentifier(int code, String value)
-   * @brief constructor
-   * @param [in] code @int
-   * @param [in] value @String
+   * construct OPCUACommandIdentifier
+   * 
+   * @param code code number of OPCUACommandIdentifier
+   * @param value value of OPCUACommandIdentifier
    */
   private OPCUACommandIdentifier(int code, String value) {
     this.code = code;
@@ -33,18 +33,18 @@ public enum OPCUACommandIdentifier {
   }
 
   /**
-   * @fn int getCode()
-   * @brief get enum code
-   * @return code
+   * Get code number of OPCUACommandIdentifier
+   * 
+   * @return code number of OPCUACommandIdentifier
    */
   public int getCode() {
     return code;
   }
 
   /**
-   * @fn String getValue()
-   * @brief get enum value
-   * @return value
+   * Get value of OPCUACommandIdentifier
+   * 
+   * @return value of OPCUACommandIdentifier
    */
   public String getValue() {
     return value;

@@ -59,9 +59,12 @@ public class OPCUAAdapter {
   private DriverCallback driverCallback = null;
 
   /**
-   * @fn OPCUAAdapter(DriverCallback callback)
-   * @brief construct
-   * @param [in] DriverCallback callback
+   * construct OPCUAAdapter <br>
+   * Use {@link org.edge.protocol.opcua.api.common.EdgeConfigure} to register callback <br>
+   * Use {@link org.edge.protocol.opcua.api.ProtocolManager#configure(EdgeConfigure)} to register
+   * callback <br>
+   * 
+   * @param callback Callback Driver
    */
   private OPCUAAdapter(DriverCallback callback) {
     this.driverCallback = callback;
@@ -75,9 +78,9 @@ public class OPCUAAdapter {
   }
 
   /**
-   * @fn OPCUAAdapter getInstance(DriverCallback callback)
-   * @brief get instance based singleton
-   * @param [in] DriverCallback callback
+   * Get OPCUAAdapter Instance (singleton)<br>
+   * 
+   * @param callback Callback Driver
    * @return OPCUAAdapter instance
    */
   public synchronized static OPCUAAdapter getInstance(DriverCallback callback) {
@@ -90,9 +93,12 @@ public class OPCUAAdapter {
   }
 
   /**
-   * @fn void receive(EdgeMessage data)
-   * @brief handling received data called @EdgeMessage
-   * @param [in] data @EdgeMessage
+   * Receive data from device<br>
+   * Use {@link DriverCallback#onReceive(Device, ResourceOperation, String)} to create OPCUAAdapter
+   * Instance <br>
+   * 
+   * @param data response message data format is
+   *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   private void receive(EdgeMessage data) {
     // TODO 7: [Optional] Fill with your own implementation for handling
@@ -117,11 +123,19 @@ public class OPCUAAdapter {
     driverCallback.onReceive(device, operation, result);
   }
 
+  /**
+   * handling received data called message<br>
+   * 
+   * @see org.edge.protocol.opcua.api.ProtocolManager.ReceivedMessageCallback
+   */
   ReceivedMessageCallback receiverCallback = new ReceivedMessageCallback() {
     /**
-     * @fn void onResponseMessages(EdgeMessage data)
-     * @brief handling received data called @EdgeMessage
-     * @param [in] data @EdgeMessage
+     * handling response data called message<br>
+     * Use {@link OPCUAMessageHandler#convertEdgeMessagetoEdgeElement(EdgeMessage)} to convert
+     * message format <br>
+     * 
+     * @param data response message data format is
+     *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
      */
     @Override
     public void onResponseMessages(EdgeMessage data) {
@@ -143,10 +157,13 @@ public class OPCUAAdapter {
     }
 
     /**
-     * @fn void onMonitoredMessage(EdgeMessage data)
-     * @brief handling monitored data called @EdgeMessage the data will be published into EMFAdapter
-     *        by default. since the data is considered as streaming data.
-     * @param [in] data @EdgeMessage
+     * handling monitored data called message<br>
+     * the data will be published into EMFAdapter by default.<br>
+     * since the data is considered as streaming data.<br>
+     * Use {@link OPCUAAdapter#receive(EdgeMessage)} to publish into EMFAdapter
+     * 
+     * @param data response message data format is
+     *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
      */
     @Override
     public void onMonitoredMessage(EdgeMessage data) {
@@ -157,9 +174,12 @@ public class OPCUAAdapter {
     }
 
     /**
-     * @fn void onErrorMessage(EdgeMessage data)
-     * @brief handling error data called @EdgeMessage
-     * @param [in] data @EdgeMessage
+     * handling error data called message<br>
+     * Use {@link OPCUAMessageHandler#convertEdgeMessagetoEdgeElement(EdgeMessage)} to convert
+     * message format <br>
+     * 
+     * @param data response message data format is
+     *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
      */
     @Override
     public void onErrorMessage(EdgeMessage data) {
@@ -168,12 +188,11 @@ public class OPCUAAdapter {
     }
 
     /**
-     * @fn void onBrowseMessage(EdgeNodeInfo endpoint, List<EdgeBrowseResult> responses, int
-     *     requestId)
-     * @brief handling browsing data.
-     * @param [in] endpoint endpoint
-     * @param [in] responses responses which has browsed node information called @EdgeBrowseResult.
-     * @param [in] requestId requestId
+     * handling browse data called message<br>
+     * 
+     * @param endpoint Endpoint data
+     * @param responses list of browse result
+     * @param requestId id of request
      */
     @Override
     public void onBrowseMessage(EdgeNodeInfo endpoint, List<EdgeBrowseResult> responses,
@@ -184,11 +203,16 @@ public class OPCUAAdapter {
   };
 
 
+  /**
+   * handling received data called message<br>
+   * 
+   * @see org.edge.protocol.opcua.api.ProtocolManager.DiscoveryCallback
+   */
   DiscoveryCallback discoveryCallback = new DiscoveryCallback() {
     /**
-     * @fn onFoundEndpoint(EdgeDevice device)
-     * @brief handling found endpoint information through Get Endpoint logic.
-     * @param [in] device endpoint list based EdgeDevice class
+     * handling endpoint data called message<br>
+     * 
+     * @param device EdgeDevice data
      */
     @Override
     public void onFoundEndpoint(EdgeDevice device) {
@@ -214,10 +238,9 @@ public class OPCUAAdapter {
     }
 
     /**
-     * @fn onFoundDevice(EdgeDevice device)
-     * @brief handling found device information through Device Discovery logic. it is not supported
-     *        yet.
-     * @param [in] device device list based EdgeDevice class
+     * handling Device data called message<br>
+     * 
+     * @param device EdgeDevice data
      */
     @Override
     public void onFoundDevice(EdgeDevice device) {
@@ -228,15 +251,16 @@ public class OPCUAAdapter {
 
   StatusCallback statusCallback = new StatusCallback() {
     /**
-     * @fn onStart(EdgeEndpointInfo ep, EdgeStatusCode status, List<String> attiributeAliasList,
-     *     List<String> methodAliasList, List<String> viewAliasList)
-     * @brief it will be called when server or client is started. and service providers (based
-     *        Attribute, Method, View Type) list will be provided.
-     * @param [in] ep endpoint to start
-     * @param [in] status status code
-     * @param [in] attiributeAliasList service provider list base on Object/Variable Type
-     * @param [in] methodAliasList service provider list base on Method Type
-     * @param [in] viewAliasList service provider list base on View Type
+     * it will be called when server or client is started. and service providers (based Attribute,
+     * Method, View Type) list will be provided.<br>
+     * Use {@link OPCUAMessageHandler#getResponseElementForStart(EdgeStatusCode)} to get start
+     * response
+     * 
+     * @param ep endpoint to start
+     * @param status status code
+     * @param attiributeAliasList service provider list base on Object/Variable Type
+     * @param methodAliasList service provider list base on Method Type
+     * @param viewAliasList service provider list base on View Type
      */
     @Override
     public void onStart(EdgeEndpointInfo ep, EdgeStatusCode status,
@@ -281,10 +305,12 @@ public class OPCUAAdapter {
     }
 
     /**
-     * @fn onStop(EdgeEndpointInfo ep, EdgeStatusCode status)
-     * @brief it will be called when server or client is stopped.
-     * @param [in] ep endpoint to stop
-     * @param [in] status status code
+     * it will be called when server or client is stopped.<br>
+     * Use {@link OPCUAMessageHandler#getResponseElementForStart(EdgeStatusCode)} to get stop
+     * response
+     * 
+     * @param ep endpoint to start
+     * @param status status code
      */
     @Override
     public void onStop(EdgeEndpointInfo ep, EdgeStatusCode status) {
@@ -305,10 +331,10 @@ public class OPCUAAdapter {
     }
 
     /**
-     * @fn onNetworkStatus(EdgeEndpointInfo ep, EdgeStatusCode status)
-     * @brief it will be called when network status is up or down.
-     * @param [in] ep endpoint to stop
-     * @param [in] status status code
+     * it will be called when network status is up or down.<br>
+     * 
+     * @param ep endpoint to start
+     * @param status status code
      */
     @Override
     public void onNetworkStatus(EdgeEndpointInfo ep, EdgeStatusCode status) {
@@ -329,8 +355,11 @@ public class OPCUAAdapter {
   }
 
   /**
-   * @fn void startAdapter()
-   * @brief start client with opcua configuration
+   * start client with opcua configuration<br>
+   * 
+   * @throws Exception if start fail
+   * @return start adapter message format based
+   *         {@link org.edge.protocol.opcua.api.common.EdgeResult}
    */
   public EdgeResult startAdapter() throws Exception {
     // 1. run discovery device
@@ -371,7 +400,7 @@ public class OPCUAAdapter {
         .setRequest(new EdgeRequest.Builder(nodeInfo).build()).build();
     ProtocolManager.getProtocolManagerInstance().send(msg);
   }
-  
+
   private static final String TEST_SERVICE_NAME = "/1/cnc14";
 
   private void testRead() throws Exception {

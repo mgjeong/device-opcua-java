@@ -62,11 +62,11 @@ public enum OPCUADefaultMetaData {
   private String description;
 
   /**
-   * @fn OPCUADefaultMetaData(int code, String value, String description)
-   * @brief constructor
-   * @param [in] code @int
-   * @param [in] value @String
-   * @param [in] description @String
+   * construct OPCUADefaultMetaData
+   * 
+   * @param code code number of OPCUADefaultMetaData
+   * @param value value of OPCUADefaultMetaData
+   * @param description description of OPCUADefaultMetaData
    */
   private OPCUADefaultMetaData(int code, String value, String description) {
       this.code = code;
@@ -75,27 +75,27 @@ public enum OPCUADefaultMetaData {
   }
 
   /**
-   * @fn int getCode()
-   * @brief get enum code
-   * @return code
+   * Get code number of OPCUADefaultMetaData
+   * 
+   * @return code number of OPCUADefaultMetaData
    */
   public int getCode() {
-      return code;
+    return code;
   }
 
   /**
-   * @fn String getValue()
-   * @brief get enum value
-   * @return value
+   * Get value of OPCUADefaultMetaData
+   * 
+   * @return value of OPCUADefaultMetaData
    */
   public String getValue() {
-      return value;
+    return value;
   }
 
   /**
-   * @fn String getDescription()
-   * @brief get description
-   * @return description
+   * Get description of OPCUADefaultMetaData
+   * 
+   * @return description of OPCUADefaultMetaData
    */
   public String getDescription() {
       return description;

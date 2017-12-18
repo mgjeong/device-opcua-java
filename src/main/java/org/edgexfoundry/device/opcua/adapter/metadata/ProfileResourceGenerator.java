@@ -25,18 +25,20 @@ import org.edgexfoundry.domain.meta.ResourceOperation;
 public class ProfileResourceGenerator {
 
   /**
-   * @fn DeviceGenerator()
-   * @brief constructor
+   * construct DeviceObjectGenerator
    */
   private ProfileResourceGenerator() {}
 
   /**
-   * @fn ResourceOperation createGetOperation(String object, String operation, int index)
-   * @brief Create GetOperation
-   * @param [in] object @String
-   * @param [in] operation @String
-   * @param [in] index @int
-   * @return @ResourceOperation
+   * create ResourceOperation for GetOPeration<br>
+   * Use {@link org.edgexfoundry.domain.meta.ResourceOperation#ResourceOperation()} to create
+   * ResourceOperation instance
+   * 
+   * @param object name of DeviceObject
+   * @param operation name of operation
+   * @param index index of operation
+   * 
+   * @return created ResourceOperation
    */
   public static ResourceOperation createGetOperation(String object, String operation, int index) {
     if (object == null || object.isEmpty()) {
@@ -53,12 +55,15 @@ public class ProfileResourceGenerator {
   }
 
   /**
-   * @fn ResourceOperation createPutOperation(String object, String operation, int index)
-   * @brief Create PutOperation
-   * @param [in] object @String
-   * @param [in] operation @String
-   * @param [in] index @int
-   * @return @ResourceOperation
+   * create ResourceOperation for PutOPeration<br>
+   * Use {@link org.edgexfoundry.domain.meta.ResourceOperation#ResourceOperation()} to create
+   * ResourceOperation instance
+   * 
+   * @param object name of DeviceObject
+   * @param operation name of operation
+   * @param index index of operation
+   * 
+   * @return created ResourceOperation
    */
   public static ResourceOperation createPutOperation(String object, String operation, int index) {
     if (object == null || object.isEmpty()) {
@@ -77,13 +82,15 @@ public class ProfileResourceGenerator {
   }
 
   /**
-   * @fn ProfileResource generate(String name, List<ResourceOperation> getList,
-   *     List<ResourceOperation> setList)
-   * @brief generate ProfileResource
-   * @param [in] name @String
-   * @param [in] getList @List<ResourceOperation>
-   * @param [in] setList @List<ResourceOperation>
-   * @return @ProfileResource
+   * generate ProfileResource<br>
+   * Use {@link org.edgexfoundry.domain.meta.ProfileResource#ProfileResource()} to create
+   * ProfileResource instance
+   * 
+   * @param name name of ProfileResource
+   * @param getList list of GetOperation
+   * @param setList list of SetOperation
+   * 
+   * @return generated ProfileResource
    */
   public static ProfileResource generate(String name, List<ResourceOperation> getList,
       List<ResourceOperation> setList) {

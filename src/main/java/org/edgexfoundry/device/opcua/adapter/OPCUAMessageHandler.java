@@ -30,6 +30,7 @@ import org.edge.protocol.opcua.api.ProtocolManager;
 import org.edge.protocol.opcua.api.client.EdgeResponse;
 import org.edge.protocol.opcua.api.client.EdgeSubRequest;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
+import org.edge.protocol.opcua.api.common.EdgeConfigure;
 import org.edge.protocol.opcua.api.common.EdgeDevice;
 import org.edge.protocol.opcua.api.common.EdgeEndpointConfig;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
@@ -44,8 +45,11 @@ import org.edge.protocol.opcua.api.common.EdgeStatusCode;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUACommandIdentifier;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
+import org.edgexfoundry.device.opcua.opcua.OPCUADriver.DriverCallback;
 import org.edgexfoundry.domain.meta.Addressable;
+import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.Protocol;
+import org.edgexfoundry.domain.meta.ResourceOperation;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 
@@ -54,12 +58,15 @@ public class OPCUAMessageHandler {
       EdgeXLoggerFactory.getEdgeXLogger(OPCUAMessageHandler.class);
   private static OPCUAMessageHandler singleton = null;
 
+  /**
+   * construct OPCUAMessageHandler
+   */
   private OPCUAMessageHandler() {}
 
   /**
-   * @fn OPCUAMessageHandler getInstance()
-   * @brief get OPCUAMessageHandler object
-   * @return OPCUAMessageHandler singleton object
+   * Get OPCUAMessageHandler Instance (singleton)<br>
+   * Use {@link #OPCUAMessageHandler()} to create OPCUAMessageHandler Instance
+   * @return OPCUAMessageHandler instance
    */
   public synchronized static OPCUAMessageHandler getInstance() {
     if (singleton == null) {
@@ -69,10 +76,19 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn String convertEdgeMessagetoEdgeElement(EdgeMessage msg)
-   * @brief covert @EdgeMessage to String format based @EdgeElement
-   * @param [in] msg @EdgeMessage
-   * @return String format based @EdgeElement
+   * Convert String from EdgeMessage format to EdgeElement format<br>
+   * Use {@link org.edge.protocol.opcua.api.common.EdgeCommandType} to find operation<br>
+   * Use {@link org.command.json.format.EdgeElement} to convert format<br>
+   * Use {@link org.command.json.format.EdgeAttribute} to convert format<br>
+   * Use
+   * {@link org.command.json.format.EdgeJsonFormatter#encodeEdgeElementToJsonString(EdgeElement)} to
+   * encode EdgeElement to JsonString<br>
+   * Use {@link #getResponseElementForSubscription(EdgeMessage)} get response subscription data<br>
+   * 
+   * 
+   * @param msg response message data format is
+   *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
+   * @return EdgeElement format string if operation is included in EdgeCommandType, otherwise null
    */
   public String convertEdgeMessagetoEdgeElement(EdgeMessage msg) {
     if (msg == null) {
@@ -110,10 +126,12 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn String convertEdgeDevicetoEdgeElement(@EdgeDevice data)
-   * @brief covert @EdgeDevice to String format based @EdgeElement
-   * @param [in] msg @EdgeDevice
-   * @return String format based @EdgeElement
+   * Convert String from EdgeDevice format to EdgeElement format<br>
+   * Use {@link #getResponseElementForEndpoint(EdgeDevice)} get response subscription data<br>
+   * 
+   * @param device response message data format is
+   *        {@link org.edge.protocol.opcua.api.common.EdgeDevice}
+   * @return String format based EdgeElement if EdgeDevice is not null, otherwise null
    */
   public String convertEdgeDevicetoEdgeElement(EdgeDevice device) {
     if (device == null) {
@@ -124,10 +142,15 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn String getResponseElementForStart(@EdgeMessage msg)
-   * @brief get String format based @EdgeElement which has start response
-   * @param [in] status @EdgeStatusCode
-   * @return String format based @EdgeElement
+   * Get String Response for start, format based EdgeElement<br>
+   * Use {@link org.command.json.format.EdgeElement} to convert format<br>
+   * Use
+   * {@link org.command.json.format.EdgeJsonFormatter#encodeEdgeElementToJsonString(EdgeElement)} to
+   * encode EdgeElement to JsonString
+   * 
+   * @param status response message status format is
+   *        {@link org.edge.protocol.opcua.api.common.EdgeStatusCode}
+   * @return String format based EdgeElement
    */
   public String getResponseElementForStart(EdgeStatusCode status) {
     EdgeElement edgeElement = new EdgeElement(EdgeCommandType.CMD_START_CLIENT.getValue());
@@ -145,10 +168,15 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn String getResponseElementForStop(@EdgeMessage msg)
-   * @brief get String format based @EdgeElement which has stop response
-   * @param [in] status @EdgeStatusCode
-   * @return String format based @EdgeElement
+   * Get String Response for stop, format based EdgeElement<br>
+   * Use {@link org.command.json.format.EdgeElement} to convert format<br>
+   * Use
+   * {@link org.command.json.format.EdgeJsonFormatter#encodeEdgeElementToJsonString(EdgeElement)} to
+   * encode EdgeElement to JsonString
+   * 
+   * @param status response message status format is
+   *        {@link org.edge.protocol.opcua.api.common.EdgeStatusCode}
+   * @return String format based EdgeElement
    */
   public String getResponseElementForStop(EdgeStatusCode status) {
     EdgeElement edgeElement = new EdgeElement(EdgeCommandType.CMD_STOP_CLIENT.getValue());
@@ -166,10 +194,16 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn String getResponseElementForSubscription(@EdgeMessage msg)
-   * @brief get String format based @EdgeElement which has sub response
-   * @param [in] msg @EdgeMessage
-   * @return String format based @EdgeElement
+   * Get String Response for subscription, format based EdgeElement<br>
+   * Use {@link org.command.json.format.EdgeElement} to convert format<br>
+   * Use {@link org.command.json.format.EdgeAttribute} to convert format<br>
+   * Use
+   * {@link org.command.json.format.EdgeJsonFormatter#encodeEdgeElementToJsonString(EdgeElement)} to
+   * encode EdgeElement to JsonString
+   * 
+   * @param status response message status format is
+   *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
+   * @return String format based EdgeElement
    */
   private String getResponseElementForSubscription(EdgeMessage msg) {
     EdgeElement edgeElement = new EdgeElement(msg.getCommand().getValue());
@@ -193,12 +227,18 @@ public class OPCUAMessageHandler {
     }
     return EdgeJsonFormatter.encodeEdgeElementToJsonString(edgeElement);
   }
-  
+
   /**
-   * @fn String getResponseElementForEndpoint(@EdgeDevice device)
-   * @brief get String format based @EdgeElement which has getEndpoint response
-   * @param [in] msg @EdgeDevice
-   * @return String format based @EdgeElement
+   * Get String Response for getEndpoint, format based EdgeElement<br>
+   * Use {@link org.command.json.format.EdgeElement} to convert format<br>
+   * Use {@link org.command.json.format.EdgeAttribute} to convert format<br>
+   * Use
+   * {@link org.command.json.format.EdgeJsonFormatter#encodeEdgeElementToJsonString(EdgeElement)} to
+   * encode EdgeElement to JsonString
+   * 
+   * @param status response message status format is
+   *        {@link org.edge.protocol.opcua.api.common.EdgeDevice}
+   * @return String format based EdgeElement
    */
   private String getResponseElementForEndpoint(EdgeDevice device) {
     EdgeElement edgeElement = new EdgeElement(EdgeCommandType.CMD_GET_ENDPOINTS.getValue());
@@ -222,15 +262,31 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn @EdgeMessage convertEdgeElementToEdgeMessage(@EdgeElement element, String operation, String
-   *     providerKey, Addressable addr, CompletableFuture<String> future)
-   * @brief covert @EdgeElement to @EdgeMessage
-   * @param [in] element element object of json format
-   * @param [in] operation opcua command
-   * @param [in] providerKey provider key which node
-   * @param [in] addr addressable object
-   * @param [in] future CompletableFuture object
-   * @return @EdgeMessage
+   * Convert command message from EdgeElement format to EdgeMessage format<br>
+   * Use {@link #getStartMessage(EdgeElement, String, Addressable, CompletableFuture)} to convert
+   * format<br>
+   * Use {@link #getStopMessage(EdgeElement, String, Addressable, CompletableFuture)} to convert
+   * format<br>
+   * Use {@link #getReadMessage(EdgeElement, String, Addressable, CompletableFuture)} to convert
+   * format<br>
+   * Use {@link #getWriteMessage(EdgeElement, String, Addressable, CompletableFuture)} to convert
+   * format<br>
+   * Use {@link #getSubMessage(EdgeElement, String, Addressable, CompletableFuture)} to convert
+   * format<br>
+   * Use {@link #getMethodMessage(EdgeElement, String, Addressable, CompletableFuture)} to convert
+   * format<br>
+   * Use {@link #getEndpointMessage(EdgeElement, String, Addressable, CompletableFuture)} to convert
+   * format<br>
+   * 
+   * @param element element object of json format
+   * @param operation opcua command
+   * @param providerKey provider key which node
+   * @param addr addressable object
+   * @param future CompletableFuture object
+   * 
+   * @throws Exception if convert fail
+   * 
+   * @return command message format is {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   public EdgeMessage convertEdgeElementToEdgeMessage(EdgeElement element, String operation,
       String providerKey, Addressable addr, CompletableFuture<String> future) throws Exception {
@@ -256,15 +312,17 @@ public class OPCUAMessageHandler {
     return msg;
   }
 
-  /**
-   * @fn @EdgeMessage getStartMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<String> future)
-   * @brief get @EdgeMessage which has start command
-   * @param [in] element element object of json format
-   * @param [in] providerKey provider key which node
-   * @param [in] addr addressable object
-   * @param [in] future CompletableFuture object
-   * @return @EdgeMessage
+   /**
+   * Get start command message from EdgeElement format<br>
+   * Use {@link org.command.json.format.EdgeJsonFormatter#getStringValueByName(List, String)} to get
+   * value from EdgeAttributes<br>
+   * Use {@link #getEndpointUrifromAddressable(Addressable)} to get addressable
+   * 
+   * @param element element object of json format
+   * @param providerKey provider key which node
+   * @param addr addressable object
+   * @param future CompletableFuture object
+   * @return command message format is {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   private EdgeMessage getStartMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
@@ -294,14 +352,16 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn @EdgeMessage getStoptMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<String> future)
-   * @brief get @EdgeMessage which has stop command
-   * @param [in] element element object of json format
-   * @param [in] providerKey provider key which node
-   * @param [in] addr addressable object
-   * @param [in] future CompletableFuture object
-   * @return @EdgeMessage
+   * Get stop command message from EdgeElement format<br>
+   * Use {@link org.command.json.format.EdgeJsonFormatter#getStringValueByName(List, String)} to get
+   * value from EdgeAttributes<br>
+   * Use {@link #getEndpointUrifromAddressable(Addressable)} to get addressable
+   * 
+   * @param element element object of json format
+   * @param providerKey provider key which node
+   * @param addr addressable object
+   * @param future CompletableFuture object
+   * @return command message format is {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   private EdgeMessage getStopMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
@@ -316,14 +376,17 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn @EdgeMessage getReadMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<String> future)
-   * @brief get @EdgeMessage which has read command
-   * @param [in] element element object of json format
-   * @param [in] providerKey provider key which node
-   * @param [in] addr addressable object
-   * @param [in] future CompletableFuture object
-   * @return @EdgeMessage
+   * Get read command message from EdgeElement format<br>
+   * Use {@link org.command.json.format.EdgeJsonFormatter#getStringValueByName(List, String)} to get
+   * value from EdgeAttributes<br>
+   * Use {@link #getEndpointUrifromAddressable(Addressable)} to get addressable<br>
+   * Use {@link #getReadRequestDeviceList(List, List)} to get list of request
+   * 
+   * @param element element object of json format
+   * @param providerKey provider key which node
+   * @param addr addressable object
+   * @param future CompletableFuture object
+   * @return command message format is {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   private EdgeMessage getReadMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
@@ -350,14 +413,17 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn @EdgeMessage getWriteMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<String> future)
-   * @brief get @EdgeMessage which has write command
-   * @param [in] element element object of json format
-   * @param [in] providerKey provider key which node
-   * @param [in] addr addressable object
-   * @param [in] future CompletableFuture object
-   * @return @EdgeMessage
+   * Get write command message from EdgeElement format<br>
+   * Use {@link org.command.json.format.EdgeJsonFormatter#getStringValueByName(List, String)} to get
+   * value from EdgeAttributes<br>
+   * Use {@link #getEndpointUrifromAddressable(Addressable)} to get addressable<br>
+   * Use {@link #getReadRequestDeviceList(List, List)} to get list of request
+   * 
+   * @param element element object of json format
+   * @param providerKey provider key which node
+   * @param addr addressable object
+   * @param future CompletableFuture object
+   * @return command message format is {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   private EdgeMessage getWriteMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
@@ -388,14 +454,16 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn @EdgeMessage getSubMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<String> future)
-   * @brief get @EdgeMessage which has subscription command
-   * @param [in] element element object of json format
-   * @param [in] providerKey provider key which node
-   * @param [in] addr addressable object
-   * @param [in] future CompletableFuture object
-   * @return @EdgeMessage
+   * Get sub command message from EdgeElement format<br>
+   * Use {@link org.command.json.format.EdgeJsonFormatter#getStringValueByName(List, String)} to get
+   * value from EdgeAttributes<br>
+   * Use {@link #getEndpointUrifromAddressable(Addressable)} to get addressable
+   * 
+   * @param element element object of json format
+   * @param providerKey provider key which node
+   * @param addr addressable object
+   * @param future CompletableFuture object
+   * @return command message format is {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   private EdgeMessage getSubMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
@@ -416,14 +484,16 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn @EdgeMessage getMethodMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<String> future)
-   * @brief get @EdgeMessage which has method command
-   * @param [in] element element object of json format
-   * @param [in] providerKey provider key which node
-   * @param [in] addr addressable object
-   * @param [in] future CompletableFuture object
-   * @return @EdgeMessage
+   * Get method command message from EdgeElement format<br>
+   * Use {@link org.command.json.format.EdgeJsonFormatter#getStringValueByName(List, String)} to get
+   * value from EdgeAttributes<br>
+   * Use {@link #getEndpointUrifromAddressable(Addressable)} to get addressable
+   * 
+   * @param element element object of json format
+   * @param providerKey provider key which node
+   * @param addr addressable object
+   * @param future CompletableFuture object
+   * @return command message format is {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   private EdgeMessage getMethodMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
@@ -440,14 +510,16 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn @EdgeMessage getEndpointMessage(@EdgeElement element, String providerKey, Addressable addr,
-   *     CompletableFuture<String> future)
-   * @brief get @EdgeMessage which has get-endpoint command
-   * @param [in] element element object of json format
-   * @param [in] providerKey provider key which node
-   * @param [in] addr addressable object
-   * @param [in] future CompletableFuture object
-   * @return @EdgeMessage
+   * Get getEndpoint command message from EdgeElement format<br>
+   * Use {@link org.command.json.format.EdgeJsonFormatter#getStringValueByName(List, String)} to get
+   * value from EdgeAttributes<br>
+   * Use {@link #getEndpointUrifromAddressable(Addressable)} to get addressable
+   * 
+   * @param element element object of json format
+   * @param providerKey provider key which node
+   * @param addr addressable object
+   * @param future CompletableFuture object
+   * @return command message format is {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
   private EdgeMessage getEndpointMessage(EdgeElement element, String providerKey, Addressable addr,
       CompletableFuture<String> future) throws Exception {
@@ -464,10 +536,14 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn @EdgeResult sendMessage(@EdgeMessage msg)
-   * @brief send message
-   * @param [in] msg @EdgeMessage
-   * @return @EdgeResult
+   * Send command message and get response<br>
+   * Use {@link org.edge.protocol.opcua.api.ProtocolManager#send(EdgeMessage)} to send message
+   * 
+   * @param msg command message
+   * 
+   * @throws Exception if it is fail to send and receive message
+   * 
+   * @return response message format is {@link org.edge.protocol.opcua.api.common.EdgeResult}
    */
   public EdgeResult sendMessage(EdgeMessage msg) throws Exception {
     if (null == msg) {
@@ -484,10 +560,11 @@ public class OPCUAMessageHandler {
   }
 
   /**
-   * @fn String getEndpointUrifromAddressable(Addressable addressable)
-   * @brief get endpoint URI from Addressable object
-   * @param [in] addressable Addressable object
-   * @return endpoint URI
+   * Get endpoint URI from Addressable object<br>
+   * Use {@link org.edgexfoundry.domain.meta.Addressable} to generate endpoint URI
+   * 
+   * @param addressable Device's addressable
+   * @return Endpoint URI
    */
   public String getEndpointUrifromAddressable(Addressable addressable) {
     String endpointUri = "";
@@ -506,6 +583,13 @@ public class OPCUAMessageHandler {
     return endpointUri;
   }
 
+  /**
+   * Get list of request for read in list of EdgeAttribute<br>
+   * Use {@link #getReadRequestDeviceList(List, List)} to generate list of request recursively
+   * 
+   * @param edgeAttributeList list of EdgeAttribute
+   * @param requestList list of EdgeRequest
+   */
   private void getReadRequestDeviceList(List<EdgeAttribute> edgeAttributeList,
       List<EdgeRequest> requestList) {
     for (EdgeAttribute edgeAttr : edgeAttributeList) {
@@ -518,12 +602,20 @@ public class OPCUAMessageHandler {
           .equals(EdgeFormatIdentifier.ATTRIBUTES_TYPE.getValue()) == true) {
         if (edgeAttr.getValue() instanceof List) {
           getReadRequestDeviceList(
-              EdgeJsonFormatter.convertEdgeAttrubiteListFromObject(edgeAttr.getValue()), requestList);
+              EdgeJsonFormatter.convertEdgeAttrubiteListFromObject(edgeAttr.getValue()),
+              requestList);
         }
       }
     }
   }
 
+  /**
+   * Get list of request for write in list of EdgeAttribute<br>
+   * Use {@link #getReadRequestDeviceList(List, List)} to generate list of request recursively
+   * 
+   * @param edgeAttributeList list of EdgeAttribute
+   * @param requestList list of EdgeRequest
+   */
   private void getWriteRequestDeviceList(List<EdgeAttribute> edgeAttributeList,
       List<EdgeRequest> requestList) {
     String valueDescriptorName = null;
@@ -540,7 +632,8 @@ public class OPCUAMessageHandler {
           .equals(EdgeFormatIdentifier.ATTRIBUTES_TYPE.getValue()) == true) {
         if (edgeAttr.getValue() instanceof List) {
           getWriteRequestDeviceList(
-              EdgeJsonFormatter.convertEdgeAttrubiteListFromObject(edgeAttr.getValue()), requestList);
+              EdgeJsonFormatter.convertEdgeAttrubiteListFromObject(edgeAttr.getValue()),
+              requestList);
         }
       }
     }

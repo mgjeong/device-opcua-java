@@ -64,16 +64,16 @@ public class DeviceEnroller {
   private static final boolean enableDeleteEvent = false;
 
   /**
-   * @fn DeviceEnroller()
-   * @brief constructor
+   * construct DeviceEnroller <br>
    */
   private DeviceEnroller() {}
 
   /**
-   * @fn Addressable addAddressableToMetaData(Addressable addressable)
-   * @brief Add Addressable To MetaData
-   * @param [in] addressable @Addressable
-   * @return @Addressable
+   * Add Addressable to metadata <br>
+   * Use {@link org.edgexfoundry.controller.AddressableClient#add(Addressable)} to add addressable
+   * 
+   * @param addressable added addressable
+   * @return added addressable if success, otherwise null
    */
   public Addressable addAddressableToMetaData(Addressable addressable) {
     if (null == addressable || addressableClient == null) {
@@ -93,10 +93,11 @@ public class DeviceEnroller {
   }
 
   /**
-   * @fn DeviceProfile addDeviceProfileToMetaData(DeviceProfile deviceProfile)
-   * @brief Add DeviceProfile To MetaData
-   * @param [in] deviceProfile @DeviceProfile
-   * @return @DeviceProfile
+   * Add DeviceProfile to metadata <br>
+   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#add(DeviceProfile)} to add DeviceProfile
+   * 
+   * @param deviceProfile added DeviceProfile
+   * @return added deviceProfile if success, otherwise null
    */
   public DeviceProfile addDeviceProfileToMetaData(DeviceProfile deviceProfile) {
     if (null == deviceProfile || deviceProfileClient == null) {
@@ -116,10 +117,11 @@ public class DeviceEnroller {
   }
 
   /**
-   * @fn boolean updateDeviceProfileToMetaData(DeviceProfile deviceProfile)
-   * @brief Update DeviceProfile To MetaData
-   * @param [in] deviceProfile @DeviceProfile
-   * @return @boolean
+   * Update DeviceProfile to metadata <br>
+   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#update(DeviceProfile)} to add DeviceProfile
+   * 
+   * @param deviceProfile updated DeviceProfile
+   * @return true if success, otherwise null
    */
   public boolean updateDeviceProfileToMetaData(DeviceProfile deviceProfile) {
     if (null == deviceProfile || deviceProfileClient == null) {
@@ -134,10 +136,11 @@ public class DeviceEnroller {
   }
 
   /**
-   * @fn Device addDeviceToMetaData(Device device)
-   * @brief Add Device To MetaData
-   * @param [in] deviceProfile @Device
-   * @return @Device
+   * Add Device to metadata <br>
+   * Use {@link org.edgexfoundry.controller.DeviceClient#add(Device)} to add Device
+   * 
+   * @param device added Device
+   * @return added Device if success, otherwise null
    */
   public Device addDeviceToMetaData(Device device) {
     if (null == device || deviceClient == null) {
@@ -161,8 +164,8 @@ public class DeviceEnroller {
   // we can get events below 100. but can not set limits
   // I will modify it when I can set a limit.
   /**
-   * @fn void deleteEvent()
-   * @brief Delete Event
+   * Delete Event in coredata <br>
+   * Use {@link org.edgexfoundry.controller.EventClient#delete(String)} to delete event
    */
   @SuppressWarnings("unused")
   private void deleteEvent() {
@@ -182,8 +185,8 @@ public class DeviceEnroller {
   // we can get events below 100. but can not set limits
   // I will modify it when I can set a limit.
   /**
-   * @fn void deleteValueDescriptor()
-   * @brief Delete ValueDescriptor
+   * Delete ValueDescriptor in coredata <br>
+   * Use {@link org.edgexfoundry.controller.ValueDescriptorClient#delete(String)} to delete ValueDescriptor
    */
   @SuppressWarnings("unused")
   private void deleteValueDescriptor() {
@@ -200,8 +203,8 @@ public class DeviceEnroller {
   }
 
   /**
-   * @fn void deleteDevice()
-   * @brief Delete Device
+   * Delete Device in metadata <br>
+   * Use {@link org.edgexfoundry.controller.DeviceClient#delete(String)} to delete Device
    */
   private void deleteDevice() {
     for (Device device : deviceClient.devices()) {
@@ -214,8 +217,8 @@ public class DeviceEnroller {
   }
 
   /**
-   * @fn void deleteDeviceProfile()
-   * @brief Delete DeviceProfile
+   * Delete DeviceProfile in metadata <br>
+   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#delete(String)} to delete DeviceProfile
    */
   private void deleteDeviceProfile() {
     for (DeviceProfile deviceProfile : deviceProfileClient.deviceProfiles()) {
@@ -229,8 +232,8 @@ public class DeviceEnroller {
   }
 
   /**
-   * @fn void deleteAddressable()
-   * @brief Delete Addressable
+   * Delete Addressable in metadata <br>
+   * Use {@link org.edgexfoundry.controller.AddressableClient#delete(String)} to delete Addressable
    */
   private void deleteAddressable() {
     List<Addressable> addressableList = null;
@@ -246,9 +249,12 @@ public class DeviceEnroller {
   }
 
   /**
-   * @fn void cleanMetaData(MetaDataType type)
-   * @brief Clean MetaData
-   * @param [in] type @MetaDataType
+   * Clean MetaData <br>
+   * Use {@link #deleteDevice()} to delete Device in metadata
+   * Use {@link #deleteDeviceProfile()} to delete DeviceProfile in metadata
+   * Use {@link #deleteAddressable()} to delete Addressable in metadata
+   * 
+   * @param type metadata clean type {@link MetaDataType}
    */
   public void cleanMetaData(MetaDataType type) {
     if (MetaDataType.DEVICE == type) {
@@ -265,8 +271,9 @@ public class DeviceEnroller {
   }
 
   /**
-   * @fn void cleanCoreData()
-   * @brief Clean CoreData
+   * Clean CoreData <br>
+   * Use {@link #deleteEvent()} to delete Event in coredata
+   * Use {@link #deleteValueDescriptor()} to delete ValueDescriptor in coredata
    */
   public void cleanCoreData() {
     // TODO
