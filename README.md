@@ -36,4 +36,4 @@
 3. docker build -t device-opcua-java .
 <br></br>
 
-#### OPC-UA library(Stand-alone) build [here](./protocol-stack/opc-ua/edge-opcua/README.md)
+#### OPC-UA library(Stand-alone) build [here](https://github.sec.samsung.net/RS7-EdgeComputing/protocol-opcua-java/blob/master/README.md)
