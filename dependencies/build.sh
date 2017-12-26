@@ -10,7 +10,7 @@ then
     echo "build fail"
     exit;
 else
-    cd protocol-ezmq-java/edgex-ezmq
+    cd protocol-ezmq-java/ezmq
     ./build.sh
 fi
 
