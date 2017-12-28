@@ -3,8 +3,7 @@ OPC-UA Device Service
 
 OPC-UA Device Service is implemented based on Device Service SDK.
 
-OPC-UA devices to generate Events and Readings to Core Data Micro Service.<br></br> 
-Furthermore, users can send commands and get responses through Command and Control Micro Service.
+OPC-UA devices to generate Events and Readings to Core Data Micro Service. Furthermore, users can send commands and get responses through Command and Control Micro Service.
 
 ## Prerequisites ##
 - JDK
@@ -30,6 +29,16 @@ $ ./build.sh
 If source codes are successfully built, you can find an output binary file, **target**, on a root of project folder.
 Note that, you can find other build scripts, **build_arm.sh** and **build_arm64**, which can be used to build the codes for ARM and ARM64 machines, respectively.
 
+##### Binaries #####
+- OPC-UA Device Service
+  - device-opcua-java.jar
+- Protocol stack
+  - OPC-UA : opcua-adapter-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+- Messaging interface
+  - ezmq : edgex-ezmq-0.0.1-SNAPSHOT.jar
+- Command data model
+  - datamodel-command-java-0.0.1-SNAPSHOT.jar
+
 #### 2. Docker Image  ####
 Next, you can create it to a Docker image.
 ```shell
@@ -50,6 +59,8 @@ Note that, you can find other Dockerfiles, **Dockerfile_arm** and **Dockerfile_a
 $ docker-compose -f ./docker-compose.yml up
 ```
 
-
 ## Reference ##
-#### [OPC-UA protocol stack library(Stand-alone) build](https://mgjeong/protocol-opcua-java/blob/master/edge-opcua/README.md)
+
+#### Ports Information
+  - OPC-UA Device Service : 49997
+#### [How to build OPC-UA protocol stack library](https://mgjeong/protocol-opcua-java/blob/master/edge-opcua/README.md)
