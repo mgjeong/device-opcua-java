@@ -63,4 +63,5 @@ $ docker-compose -f ./docker-compose.yml up
 
 #### Ports Information
   - OPC-UA Device Service : 49997
-#### [How to build OPC-UA protocol stack library](https://mgjeong/protocol-opcua-java/blob/master/edge-opcua/README.md)
+#### OPC-UA protocol stack library 
+  - [How to build OPC-UA protocol stack library](https://mgjeong/protocol-opcua-java/blob/master/edge-opcua/README.md)
