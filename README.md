@@ -1,6 +1,11 @@
 OPC-UA Device Service
 =======================================
 
+OPC-UA Device Service is implemented based on Device Service SDK.
+
+OPC-UA devices to generate Events and Readings to Core Data Micro Service. 
+Furthermore, users can send commands and get responses through Command and Control Micro Service.
+
 ## Prerequisites ##
 - JDK
   - Version : 1.8
