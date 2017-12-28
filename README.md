@@ -22,7 +22,7 @@ OPC-UA Device Service
 ```shell
 $ ./build.sh
 ```
-If source codes are successfully built, you can find an output binary file, **main**, on a root of project folder.
+If source codes are successfully built, you can find an output binary file, **target**, on a root of project folder.
 Note that, you can find other build scripts, **build_arm.sh** and **build_arm64**, which can be used to build the codes for ARM and ARM64 machines, respectively.
 
 #### 2. Docker Image  ####
@@ -46,4 +46,5 @@ $ docker-compose -f ./docker-compose.yml up
 ```
 
 
+## Reference ##
 #### [OPC-UA protocol stack library(Stand-alone) build](https://mgjeong/protocol-opcua-java/blob/master/edge-opcua/README.md)
