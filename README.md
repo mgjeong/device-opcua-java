@@ -33,8 +33,8 @@ $ docker build -t device-opcua-java -f Dockerfile .
 If it succeeds, you can see the built image as follows:
 ```shell
 $ sudo docker images
-REPOSITORY                                                   TAG                 IMAGE ID            CREATED             SIZE
-device-opcua-java                                            latest              bb7c3f3860ab        6 seconds ago       715MB
+REPOSITORY                 TAG               IMAGE ID            CREATED             SIZE
+device-opcua-java          latest            bb7c3f3860ab        6 seconds ago       715MB
 ```
 Note that, you can find other Dockerfiles, **Dockerfile_arm** and **Dockerfile_arm64**, which can be used to dockerize for ARM and ARM64 machines, respectively.
 
