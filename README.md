@@ -1,39 +1,67 @@
-# OPC-UA Device Service
+OPC-UA Device Service
+=======================================
 
-## Pre-Requirements to build OPC-UA Device Service
+OPC-UA Device Service is implemented based on Device Service SDK.
 
-### JDK 1.8
-1. Intall JDK v1.8
+OPC-UA devices to generate Events and Readings to Core Data Micro Service. Furthermore, users can send commands and get responses through Command and Control Micro Service.
 
-   Install Guide : https://docs.oracle.com/javase/8/docs/technotes/guides/install/linux_jdk.html
-<br></br>
-### maven
-1. Install maven v3.5.2
+## Prerequisites ##
+- JDK
+  - Version : 1.8
+  - [How to install](https://docs.oracle.com/javase/8/docs/technotes/guides/install/linux_jdk.html)
+- Maven
+  - Version : 3.5.2
+  - [Where to download](https://maven.apache.org/download.cgi)
+  - [How to install](https://maven.apache.org/install.html)
+  - [Setting up proxy for maven](https://maven.apache.org/guides/mini/guide-proxies.html)
+- Certificates
+  - Access https://nexus.edgexfoundry.org/ using browser(ex. firefox, google Chrome)
+  - Extract certificate file (DST Root CA X3)
+  - add certificate file to jre using keytool
+    `sudo keytool -importcert -noprompt -trustcacerts -alias ALIASNAME -file /PATH/TO/YOUR/DESKTOP/CertificateName.cer -keystore /PATH/TO/YOUR/JDK/jre/lib/security/cacerts -storepass changeit`
 
-   Download : https://maven.apache.org/download.cgi
+## How to build ##
 
-   Install Guide : https://maven.apache.org/install.html
-   
-   1) `tar xzvf apache-maven-3.5.2-bin.tar.gz`
-   
-   2) Add the bin directory of the created directory apache-maven-3.5.2 to the PATH environment variable<br></br>
-### Add Certificate your envorionments
-1. get certificate file using browser
+#### 1. Executable binary ####
+```shell
+$ ./build.sh
+```
+If source codes are successfully built, you can find an output binary file, **target**, on a root of project folder.
+Note that, you can find other build scripts, **build_arm.sh** and **build_arm64**, which can be used to build the codes for ARM and ARM64 machines, respectively.
 
-   1) Access https://nexus.edgexfoundry.org/ using browser(ex. firefox, google Chrome)
-   
-   2) Extract certificate file (DST Root CA X3)
+##### Binaries #####
+- OPC-UA Device Service
+  - device-opcua-java.jar
+- Protocol stack
+  - OPC-UA : opcua-adapter-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+- Messaging interface
+  - ezmq : edgex-ezmq-0.0.1-SNAPSHOT.jar
+- Command data model
+  - datamodel-command-java-0.0.1-SNAPSHOT.jar
 
-2. add certificate file to jre using keytool
+#### 2. Docker Image  ####
+Next, you can create it to a Docker image.
+```shell
+$ docker build -t device-opcua-java -f Dockerfile .
+```
+If it succeeds, you can see the built image as follows:
+```shell
+$ sudo docker images
+REPOSITORY                 TAG               IMAGE ID            CREATED             SIZE
+device-opcua-java          latest            bb7c3f3860ab        6 seconds ago       715MB
+```
+Note that, you can find other Dockerfiles, **Dockerfile_arm** and **Dockerfile_arm64**, which can be used to dockerize for ARM and ARM64 machines, respectively.
 
-   1) `sudo keytool -importcert -noprompt -trustcacerts -alias ALIASNAME -file /PATH/TO/YOUR/DESKTOP/CertificateName.cer -keystore /PATH/TO/YOUR/JDK/jre/lib/security/cacerts -storepass changeit`
-<br></br>
-## How to build OPC-UA Device Service
-1. cd ./device-opcua-java
 
-2. ./build.sh
+## How to run with Docker image ##
 
-3. docker build -t device-opcua-java .
-<br></br>
+```shell
+$ docker-compose -f ./docker-compose.yml up
+```
 
-#### OPC-UA library(Stand-alone) build [here](https://github.sec.samsung.net/RS7-EdgeComputing/protocol-opcua-java/blob/master/README.md)
+## Reference ##
+
+#### Ports Information
+  - OPC-UA Device Service : 49997
+#### OPC-UA protocol stack library 
+  - [How to build OPC-UA protocol stack library](https://github.com/mgjeong/protocol-opcua-java/blob/master/edge-opcua/README.md)
