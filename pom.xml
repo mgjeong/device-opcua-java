@@ -108,7 +108,7 @@
 			<version>${core-command.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.edge.compute1.protocol</groupId>
+			<groupId>com.edge.protocol</groupId>
 			<artifactId>opcua-adapter</artifactId>
 			<version>${opcua-adapter.version}</version>
 		</dependency>
