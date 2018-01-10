@@ -25,7 +25,6 @@ import org.edgexfoundry.ezmq.EZMQCallback;
 import org.edgexfoundry.ezmq.EZMQErrorCode;
 import org.edgexfoundry.ezmq.EZMQPublisher;
 import org.edgexfoundry.ezmq.EZMQStatusCode;
-import org.edgexfoundry.ezmq.EZMQAPI;
 
 public class Publisher {
   private static Publisher singleton;
@@ -37,7 +36,6 @@ public class Publisher {
   /**
    * handling callback related ezmq.
    * 
-   * @fn void callbackFactory()
    */
   private static void callbackFactory() {
     mCallback = new EZMQCallback() {
@@ -59,7 +57,6 @@ public class Publisher {
   /**
    * construct publisher
    * 
-   * @fn Publisher()
    */
   private Publisher() {
     apiInstance = EZMQAPI.getInstance();
@@ -73,7 +70,6 @@ public class Publisher {
   /**
    * get instance of publisher class based singleton.
    * 
-   * @fn Publisher getInstance()
    */
   public synchronized static Publisher getInstance() {
     if (singleton == null) {
@@ -85,8 +81,8 @@ public class Publisher {
   /**
    * start publisher
    * 
-   * @fn EZMQErrorCode startPublisher(int port)
    * @param port subscriber port
+   * @return error code
    */
   public EZMQErrorCode startPublisher(int port) {
     pubInstance = new EZMQPublisher(port, mCallback);
@@ -102,7 +98,7 @@ public class Publisher {
   /**
    * stop publisher
    * 
-   * @fn EZMQErrorCode stopPublisher()
+   * @return error code
    */
   public EZMQErrorCode stopPublisher() {
     result = pubInstance.stop();
@@ -116,9 +112,9 @@ public class Publisher {
 
   /**
    * publish Event Data
-   * 
-   * @fn EZMQErrorCode publishEvent(Event event)
+   *
    * @param event publish data based Event Class
+   * @return error code
    */
   public EZMQErrorCode publishEvent(Event event) {
     EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;
@@ -133,11 +129,10 @@ public class Publisher {
 
   /**
    * publish Event Data
-   * 
-   * @fn EZMQErrorCode publishEvent(String topic, Event event)
-   * 
+   *
    * @param topic topic
    * @param event publish data based Event Class
+   * @return error code
    */
   public EZMQErrorCode publishEvent(String topic, Event event) {
     EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;
@@ -153,10 +148,9 @@ public class Publisher {
   /**
    * publish Event Data
    * 
-   * @fn EZMQErrorCode publishEvent(List<String> topics, Event event)
-   * 
    * @param topics topic list
    * @param event publish data based Event Class
+   * @return error code
    */
   public EZMQErrorCode publishEvent(List<String> topics, Event event) {
     EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;

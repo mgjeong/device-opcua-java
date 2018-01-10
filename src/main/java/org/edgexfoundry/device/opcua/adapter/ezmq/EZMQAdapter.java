@@ -42,7 +42,6 @@ public class EZMQAdapter {
   /**
    * get EMFAdapter instance
    * 
-   * @fn EMFAdapter getInstance()
    * @return EMFAdapter instance based singleton
    */
   public synchronized static EZMQAdapter getInstance() {
@@ -55,7 +54,6 @@ public class EZMQAdapter {
   /**
    * publish data related EdgeMessage.
    * 
-   * @fn void publish(EdgeMessage data)
    */
   public void publish(EdgeMessage data) {
     if (null == data) {

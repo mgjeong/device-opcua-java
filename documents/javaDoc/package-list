@@ -1,0 +1,11 @@
+org.edgexfoundry.device.opcua
+org.edgexfoundry.device.opcua.adapter
+org.edgexfoundry.device.opcua.adapter.coredata
+org.edgexfoundry.device.opcua.adapter.ezmq
+org.edgexfoundry.device.opcua.adapter.metadata
+org.edgexfoundry.device.opcua.controller
+org.edgexfoundry.device.opcua.data
+org.edgexfoundry.device.opcua.domain
+org.edgexfoundry.device.opcua.handler
+org.edgexfoundry.device.opcua.opcua
+org.edgexfoundry.device.opcua.scheduling
