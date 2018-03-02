@@ -105,7 +105,12 @@ public class OPCUAMetadataGenerateManager {
    */
   public void initAddressable(String name) {
     Addressable addressable = AddressableGenerator.generate(name);
-    deviceEnroller.addAddressableToMetaData(addressable);
+
+    try {
+      deviceEnroller.addAddressableToMetaData(addressable);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
 
@@ -157,21 +162,9 @@ public class OPCUAMetadataGenerateManager {
       ProfileResource profileResource =
           ProfileResourceGenerator.generate(deviceInfoName, getList, setList);
 
-      if (deviceProfileGenerator == null || deviceEnroller == null) {
-        return;
-      }
-      DeviceProfile deviceProfile =
-          deviceProfileGenerator.update(deviceProfileName, profileResource);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
       Command command = CommandGenerator.generate(deviceInfoName,
           mapper.getMappingData(EdgeMapperCommon.PROPERTYVALUE_READWRITE.name()));
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
-      DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+      update(profileResource, deviceProfileName, commandType, deviceInfoName, command);
     }
   }
 
@@ -213,21 +206,25 @@ public class OPCUAMetadataGenerateManager {
       ProfileResource profileResource =
           ProfileResourceGenerator.generate(deviceInfoName, getList, setList);
 
-      if (deviceProfileGenerator == null || deviceEnroller == null) {
-        return;
-      }
-      DeviceProfile deviceProfile =
-          deviceProfileGenerator.update(deviceProfileName, profileResource);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
       Command command = CommandGenerator.generate(deviceInfoName, null);
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
-      DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+      update(profileResource, deviceProfileName, commandType, deviceInfoName, command);
     }
+  }
+
+  private void update(ProfileResource profileResource, String deviceProfileName, String commandType,
+      String deviceInfoName, Command command) {
+    if (deviceProfileGenerator == null || deviceEnroller == null) {
+      return;
+    }
+    DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, profileResource);
+    deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+    deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
+    deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+    DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
+    deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
+    deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
   }
 
   /**
