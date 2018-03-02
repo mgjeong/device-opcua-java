@@ -109,6 +109,12 @@ public class OPCUAAdapter {
 
     driverCallback.onReceive(device, operation, result);
   }
+  
+  public void handleMonitoringData(EdgeMessage data) {
+    receive(data);
+    // publish
+    EZMQAdapter.getInstance().publish(data);
+  }
 
   /**
    * handling received data called message<br>
@@ -155,9 +161,7 @@ public class OPCUAAdapter {
     @Override
     public void onMonitoredMessage(EdgeMessage data) {
       // TODO Auto-generated method stub
-      receive(data);
-      // publish
-      EZMQAdapter.getInstance().publish(data);
+      handleMonitoringData(data);
     }
 
     /**
@@ -171,7 +175,6 @@ public class OPCUAAdapter {
     @Override
     public void onErrorMessage(EdgeMessage data) {
       // TODO Auto-generated method stub
-      logger.info("[Error] onErrorMessage");
     }
 
     /**
@@ -232,7 +235,6 @@ public class OPCUAAdapter {
     @Override
     public void onFoundDevice(EdgeDevice device) {
       // TODO Auto-generated method stub
-      logger.info("[Event] onFoundDevice is not supported");
     }
   };
 

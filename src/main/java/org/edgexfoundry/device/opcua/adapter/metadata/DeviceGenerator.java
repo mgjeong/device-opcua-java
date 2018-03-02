@@ -24,7 +24,6 @@ import org.edgexfoundry.controller.DeviceServiceClient;
 import org.edgexfoundry.domain.meta.AdminState;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.OperatingState;
-import org.edgexfoundry.domain.meta.Protocol;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,11 +64,15 @@ public class DeviceGenerator {
    */
   @SuppressWarnings("deprecation")
   public Device generate(String name) {
-    if (name == null || name.isEmpty() || deviceProfileClient == null) {
+    if (name == null || name.isEmpty()) {
       return null;
     }
 
     Device device = new Device();
+    if (device == null) {
+      return null;
+    }
+    
     device.setAdminState(AdminState.unlocked);
     device.setDescription(OPCUADefaultMetaData.DESCRIPTION_DEVICE.getValue());
     device.setLastConnected(OPCUADefaultMetaData.DEFAULT_LAST_CONNECTED);
@@ -78,7 +81,9 @@ public class DeviceGenerator {
     device.setName(name);
     device.setOperatingState(OperatingState.enabled);
     device.setOrigin(OPCUADefaultMetaData.DEFAULT_ORIGIN);
-    device.setProfile(deviceProfileClient.deviceProfileForName(name));
+    if (deviceProfileClient != null) {
+      device.setProfile(deviceProfileClient.deviceProfileForName(name));
+    }
     String[] labels =
         {OPCUADefaultMetaData.LABEL1.getValue(), OPCUADefaultMetaData.LABEL2.getValue()};
     device.setLabels(labels);
@@ -86,14 +91,12 @@ public class DeviceGenerator {
     try {
       device.setAddressable(addressableClient.addressableForName(name));
     } catch (Exception e) {
-      logger.debug("Could not set Addressable for device msg: " + e.getMessage());
-      return null;
+      e.printStackTrace();
     }
     try {
       serviceName = OPCUADefaultMetaData.DEVICESERVICE_NAME.getValue();
       device.setService(deviceServiceClient.deviceServiceForName(serviceName));
     } catch (Exception e) {
-      logger.error("Could not get deviceService by name msg: " + e.getMessage());
       e.printStackTrace();
       return null;
     }
