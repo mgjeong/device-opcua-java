@@ -107,9 +107,11 @@ public class OPCUAAdapter {
     String result = "";
     ResourceOperation operation = null;
 
-    driverCallback.onReceive(device, operation, result);
+    if (driverCallback != null) {
+      driverCallback.onReceive(device, operation, result);
+    }
   }
-  
+
   public void handleMonitoringData(EdgeMessage data) {
     receive(data);
     // publish
