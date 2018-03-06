@@ -99,7 +99,10 @@ public class OPCUAAdapterTest {
                 .setMessage(new EdgeVersatility.Builder("data").build()).build()))
             .build();
 
-    OPCUAAdapter.getInstance(callback).handleMonitoringData(msg);
+    OPCUAAdapter adapter = OPCUAAdapter.getInstance(callback);
+    if (adapter != null) {
+      adapter.handleMonitoringData(msg);
+    }
     logger.info("[PASS] test_handleMonitoringData");
   }
 }

@@ -45,6 +45,7 @@ public class OPCUAServiceTest {
     OPCUAAdapterTest opcuaAdapter = new OPCUAAdapterTest();
     opcuaAdapter.test_startAdapter();
     opcuaAdapter.test_startAdapter_without_param();
+    opcuaAdapter.test_handleMonitoringData();
     logger.info("[PASS] testOPCUAdapter");
   }
 
