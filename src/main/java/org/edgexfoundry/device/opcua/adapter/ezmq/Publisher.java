@@ -31,7 +31,6 @@ public class Publisher {
   private static EZMQAPI apiInstance;
   private static EZMQPublisher pubInstance;
   private static EZMQCallback mCallback;
-  private static EZMQErrorCode result = EZMQErrorCode.EZMQ_ERROR;
 
   /**
    * handling callback related ezmq.
@@ -86,13 +85,13 @@ public class Publisher {
    */
   public EZMQErrorCode startPublisher(int port) {
     pubInstance = new EZMQPublisher(port, mCallback);
-    result = pubInstance.start();
+    EZMQErrorCode ret = pubInstance.start();
 
-    if (result != EZMQErrorCode.EZMQ_OK) {
+    if (ret != EZMQErrorCode.EZMQ_OK) {
       pubInstance = null;
       System.out.println("Could not start EZMQ...");
     }
-    return result;
+    return ret;
   }
 
   /**
@@ -101,13 +100,13 @@ public class Publisher {
    * @return error code
    */
   public EZMQErrorCode stopPublisher() {
-    result = pubInstance.stop();
+      EZMQErrorCode ret = pubInstance.stop();
 
-    if (result != EZMQErrorCode.EZMQ_OK) {
+    if (ret != EZMQErrorCode.EZMQ_OK) {
       pubInstance = null;
       System.out.println("Publisher already stopped");
     }
-    return result;
+    return ret;
   }
 
   /**

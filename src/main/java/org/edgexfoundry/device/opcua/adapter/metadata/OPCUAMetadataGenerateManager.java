@@ -322,7 +322,7 @@ public class OPCUAMetadataGenerateManager {
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
     getList.add(ProfileResourceGenerator.createGetOperation(deviceInfoKey,
-        EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
+        EdgeCommandType.CMD_READ.getValue(), getOperationIndex));
     return getList;
   }
 
@@ -356,7 +356,7 @@ public class OPCUAMetadataGenerateManager {
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
     getList.add(ProfileResourceGenerator.createGetOperation(deviceInfoKey,
-        EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
+        EdgeCommandType.CMD_READ.getValue(), getOperationIndex));
     return getList;
   }
 
@@ -372,7 +372,7 @@ public class OPCUAMetadataGenerateManager {
     // TODO set secondary and mappings
     int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
-        EdgeCommandType.CMD_METHOD.getValue(), putOperationIndex++));
+        EdgeCommandType.CMD_METHOD.getValue(), putOperationIndex));
     return setList;
   }
 
@@ -408,7 +408,7 @@ public class OPCUAMetadataGenerateManager {
     // TODO set secondary and mappings
     int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
-        EdgeCommandType.CMD_START_CLIENT.getValue(), putOperationIndex++));
+        EdgeCommandType.CMD_START_CLIENT.getValue(), putOperationIndex));
     return setList;
   }
 
@@ -424,7 +424,7 @@ public class OPCUAMetadataGenerateManager {
     // TODO set secondary and mappings
     int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
-        EdgeCommandType.CMD_STOP_CLIENT.getValue(), putOperationIndex++));
+        EdgeCommandType.CMD_STOP_CLIENT.getValue(), putOperationIndex));
     return setList;
   }
 
@@ -440,7 +440,7 @@ public class OPCUAMetadataGenerateManager {
     // TODO set secondary and mappings
     int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
-        EdgeCommandType.CMD_GET_ENDPOINTS.getValue(), putOperationIndex++));
+        EdgeCommandType.CMD_GET_ENDPOINTS.getValue(), putOperationIndex));
     return setList;
   }
 }
