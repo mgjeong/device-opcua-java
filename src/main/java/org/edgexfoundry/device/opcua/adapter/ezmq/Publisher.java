@@ -54,7 +54,7 @@ public class Publisher {
   }
 
   /**
-   * construct publisher
+   * constructor publisher
    * 
    */
   private Publisher() {
