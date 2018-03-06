@@ -18,6 +18,8 @@
 
 package org.edgexfoundry.device.opcua.adapter.metadata;
 
+import java.util.Optional;
+
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceProfileClient;
 import org.edgexfoundry.controller.DeviceServiceClient;
@@ -69,7 +71,7 @@ public class DeviceGenerator {
     }
 
     Device device = new Device();
-    if (device == null) {
+    if (!Optional.ofNullable(device).isPresent()) {
       return null;
     }
     
