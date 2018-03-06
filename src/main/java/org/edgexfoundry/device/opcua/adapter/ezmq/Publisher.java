@@ -100,7 +100,7 @@ public class Publisher {
    * @return error code
    */
   public EZMQErrorCode stopPublisher() {
-      EZMQErrorCode ret = pubInstance.stop();
+    EZMQErrorCode ret = pubInstance.stop();
 
     if (ret != EZMQErrorCode.EZMQ_OK) {
       pubInstance = null;
