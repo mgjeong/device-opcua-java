@@ -36,7 +36,9 @@ public class EZMQAdapter {
 
   private EZMQAdapter() {
     pub = Publisher.getInstance();
-    pub.startPublisher(mPort);
+    if (pub != null) {
+      pub.startPublisher(mPort);  
+    }
   }
 
   /**
