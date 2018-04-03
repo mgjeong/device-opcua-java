@@ -281,8 +281,8 @@ public class BaseService {
     // Setup the service
     service.setAddressable(addressable);
     service.setOrigin(System.currentTimeMillis());
-    service.setAdminState(AdminState.unlocked);
-    service.setOperatingState(OperatingState.enabled);
+    service.setAdminState(AdminState.UNLOCKED);
+    service.setOperatingState(OperatingState.ENABLED);
     service.setLabels(labels);
     service.setName(serviceName);
     try {
@@ -306,7 +306,7 @@ public class BaseService {
   }
 
   public boolean isServiceLocked() {
-    return getService().getAdminState().equals(AdminState.locked);
+    return getService().getAdminState().equals(AdminState.LOCKED);
   }
 
   public String getServiceId() {

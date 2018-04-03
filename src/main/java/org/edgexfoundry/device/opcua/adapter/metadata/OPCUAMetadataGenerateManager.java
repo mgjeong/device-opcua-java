@@ -1,3 +1,21 @@
+/******************************************************************
+ *
+ * Copyright 2017 Samsung Electronics All Rights Reserved.
+ *
+ *
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ ******************************************************************/
+
 package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.util.ArrayList;
@@ -87,7 +105,12 @@ public class OPCUAMetadataGenerateManager {
    */
   public void initAddressable(String name) {
     Addressable addressable = AddressableGenerator.generate(name);
-    deviceEnroller.addAddressableToMetaData(addressable);
+
+    try {
+      deviceEnroller.addAddressableToMetaData(addressable);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
 
@@ -139,21 +162,9 @@ public class OPCUAMetadataGenerateManager {
       ProfileResource profileResource =
           ProfileResourceGenerator.generate(deviceInfoName, getList, setList);
 
-      if (deviceProfileGenerator == null || deviceEnroller == null) {
-        return;
-      }
-      DeviceProfile deviceProfile =
-          deviceProfileGenerator.update(deviceProfileName, profileResource);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
       Command command = CommandGenerator.generate(deviceInfoName,
           mapper.getMappingData(EdgeMapperCommon.PROPERTYVALUE_READWRITE.name()));
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
-      DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+      update(profileResource, deviceProfileName, commandType, deviceInfoName, command);
     }
   }
 
@@ -195,21 +206,25 @@ public class OPCUAMetadataGenerateManager {
       ProfileResource profileResource =
           ProfileResourceGenerator.generate(deviceInfoName, getList, setList);
 
-      if (deviceProfileGenerator == null || deviceEnroller == null) {
-        return;
-      }
-      DeviceProfile deviceProfile =
-          deviceProfileGenerator.update(deviceProfileName, profileResource);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
       Command command = CommandGenerator.generate(deviceInfoName, null);
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
-
-      DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
-      deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
-      deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+      update(profileResource, deviceProfileName, commandType, deviceInfoName, command);
     }
+  }
+
+  private void update(ProfileResource profileResource, String deviceProfileName, String commandType,
+      String deviceInfoName, Command command) {
+    if (deviceProfileGenerator == null || deviceEnroller == null) {
+      return;
+    }
+    DeviceProfile deviceProfile = deviceProfileGenerator.update(deviceProfileName, profileResource);
+    deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+    deviceProfile = deviceProfileGenerator.update(deviceProfileName, command);
+    deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
+
+    DeviceObject deviceObject = DeviceObjectGenerator.generate(deviceInfoName, commandType);
+    deviceProfile = deviceProfileGenerator.update(deviceProfileName, deviceObject);
+    deviceEnroller.updateDeviceProfileToMetaData(deviceProfile);
   }
 
   /**
@@ -307,7 +322,7 @@ public class OPCUAMetadataGenerateManager {
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
     getList.add(ProfileResourceGenerator.createGetOperation(deviceInfoKey,
-        EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
+        EdgeCommandType.CMD_READ.getValue(), getOperationIndex));
     return getList;
   }
 
@@ -341,7 +356,7 @@ public class OPCUAMetadataGenerateManager {
     List<ResourceOperation> getList = new ArrayList<ResourceOperation>();
     // TODO set secondary and mappings
     getList.add(ProfileResourceGenerator.createGetOperation(deviceInfoKey,
-        EdgeCommandType.CMD_READ.getValue(), getOperationIndex++));
+        EdgeCommandType.CMD_READ.getValue(), getOperationIndex));
     return getList;
   }
 
@@ -357,7 +372,7 @@ public class OPCUAMetadataGenerateManager {
     // TODO set secondary and mappings
     int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
-        EdgeCommandType.CMD_METHOD.getValue(), putOperationIndex++));
+        EdgeCommandType.CMD_METHOD.getValue(), putOperationIndex));
     return setList;
   }
 
@@ -393,7 +408,7 @@ public class OPCUAMetadataGenerateManager {
     // TODO set secondary and mappings
     int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
-        EdgeCommandType.CMD_START_CLIENT.getValue(), putOperationIndex++));
+        EdgeCommandType.CMD_START_CLIENT.getValue(), putOperationIndex));
     return setList;
   }
 
@@ -409,7 +424,7 @@ public class OPCUAMetadataGenerateManager {
     // TODO set secondary and mappings
     int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
-        EdgeCommandType.CMD_STOP_CLIENT.getValue(), putOperationIndex++));
+        EdgeCommandType.CMD_STOP_CLIENT.getValue(), putOperationIndex));
     return setList;
   }
 
@@ -425,7 +440,7 @@ public class OPCUAMetadataGenerateManager {
     // TODO set secondary and mappings
     int putOperationIndex = startOperationIndex;
     setList.add(ProfileResourceGenerator.createPutOperation(deviceInfoKey,
-        EdgeCommandType.CMD_GET_ENDPOINTS.getValue(), putOperationIndex++));
+        EdgeCommandType.CMD_GET_ENDPOINTS.getValue(), putOperationIndex));
     return setList;
   }
 }

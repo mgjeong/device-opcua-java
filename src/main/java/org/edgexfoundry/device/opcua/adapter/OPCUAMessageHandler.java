@@ -20,6 +20,7 @@ package org.edgexfoundry.device.opcua.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.command.json.format.EdgeAttribute;
 import org.command.json.format.EdgeElement;
@@ -43,6 +44,7 @@ import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeResult;
 import org.edge.protocol.opcua.api.common.EdgeStatusCode;
 import org.edge.protocol.opcua.api.common.EdgeVersatility;
+import org.edge.protocol.opcua.queue.ErrorHandler;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUACommandIdentifier;
 import org.edgexfoundry.device.opcua.adapter.metadata.OPCUADefaultMetaData;
 import org.edgexfoundry.device.opcua.opcua.OPCUADriver.DriverCallback;
@@ -470,6 +472,10 @@ public class OPCUAMessageHandler {
     Object inputValue = EdgeJsonFormatter.getDoubleValueByName(element.getEdgeAttributeList(),
         OPCUAMessageKeyIdentifier.SAMPLING_INTERVAL.getValue());
 
+    if(!Optional.ofNullable(inputValue).isPresent()) {
+        throw new Exception("The parameter is not valid");
+    }
+
     EdgeSubRequest sub = new EdgeSubRequest.Builder(EdgeNodeIdentifier.Edge_Create_Sub)
         .setSamplingInterval((Double) inputValue).build();
     EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(providerKey).build();
@@ -499,6 +505,11 @@ public class OPCUAMessageHandler {
       CompletableFuture<String> future) throws Exception {
     Object inputValue = EdgeJsonFormatter.getObjectValueByName(element.getEdgeAttributeList(),
         OPCUAMessageKeyIdentifier.INPUT_ARGUMENT.getValue());
+
+    if(!Optional.ofNullable(inputValue).isPresent()) {
+        throw new Exception("The parameter is not valid");
+    }
+
     EdgeEndpointInfo epInfo =
         new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr)).setFuture(future).build();
     EdgeNodeInfo ep = new EdgeNodeInfo.Builder().setValueAlias(providerKey).build();
