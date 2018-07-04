@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.edge.protocol.opcua.api.client.EdgeResponse;
 import org.edge.protocol.opcua.api.common.EdgeMessage;
-import org.edgexfoundry.domain.core.Event;
-import org.edgexfoundry.domain.core.Reading;
+import org.edgexfoundry.ezmq.domain.core.Reading;
+import org.edgexfoundry.ezmq.domain.core.Event;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 

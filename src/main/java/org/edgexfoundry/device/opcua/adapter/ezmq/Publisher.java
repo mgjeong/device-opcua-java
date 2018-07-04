@@ -19,7 +19,7 @@
 package org.edgexfoundry.device.opcua.adapter.ezmq;
 
 import java.util.List;
-import org.edgexfoundry.domain.core.Event;
+import org.edgexfoundry.ezmq.domain.core.Event;
 import org.edgexfoundry.ezmq.EZMQAPI;
 import org.edgexfoundry.ezmq.EZMQCallback;
 import org.edgexfoundry.ezmq.EZMQErrorCode;
