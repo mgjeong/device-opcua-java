@@ -19,13 +19,17 @@
 package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceClient;
+import org.edgexfoundry.controller.DeviceServiceClient;
 import org.edgexfoundry.controller.DeviceProfileClient;
 import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.controller.ReadingClient;
 import org.edgexfoundry.controller.ValueDescriptorClient;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
+import org.edgexfoundry.device.opcua.BaseService;
 import org.edgexfoundry.domain.common.ValueDescriptor;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.meta.Addressable;
@@ -34,6 +38,7 @@ import org.edgexfoundry.domain.meta.DeviceProfile;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -50,6 +55,9 @@ public class DeviceEnroller {
   private AddressableClient addressableClient;
 
   @Autowired
+  private DeviceServiceClient deviceServiceClient;
+
+  @Autowired
   private ValueDescriptorClient valueDescriptorClient;
 
   @Autowired
@@ -61,6 +69,9 @@ public class DeviceEnroller {
   @Autowired
   private DeviceStore deviceStore;
 
+  @Value("${service.name}")
+  private String serviceName;
+
   private static final boolean enableDeleteEvent = false;
 
   /**
@@ -71,7 +82,7 @@ public class DeviceEnroller {
   /**
    * Add Addressable to metadata <br>
    * Use {@link org.edgexfoundry.controller.AddressableClient#add(Addressable)} to add addressable
-   * 
+   *
    * @param addressable added addressable
    * @return added addressable if success, otherwise null
    */
@@ -96,7 +107,7 @@ public class DeviceEnroller {
    * Add DeviceProfile to metadata <br>
    * Use {@link org.edgexfoundry.controller.DeviceProfileClient#add(DeviceProfile)} to add
    * DeviceProfile
-   * 
+   *
    * @param deviceProfile added DeviceProfile
    * @return added deviceProfile if success, otherwise null
    */
@@ -121,7 +132,7 @@ public class DeviceEnroller {
    * Update DeviceProfile to metadata <br>
    * Use {@link org.edgexfoundry.controller.DeviceProfileClient#update(DeviceProfile)} to add
    * DeviceProfile
-   * 
+   *
    * @param deviceProfile updated DeviceProfile
    * @return true if success, otherwise null
    */
@@ -140,7 +151,7 @@ public class DeviceEnroller {
   /**
    * Add Device to metadata <br>
    * Use {@link org.edgexfoundry.controller.DeviceClient#add(Device)} to add Device
-   * 
+   *
    * @param device added Device
    * @return added Device if success, otherwise null
    */
@@ -210,9 +221,12 @@ public class DeviceEnroller {
    * Use {@link org.edgexfoundry.controller.DeviceClient#delete(String)} to delete Device
    */
   private void deleteDevice() {
+
     try {
-      for (Device device : deviceClient.devices()) {
-          logger.debug("remove device from  metadata ret: " + deviceClient.delete(device.getId()));
+      for (Device device : deviceStore.getDevices().entrySet().stream().map(d -> d.getValue()).collect(Collectors.toList()))  {
+        eventClient.deleteByDevice(device.getName());
+        logger.debug("remove device from  metadata ret: " + deviceClient.delete(device.getId()));
+        addressableClient.delete(device.getAddressable().getId());
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -225,10 +239,11 @@ public class DeviceEnroller {
    * DeviceProfile
    */
   private void deleteDeviceProfile() {
+
     try {
-      for (DeviceProfile deviceProfile : deviceProfileClient.deviceProfiles()) {
+      for (Device device : deviceStore.getDevices().entrySet().stream().map(d -> d.getValue()).collect(Collectors.toList())) {
         logger.debug("remove profile from  metadata ret: "
-            + deviceProfileClient.delete(deviceProfile.getId()));
+            + deviceProfileClient.delete(device.getProfile().getId()));
       }
     } catch (Exception e) {
       logger.debug("Could not remove profile from metadata msg: " + e.getMessage());
@@ -236,18 +251,16 @@ public class DeviceEnroller {
   }
 
   /**
-   * Delete Addressable in metadata <br>
-   * Use {@link org.edgexfoundry.controller.AddressableClient#delete(String)} to delete Addressable
+   * Delete DeviceService in metadata <br>
+   * Use {@link org.edgexfoundry.controller.DeviceServiceClient#deleteByName(String)} to delete DeviceService
    */
-  private void deleteAddressable() {
-    List<Addressable> addressableList = null;
+  private void deleteDeviceService() {
+    logger.info("serviceName : " + serviceName);
     try {
-      addressableList = addressableClient.addressables();
-      for (Addressable addressable : addressableList) {
-
-        logger.debug("remove addressable from  metadata ret: "
-            + addressableClient.delete(addressable.getId()));
-      }
+      logger.debug("remove deviceService from  metadata ret: "
+            + deviceServiceClient.deleteByName(serviceName));
+      logger.debug("remove addressable related with deviceservice from metadata ret: "
+            + addressableClient.deleteByName(serviceName));
     } catch (Exception e) {
       logger.debug("Could not remove addressable from metadata msg: " + e.getMessage());
     }
@@ -258,7 +271,7 @@ public class DeviceEnroller {
    * Use {@link #deleteDevice()} to delete Device in metadata Use {@link #deleteDeviceProfile()} to
    * delete DeviceProfile in metadata Use {@link #deleteAddressable()} to delete Addressable in
    * metadata
-   * 
+   *
    * @param type metadata clean type {@link MetaDataType}
    */
   public void cleanMetaData(MetaDataType type) {
@@ -266,12 +279,10 @@ public class DeviceEnroller {
       deleteDevice();
     } else if (MetaDataType.DEVICE_PROFILE == type) {
       deleteDeviceProfile();
-    } else if (MetaDataType.ADDRESSABLE == type) {
-      deleteAddressable();
     } else if (MetaDataType.ALL == type) {
       deleteDevice();
       deleteDeviceProfile();
-      deleteAddressable();
+      deleteDeviceService();
     }
   }
 
