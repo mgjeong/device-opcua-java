@@ -26,6 +26,8 @@ import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
+
 @Component
 public class Initializer extends BaseService {
 
@@ -43,11 +45,16 @@ public class Initializer extends BaseService {
   @Override
   public boolean initialize(String deviceServiceId) {
     // load the devices in cache.
-    deviceEnroller.cleanCoreData();
-    deviceEnroller.cleanMetaData(MetaDataType.ALL);
     devices.initialize(deviceServiceId);
     schedules.initialize(getServiceName());
     logger.info("Initialized device service successfully");
     return true;
+  }
+
+  @PreDestroy
+  public void destroy() {
+    logger.info("Destroy");
+    deviceEnroller.cleanCoreData();
+    deviceEnroller.cleanMetaData(MetaDataType.ALL);
   }
 }
