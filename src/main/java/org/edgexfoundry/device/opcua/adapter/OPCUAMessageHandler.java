@@ -341,7 +341,8 @@ public class OPCUAMessageHandler {
     }
 
     EdgeEndpointConfig endpointConfig =
-        new EdgeEndpointConfig.Builder().setApplicationUri(applicationUri).setViewNodeFlag(true)
+        new EdgeEndpointConfig.Builder().setApplicationName(applicationName)
+        .setApplicationUri(applicationUri).setViewNodeFlag(true)
         .setSecurityPolicyUri(OPCUADefaultMetaData.DEFAULT_SECURE_TYPE.getValue()).build();
 
     EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder(getEndpointUrifromAddressable(addr))
