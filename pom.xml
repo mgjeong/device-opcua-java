@@ -11,7 +11,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.edgexfoundry.device.opcua</groupId>
 	<artifactId>device-opcua-java</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0-Release</version>
 	<name>device-opcua-java</name>
 	<description>OPC-UA device service</description>
 
@@ -21,7 +21,7 @@
 		<core-metadata-client.version>0.2.0</core-metadata-client.version>
 		<core-exception.version>0.2.0</core-exception.version>
 		<core-command.version>0.2.0</core-command.version>
-		<opcua-adapter.version>0.0.1-SNAPSHOT</opcua-adapter.version>
+		<opcua-adapter.version>1.0.0-Release</opcua-adapter.version>
 		<support-logging-client.version>0.2.0</support-logging-client.version>
 		<spring.cloud.version>Brixton.SR7</spring.cloud.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
