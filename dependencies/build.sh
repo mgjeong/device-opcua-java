@@ -23,7 +23,7 @@ release_tag="v1.0_rel"
 #start clone dependencies git repo and maven install
 cd $DEP_ROOT
 #git clone -b alpha https://github.com/mgjeong/protocol-ezmq-java.git
-git clone -b 1.0_rel git@github.sec.samsung.net:RS7-EdgeComputing/protocol-ezmq-java.git
+git clone -b $release_tag git@github.sec.samsung.net:RS7-EdgeComputing/protocol-ezmq-java.git
 if [ ! -d "protocol-ezmq-java" ]
 then
     echo "build fail"
