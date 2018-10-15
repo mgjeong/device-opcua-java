@@ -25,23 +25,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.edgexfoundry.support.logging.client.EdgeXLogger;
+import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 
 @RestController
 @RequestMapping("/api/v1/device")
 public class CommandController {
+  private static final EdgeXLogger logger = EdgeXLoggerFactory.getEdgeXLogger(CommandHandler.class);
 
   @Autowired
   private CommandHandler command;
 
   // using String (datamodel-command-java format) for result
   // @author jeongin.kim@samsung.com
-  @RequestMapping(value = "/{deviceId}/{cmd}",
+  @RequestMapping(value = "/{deviceId}/{cmd:.+}",
       method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET})
   public Callable<String> getCommand(@PathVariable String deviceId, @PathVariable String cmd,
       @RequestBody(required = false) String arguments) {
     Callable<String> callable = new Callable<String>() {
       @Override
       public String call() throws Exception {
+        logger.info("command : {}", cmd);
         return command.getResponse(deviceId, cmd, arguments);
       }
     };

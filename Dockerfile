@@ -15,9 +15,34 @@
 #
 ###############################################################################
 
-FROM java:8
-MAINTAINER bg.chun@samsung.com
-COPY target/device-opcua-java.jar /home/device-opcua-java.jar
-COPY run.sh run.sh
-EXPOSE 49997
-CMD ["./run.sh"]
+# FROM java:8
+# MAINTAINER bg.chun@samsung.com
+# COPY target/device-opcua-java.jar /home/device-opcua-java.jar
+# COPY run.sh run.sh
+# EXPOSE 49997
+# CMD ["./run.sh"]
+
+
+FROM alpine:3.4
+MAINTAINER jw_wonny.cha@samsung.com
+
+RUN apk --update add openjdk8-jre
+
+# environment variables
+ENV APP_DIR=./device-service
+ENV APP=device-opcua-java.jar
+ENV APP_PORT=49997
+
+#copy JAR and property files to the image
+COPY target/*.jar $APP_DIR/$APP
+
+# RUN mkdir /device-service
+
+#expose support rulesengine port
+EXPOSE $APP_PORT
+
+#set the working directory
+WORKDIR $APP_DIR
+
+#kick off the micro service
+ENTRYPOINT java -jar $APP

@@ -57,10 +57,11 @@ public enum OPCUADefaultMetaData {
   PARAMETER_OPERATION(35, "operation", "ProfileResource Parameter Value"),
   PARAMETER_VALUE(36, "value", "ProfileResource Parameter Value"),
   RESOURCE(37, null, "ProfileResource Resource Value"),
-  
+
   DEVICE_NAME(40, "opc.tcp://localhost:12686/edge-opc-server", "Device Name"),
-  DEVICESERVICE_NAME(41, "device-opcua-java", "Device Service Name");
-  
+  DEVICESERVICE_NAME(41, "device-opcua-java", "Device Service Name"),
+  DEFAULT_SECURE_TYPE(50, "http://opcfoundation.org/UA/SecurityPolicy#None", "Default SECURE TYPE");
+
   public static final int ADDRESSABLE_PORT = 12686;
   public static final long DEFAULT_LAST_CONNECTED = 1000000;
   public static final long DEFAULT_LAST_REPORTED = 2000000;
@@ -71,17 +72,17 @@ public enum OPCUADefaultMetaData {
   public static final String WRITE_ONLY = "Write";
   public static final String READ_WRITE = "ReadWrite";
   public static final String INSTANCE = "Instance";
-  
+
   public static final String AFTER_REPLACE_WORD = "~";
   public static final String BEFORE_REPLACE_WORD = "/";
-  
+
   private int code;
   private String value;
   private String description;
 
   /**
    * construct OPCUADefaultMetaData
-   * 
+   *
    * @param code code number of OPCUADefaultMetaData
    * @param value value of OPCUADefaultMetaData
    * @param description description of OPCUADefaultMetaData
@@ -94,7 +95,7 @@ public enum OPCUADefaultMetaData {
 
   /**
    * Get code number of OPCUADefaultMetaData
-   * 
+   *
    * @return code number of OPCUADefaultMetaData
    */
   public int getCode() {
@@ -103,7 +104,7 @@ public enum OPCUADefaultMetaData {
 
   /**
    * Get value of OPCUADefaultMetaData
-   * 
+   *
    * @return value of OPCUADefaultMetaData
    */
   public String getValue() {
@@ -112,7 +113,7 @@ public enum OPCUADefaultMetaData {
 
   /**
    * Get description of OPCUADefaultMetaData
-   * 
+   *
    * @return description of OPCUADefaultMetaData
    */
   public String getDescription() {
