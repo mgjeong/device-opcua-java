@@ -20,23 +20,32 @@ package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.Response.Status;
+
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceClient;
 import org.edgexfoundry.controller.DeviceServiceClient;
 import org.edgexfoundry.controller.DeviceProfileClient;
 import org.edgexfoundry.controller.EventClient;
+import org.edgexfoundry.controller.ScheduleClient;
+import org.edgexfoundry.controller.ScheduleEventClient;
 import org.edgexfoundry.controller.ReadingClient;
 import org.edgexfoundry.controller.ValueDescriptorClient;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
+import org.edgexfoundry.device.opcua.data.ProfileStore;
 import org.edgexfoundry.device.opcua.BaseService;
 import org.edgexfoundry.domain.common.ValueDescriptor;
+import org.edgexfoundry.domain.meta.ScheduleEvent;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.meta.Addressable;
 import org.edgexfoundry.domain.meta.Device;
 import org.edgexfoundry.domain.meta.DeviceProfile;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -61,6 +70,12 @@ public class DeviceEnroller {
   private ValueDescriptorClient valueDescriptorClient;
 
   @Autowired
+  private ScheduleEventClient scheduleEventClient;
+
+  @Autowired
+  private ScheduleClient scheduleClient;
+
+  @Autowired
   private EventClient eventClient;
 
   @Autowired
@@ -68,6 +83,9 @@ public class DeviceEnroller {
 
   @Autowired
   private DeviceStore deviceStore;
+
+  @Autowired
+  private ProfileStore profileStore;
 
   @Value("${service.name}")
   private String serviceName;
@@ -173,6 +191,45 @@ public class DeviceEnroller {
     return retDevice;
   }
 
+  private void removeValueDescriptors() {
+    List<ValueDescriptor> valueDescriptorList = profileStore.getValueDescriptors();
+    valueDescriptorList.stream().map(ValueDescriptor::getId).filter(Objects::nonNull).distinct()
+        .forEach(id -> {
+          try {
+            valueDescriptorClient.delete(id);
+          } catch (Exception e) {
+            logger.error("Could not delete event to coredata msg: " + e.getMessage());
+          }
+        });
+
+    logger.debug("the ValueDescriptor records have been deleted");
+
+  }
+
+  private void removeSchedulesAndEvents() {
+    List<ScheduleEvent> scheduleEventList = scheduleEventClient
+        .scheduleEventsForServiceByName(serviceName);
+    scheduleEventList.stream().forEach(se -> {
+      scheduleEventClient.delete(se.getId());
+      addressableClient.delete(se.getAddressable().getId());
+      try {
+        scheduleClient.deleteByName(se.getSchedule());
+      } catch (ClientErrorException e) {
+        if (e.getResponse().getStatus() == Status.CONFLICT.getStatusCode()) {
+          // ignore the error because there might be other schedule
+          // event associated to this schedule
+          logger.info("delete schedule (" + se.getSchedule()
+              + ") failed, because there might be other schedule event associated to this schedule "
+              + e.getMessage());
+        } else {
+          throw e;
+        }
+      }
+    });
+
+    logger.debug("the Schedule And ScheduleEvent records have been deleted");
+  }
+
   // TODO
   // we can get events below 100. but can not set limits
   // I will modify it when I can set a limit.
@@ -221,7 +278,6 @@ public class DeviceEnroller {
    * Use {@link org.edgexfoundry.controller.DeviceClient#delete(String)} to delete Device
    */
   private void deleteDevice() {
-
     try {
       for (Device device : deviceStore.getDevices().entrySet().stream().map(d -> d.getValue()).collect(Collectors.toList()))  {
         eventClient.deleteByDevice(device.getName());
@@ -297,8 +353,11 @@ public class DeviceEnroller {
     // it can be cause big confusion to configure device service.
     // since the event of other device service will be all removed
     // when we try to remove all events.
-    deleteEvent();
-    deleteValueDescriptor();
+    // deleteEvent();
+    // deleteValueDescriptor();
+
+    removeValueDescriptors();
+    removeSchedulesAndEvents();
   }
 
 }

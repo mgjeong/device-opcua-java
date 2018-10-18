@@ -50,7 +50,7 @@ public class OPCUAAdapter {
    * Use {@link org.edge.protocol.opcua.api.common.EdgeConfigure} to register callback <br>
    * Use {@link org.edge.protocol.opcua.api.ProtocolManager#configure(EdgeConfigure)} to register
    * callback <br>
-   * 
+   *
    * @param callback Callback Driver
    */
   private OPCUAAdapter(DriverCallback callback) {
@@ -66,7 +66,7 @@ public class OPCUAAdapter {
 
   /**
    * Get OPCUAAdapter Instance (singleton)<br>
-   * 
+   *
    * @param callback Callback Driver
    * @return OPCUAAdapter instance
    */
@@ -83,7 +83,7 @@ public class OPCUAAdapter {
    * Receive data from device<br>
    * Use {@link DriverCallback#onReceive(Device, ResourceOperation, String)} to create OPCUAAdapter
    * Instance <br>
-   * 
+   *
    * @param data response message data format is
    *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
    */
@@ -120,7 +120,7 @@ public class OPCUAAdapter {
 
   /**
    * handling received data called message<br>
-   * 
+   *
    * @see org.edge.protocol.opcua.api.ProtocolManager.ReceivedMessageCallback
    */
   ReceivedMessageCallback receiverCallback = new ReceivedMessageCallback() {
@@ -128,7 +128,7 @@ public class OPCUAAdapter {
      * handling response data called message<br>
      * Use {@link OPCUAMessageHandler#convertEdgeMessagetoEdgeElement(EdgeMessage)} to convert
      * message format <br>
-     * 
+     *
      * @param data response message data format is
      *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
      */
@@ -156,7 +156,7 @@ public class OPCUAAdapter {
      * the data will be published into EMFAdapter by default.<br>
      * since the data is considered as streaming data.<br>
      * Use {@link OPCUAAdapter#receive(EdgeMessage)} to publish into EMFAdapter
-     * 
+     *
      * @param data response message data format is
      *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
      */
@@ -170,7 +170,7 @@ public class OPCUAAdapter {
      * handling error data called message<br>
      * Use {@link OPCUAMessageHandler#convertEdgeMessagetoEdgeElement(EdgeMessage)} to convert
      * message format <br>
-     * 
+     *
      * @param data response message data format is
      *        {@link org.edge.protocol.opcua.api.common.EdgeMessage}
      */
@@ -181,7 +181,7 @@ public class OPCUAAdapter {
 
     /**
      * handling browse data called message<br>
-     * 
+     *
      * @param endpoint Endpoint data
      * @param responses list of browse result
      * @param requestId id of request
@@ -197,13 +197,13 @@ public class OPCUAAdapter {
 
   /**
    * handling received data called message<br>
-   * 
+   *
    * @see org.edge.protocol.opcua.api.ProtocolManager.DiscoveryCallback
    */
   DiscoveryCallback discoveryCallback = new DiscoveryCallback() {
     /**
      * handling endpoint data called message<br>
-     * 
+     *
      * @param device EdgeDevice data
      */
     @Override
@@ -231,7 +231,7 @@ public class OPCUAAdapter {
 
     /**
      * handling Device data called message<br>
-     * 
+     *
      * @param device EdgeDevice data
      */
     @Override
@@ -246,7 +246,7 @@ public class OPCUAAdapter {
      * Method, View Type) list will be provided.<br>
      * Use {@link OPCUAMessageHandler#getResponseElementForStart(EdgeStatusCode)} to get start
      * response
-     * 
+     *
      * @param ep endpoint to start
      * @param status status code
      * @param attiributeAliasList service provider list base on Object/Variable Type
@@ -287,7 +287,7 @@ public class OPCUAAdapter {
      * it will be called when server or client is stopped.<br>
      * Use {@link OPCUAMessageHandler#getResponseElementForStart(EdgeStatusCode)} to get stop
      * response
-     * 
+     *
      * @param ep endpoint to start
      * @param status status code
      */
@@ -303,21 +303,17 @@ public class OPCUAAdapter {
       } else {
         logger.error("EdgeElement data of the onStop callback is invalid");
       }
-      // TODO Auto-generated method stub
       logger.info("onStop({})", ep.getEndpointUri());
-      driverCallback.onDeleteCoreData();
-      driverCallback.onDeleteMetaData(MetaDataType.ALL);
     }
 
     /**
      * it will be called when network status is up or down.<br>
-     * 
+     *
      * @param ep endpoint to start
      * @param status status code
      */
     @Override
     public void onNetworkStatus(EdgeEndpointInfo ep, EdgeStatusCode status) {
-      // TODO Auto-generated method stub
       logger.info("onNetworkStatus: status {} from {}", status, ep.getEndpointUri());
       if (EdgeStatusCode.STATUS_DISCONNECTED == status) {
         driverCallback.onDeleteCoreData();
