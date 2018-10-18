@@ -26,6 +26,7 @@ import org.command.json.format.EdgeData;
 import org.command.json.format.EdgeElement;
 import org.command.json.format.EdgeJsonFormatter;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
+import org.edgexfoundry.device.opcua.adapter.metadata.OPCUACommandIdentifier;
 import org.edgexfoundry.device.opcua.data.ObjectStore;
 import org.edgexfoundry.device.opcua.data.ProfileStore;
 import org.edgexfoundry.device.opcua.domain.OPCUAObject;
@@ -137,6 +138,11 @@ public class OPCUAHandler {
       }
     }
 
+    // When command is wellknown~stopcommand, it doesn't send to coredata.
+    if(OPCUACommandIdentifier.WELLKNOWN_COMMAND_STOP.getValue().equals(cmd)) {
+      return null;
+    }
+
     List<Reading> readings = transactions.get(transactionId).getReadings();
     transactions.remove(transactionId);
 
@@ -180,7 +186,7 @@ public class OPCUAHandler {
 
       String objectName = operation.getObject();
       OPCUAObject object = getOPCUAObject(objects, objectName, transactionId);
-      
+
       // command operation for client processing
       if (requiresQuery(immediate, method, device, operation)) {
         String opId = transactions.get(transactionId).newOpId();
