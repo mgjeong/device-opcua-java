@@ -47,7 +47,6 @@ public class CommandHandler {
   Initializer init;
 
   // using String (datamodel-command-java format) for result
-  // @author jeongin.kim@samsung.com
   public String getResponse(String deviceId, String cmd, String arguments) {
     if (init.isServiceLocked()) {
       logger.error("GET request cmd: " + cmd + " with device service locked on: " + deviceId);
@@ -72,7 +71,6 @@ public class CommandHandler {
   }
 
   // using String (datamodel-command-java format) for result
-  // @author jeongin.kim@samsung.com
   public String getResponses(String cmd, String arguments) {
 
     if (init.isServiceLocked()) {
