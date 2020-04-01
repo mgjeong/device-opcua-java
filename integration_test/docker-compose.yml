@@ -46,7 +46,7 @@ services:
       - volume
 
   config-seed:
-    image: docker.sec.samsung.net:5000/docker-core-config-seed/x86_64
+    image: ${PATH_OF_DOCKER_CORE_CONFIG_SEED}/x86_64
     container_name: edgex-config-seed
     hostname: edgex-core-config-seed
     networks:
@@ -174,7 +174,7 @@ services:
       - consul
 
   edgex-core-test-tool:
-    image: docker.sec.samsung.net:5000/edgex-core-test-tool/x86_64
+    image: ${PATH_OF_EDGEX_CORE_TEST_TOOL}/x86_64
     ports:
       - "49113"
     container_name: edgex-core-test-tool
