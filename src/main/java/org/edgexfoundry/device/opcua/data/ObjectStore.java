@@ -103,7 +103,6 @@ public class ObjectStore {
       if (responseCache.get(deviceId) == null)
         responseCache.put(deviceId, new HashMap<String, List<Reading>>());
       // Add operationIndex in operation key, At the same time, the same order was used.
-      // @author jeongin.kim@samsung.com
       responseCache.get(deviceId).put(operationId + operation.getIndex(), readings);
     }
   }

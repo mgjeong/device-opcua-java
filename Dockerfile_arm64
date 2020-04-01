@@ -1,5 +1,5 @@
 FROM java:8
-MAINTAINER bg.chun@samsung.com
+MAINTAINER master
 
 # If you don't need QEMU, please comment the below command. Otherwise, please refer to README file to use QEMU
 COPY qemu-aarch64-static /usr/bin/qemu-aarch64-static

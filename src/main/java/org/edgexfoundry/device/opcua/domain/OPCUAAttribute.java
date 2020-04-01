@@ -30,7 +30,6 @@ public class OPCUAAttribute {
   // specific metadata needed by the OPCUA Driver
 
   // Add providerKey used in opcua stack
-  // @author jeongin.kim@samsung.com
   private String providerKey;
   private String Instance;
   private String Type;
