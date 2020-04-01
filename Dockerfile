@@ -16,7 +16,7 @@
 ###############################################################################
 
 FROM java:8
-MAINTAINER bg.chun@samsung.com
+MAINTAINER master
 COPY target/device-opcua-java.jar /home/device-opcua-java.jar
 COPY run.sh run.sh
 EXPOSE 49997
