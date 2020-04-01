@@ -151,7 +151,7 @@ public class ObjectStore {
     // device?)
     if (propValue.getAssertion() != null)
       if (!transformResult.equals(propValue.getAssertion().toString())) {
-        device.setOperatingState(OperatingState.disabled);
+        device.setOperatingState(OperatingState.DISABLED);
         return "Assertion failed with value: " + transformResult;
       }
 

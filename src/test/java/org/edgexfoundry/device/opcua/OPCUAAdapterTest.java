@@ -17,16 +17,21 @@
  ******************************************************************/
 package org.edgexfoundry.device.opcua;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.edge.protocol.opcua.api.ProtocolManager;
+import org.edge.protocol.opcua.api.client.EdgeResponse;
 import org.edge.protocol.opcua.api.common.EdgeCommandType;
 import org.edge.protocol.opcua.api.common.EdgeEndpointInfo;
 import org.edge.protocol.opcua.api.common.EdgeMessage;
+import org.edge.protocol.opcua.api.common.EdgeMessageType;
+import org.edge.protocol.opcua.api.common.EdgeNodeId;
 import org.edge.protocol.opcua.api.common.EdgeNodeInfo;
 import org.edge.protocol.opcua.api.common.EdgeRequest;
 import org.edge.protocol.opcua.api.common.EdgeResult;
 import org.edge.protocol.opcua.api.common.EdgeStatusCode;
+import org.edge.protocol.opcua.api.common.EdgeVersatility;
 import org.edgexfoundry.device.opcua.adapter.OPCUAAdapter;
 import org.edgexfoundry.device.opcua.adapter.OPCUAMessageHandler;
 import org.edgexfoundry.device.opcua.adapter.metadata.MetaDataType;
@@ -80,5 +85,24 @@ public class OPCUAAdapterTest {
     OPCUAAdapter adapter = OPCUAAdapter.getInstance(null);
     assertNotNull(adapter);
     logger.info("[PASS] test_startAdapter_without_param");
+  }
+
+  @Test
+  public void test_handleMonitoringData() throws Exception {
+    logger.info("[TEST] test_handleMonitoringData");
+    EdgeNodeInfo ep =
+        new EdgeNodeInfo.Builder().setEdgeNodeId(new EdgeNodeId.Builder("uri").build()).build();
+    EdgeEndpointInfo epInfo = new EdgeEndpointInfo.Builder("opc.tcp://localhost:12686").build();
+    EdgeMessage msg =
+        new EdgeMessage.Builder(epInfo).setMessageType(EdgeMessageType.GENERAL_RESPONSE)
+            .setResponses(newArrayList(new EdgeResponse.Builder(ep, 0)
+                .setMessage(new EdgeVersatility.Builder("data").build()).build()))
+            .build();
+
+    OPCUAAdapter adapter = OPCUAAdapter.getInstance(callback);
+    if (adapter != null) {
+      adapter.handleMonitoringData(msg);
+    }
+    logger.info("[PASS] test_handleMonitoringData");
   }
 }

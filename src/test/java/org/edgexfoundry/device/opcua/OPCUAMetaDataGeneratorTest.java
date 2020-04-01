@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.edgexfoundry.device.opcua.adapter.metadata.AddressableGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.CommandGenerator;
+import org.edgexfoundry.device.opcua.adapter.metadata.DeviceEnroller;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceObjectGenerator;
 import org.edgexfoundry.device.opcua.adapter.metadata.DeviceProfileGenerator;
@@ -369,6 +370,14 @@ public class OPCUAMetaDataGeneratorTest {
   }
   
   @Test
+  public void test_metadataGenerator_updateAttributeServiceWithoutParam() throws Exception {
+    logger.info("[TEST] test_metadataGenerator_updateAttributeServiceWithoutParam");
+    OPCUAMetadataGenerateManager manager = new OPCUAMetadataGenerateManager();
+    manager.updateAttributeService("name", "read", null); 
+    logger.info("[PASS] test_metadataGenerator_updateAttributeServiceWithoutParam");
+  }
+  
+  @Test
   public void test_metadataGenerator_updateMethodService() throws Exception {
     logger.info("[TEST] test_metadataGenerator_updateMethodService");
     OPCUAMetadataGenerateManager manager = new OPCUAMetadataGenerateManager();
@@ -380,4 +389,20 @@ public class OPCUAMetaDataGeneratorTest {
     logger.info("[PASS] test_metadataGenerator_updateMethodService");
   }
   
+  @Test
+  public void test_metadataGenerator_updateMethodServiceWithoutParam() throws Exception {
+    logger.info("[TEST] test_metadataGenerator_updateMethodServiceWithoutParam");
+    OPCUAMetadataGenerateManager manager = new OPCUAMetadataGenerateManager();
+    manager.updateMethodService("name", "read", null); 
+    logger.info("[PASS] test_metadataGenerator_updateMethodServiceWithoutParam");
+  }
+  
+  
+  @Test
+  public void test_initAddressable() throws Exception {
+    logger.info("[TEST] test_initAddressable");
+    OPCUAMetadataGenerateManager manager = new OPCUAMetadataGenerateManager();
+    manager.initAddressable("address");
+    logger.info("[PASS] test_initAddressable");
+  }
 }

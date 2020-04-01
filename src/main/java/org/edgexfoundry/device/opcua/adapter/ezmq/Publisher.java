@@ -19,25 +19,22 @@
 package org.edgexfoundry.device.opcua.adapter.ezmq;
 
 import java.util.List;
-import org.edgexfoundry.domain.core.Event;
+import org.edgexfoundry.ezmq.domain.core.Event;
 import org.edgexfoundry.ezmq.EZMQAPI;
 import org.edgexfoundry.ezmq.EZMQCallback;
 import org.edgexfoundry.ezmq.EZMQErrorCode;
 import org.edgexfoundry.ezmq.EZMQPublisher;
 import org.edgexfoundry.ezmq.EZMQStatusCode;
-import org.edgexfoundry.ezmq.EZMQAPI;
 
 public class Publisher {
   private static Publisher singleton;
   private static EZMQAPI apiInstance;
   private static EZMQPublisher pubInstance;
   private static EZMQCallback mCallback;
-  private static EZMQErrorCode result = EZMQErrorCode.EZMQ_ERROR;
 
   /**
    * handling callback related ezmq.
    * 
-   * @fn void callbackFactory()
    */
   private static void callbackFactory() {
     mCallback = new EZMQCallback() {
@@ -59,7 +56,6 @@ public class Publisher {
   /**
    * construct publisher
    * 
-   * @fn Publisher()
    */
   private Publisher() {
     apiInstance = EZMQAPI.getInstance();
@@ -73,7 +69,6 @@ public class Publisher {
   /**
    * get instance of publisher class based singleton.
    * 
-   * @fn Publisher getInstance()
    */
   public synchronized static Publisher getInstance() {
     if (singleton == null) {
@@ -85,40 +80,40 @@ public class Publisher {
   /**
    * start publisher
    * 
-   * @fn EZMQErrorCode startPublisher(int port)
    * @param port subscriber port
+   * @return error code
    */
   public EZMQErrorCode startPublisher(int port) {
     pubInstance = new EZMQPublisher(port, mCallback);
-    result = pubInstance.start();
+    EZMQErrorCode ret = pubInstance.start();
 
-    if (result != EZMQErrorCode.EZMQ_OK) {
+    if (ret != EZMQErrorCode.EZMQ_OK) {
       pubInstance = null;
       System.out.println("Could not start EZMQ...");
     }
-    return result;
+    return ret;
   }
 
   /**
    * stop publisher
    * 
-   * @fn EZMQErrorCode stopPublisher()
+   * @return error code
    */
   public EZMQErrorCode stopPublisher() {
-    result = pubInstance.stop();
+    EZMQErrorCode ret = pubInstance.stop();
 
-    if (result != EZMQErrorCode.EZMQ_OK) {
+    if (ret != EZMQErrorCode.EZMQ_OK) {
       pubInstance = null;
       System.out.println("Publisher already stopped");
     }
-    return result;
+    return ret;
   }
 
   /**
    * publish Event Data
-   * 
-   * @fn EZMQErrorCode publishEvent(Event event)
+   *
    * @param event publish data based Event Class
+   * @return error code
    */
   public EZMQErrorCode publishEvent(Event event) {
     EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;
@@ -133,11 +128,10 @@ public class Publisher {
 
   /**
    * publish Event Data
-   * 
-   * @fn EZMQErrorCode publishEvent(String topic, Event event)
-   * 
+   *
    * @param topic topic
    * @param event publish data based Event Class
+   * @return error code
    */
   public EZMQErrorCode publishEvent(String topic, Event event) {
     EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;
@@ -153,10 +147,9 @@ public class Publisher {
   /**
    * publish Event Data
    * 
-   * @fn EZMQErrorCode publishEvent(List<String> topics, Event event)
-   * 
    * @param topics topic list
    * @param event publish data based Event Class
+   * @return error code
    */
   public EZMQErrorCode publishEvent(List<String> topics, Event event) {
     EZMQErrorCode ret = EZMQErrorCode.EZMQ_ERROR;

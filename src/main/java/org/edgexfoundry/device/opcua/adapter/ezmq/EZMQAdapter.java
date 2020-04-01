@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.edge.protocol.opcua.api.client.EdgeResponse;
 import org.edge.protocol.opcua.api.common.EdgeMessage;
-import org.edgexfoundry.domain.core.Event;
-import org.edgexfoundry.domain.core.Reading;
+import org.edgexfoundry.ezmq.domain.core.Reading;
+import org.edgexfoundry.ezmq.domain.core.Event;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 
@@ -36,13 +36,14 @@ public class EZMQAdapter {
 
   private EZMQAdapter() {
     pub = Publisher.getInstance();
-    pub.startPublisher(mPort);
+    if (pub != null) {
+      pub.startPublisher(mPort);  
+    }
   }
 
   /**
    * get EMFAdapter instance
    * 
-   * @fn EMFAdapter getInstance()
    * @return EMFAdapter instance based singleton
    */
   public synchronized static EZMQAdapter getInstance() {
@@ -55,7 +56,6 @@ public class EZMQAdapter {
   /**
    * publish data related EdgeMessage.
    * 
-   * @fn void publish(EdgeMessage data)
    */
   public void publish(EdgeMessage data) {
     if (null == data) {

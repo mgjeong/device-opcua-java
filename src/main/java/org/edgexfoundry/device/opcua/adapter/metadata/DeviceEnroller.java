@@ -19,13 +19,17 @@
 package org.edgexfoundry.device.opcua.adapter.metadata;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.edgexfoundry.controller.AddressableClient;
 import org.edgexfoundry.controller.DeviceClient;
+import org.edgexfoundry.controller.DeviceServiceClient;
 import org.edgexfoundry.controller.DeviceProfileClient;
 import org.edgexfoundry.controller.EventClient;
 import org.edgexfoundry.controller.ReadingClient;
 import org.edgexfoundry.controller.ValueDescriptorClient;
 import org.edgexfoundry.device.opcua.data.DeviceStore;
+import org.edgexfoundry.device.opcua.BaseService;
 import org.edgexfoundry.domain.common.ValueDescriptor;
 import org.edgexfoundry.domain.core.Event;
 import org.edgexfoundry.domain.meta.Addressable;
@@ -34,6 +38,7 @@ import org.edgexfoundry.domain.meta.DeviceProfile;
 import org.edgexfoundry.support.logging.client.EdgeXLogger;
 import org.edgexfoundry.support.logging.client.EdgeXLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -50,6 +55,9 @@ public class DeviceEnroller {
   private AddressableClient addressableClient;
 
   @Autowired
+  private DeviceServiceClient deviceServiceClient;
+
+  @Autowired
   private ValueDescriptorClient valueDescriptorClient;
 
   @Autowired
@@ -61,17 +69,20 @@ public class DeviceEnroller {
   @Autowired
   private DeviceStore deviceStore;
 
+  @Value("${service.name}")
+  private String serviceName;
+
   private static final boolean enableDeleteEvent = false;
 
   /**
    * construct DeviceEnroller <br>
    */
-  private DeviceEnroller() {}
+  public DeviceEnroller() {}
 
   /**
    * Add Addressable to metadata <br>
    * Use {@link org.edgexfoundry.controller.AddressableClient#add(Addressable)} to add addressable
-   * 
+   *
    * @param addressable added addressable
    * @return added addressable if success, otherwise null
    */
@@ -94,8 +105,9 @@ public class DeviceEnroller {
 
   /**
    * Add DeviceProfile to metadata <br>
-   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#add(DeviceProfile)} to add DeviceProfile
-   * 
+   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#add(DeviceProfile)} to add
+   * DeviceProfile
+   *
    * @param deviceProfile added DeviceProfile
    * @return added deviceProfile if success, otherwise null
    */
@@ -118,8 +130,9 @@ public class DeviceEnroller {
 
   /**
    * Update DeviceProfile to metadata <br>
-   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#update(DeviceProfile)} to add DeviceProfile
-   * 
+   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#update(DeviceProfile)} to add
+   * DeviceProfile
+   *
    * @param deviceProfile updated DeviceProfile
    * @return true if success, otherwise null
    */
@@ -138,7 +151,7 @@ public class DeviceEnroller {
   /**
    * Add Device to metadata <br>
    * Use {@link org.edgexfoundry.controller.DeviceClient#add(Device)} to add Device
-   * 
+   *
    * @param device added Device
    * @return added Device if success, otherwise null
    */
@@ -170,12 +183,12 @@ public class DeviceEnroller {
   @SuppressWarnings("unused")
   private void deleteEvent() {
     if (enableDeleteEvent == true) {
-      for (Event event : eventClient.events()) {
-        try {
+      try {
+        for (Event event : eventClient.events()) {
           logger.debug("delete event successfully msg: " + eventClient.delete(event.getId()));
-        } catch (Exception e) {
-          logger.error("Could not delete event to coredata msg: " + e.getMessage());
         }
+      } catch (Exception e) {
+        logger.error("Could not delete event to coredata msg: " + e.getMessage());
       }
     }
   }
@@ -186,18 +199,19 @@ public class DeviceEnroller {
   // I will modify it when I can set a limit.
   /**
    * Delete ValueDescriptor in coredata <br>
-   * Use {@link org.edgexfoundry.controller.ValueDescriptorClient#delete(String)} to delete ValueDescriptor
+   * Use {@link org.edgexfoundry.controller.ValueDescriptorClient#delete(String)} to delete
+   * ValueDescriptor
    */
   @SuppressWarnings("unused")
   private void deleteValueDescriptor() {
     if (enableDeleteEvent == true) {
-      for (ValueDescriptor valueDescriptor : valueDescriptorClient.valueDescriptors()) {
-        try {
+      try {
+        for (ValueDescriptor valueDescriptor : valueDescriptorClient.valueDescriptors()) {
           logger.debug("delete vauleDescriptor successfully msg: "
               + valueDescriptorClient.delete(valueDescriptor.getId()));
-        } catch (Exception e) {
-          logger.error("Could not delete vauleDescriptor to coredata msg: " + e.getMessage());
         }
+      } catch (Exception e) {
+        logger.error("Could not delete vauleDescriptor to coredata msg: " + e.getMessage());
       }
     }
   }
@@ -207,53 +221,57 @@ public class DeviceEnroller {
    * Use {@link org.edgexfoundry.controller.DeviceClient#delete(String)} to delete Device
    */
   private void deleteDevice() {
-    for (Device device : deviceClient.devices()) {
-      try {
+
+    try {
+      for (Device device : deviceStore.getDevices().entrySet().stream().map(d -> d.getValue()).collect(Collectors.toList()))  {
+        eventClient.deleteByDevice(device.getName());
         logger.debug("remove device from  metadata ret: " + deviceClient.delete(device.getId()));
-      } catch (Exception e) {
-        logger.debug("Could not remove deviceprofile from metadata msg: " + e.getMessage());
+        addressableClient.delete(device.getAddressable().getId());
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
   /**
    * Delete DeviceProfile in metadata <br>
-   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#delete(String)} to delete DeviceProfile
+   * Use {@link org.edgexfoundry.controller.DeviceProfileClient#delete(String)} to delete
+   * DeviceProfile
    */
   private void deleteDeviceProfile() {
-    for (DeviceProfile deviceProfile : deviceProfileClient.deviceProfiles()) {
-      try {
+
+    try {
+      for (Device device : deviceStore.getDevices().entrySet().stream().map(d -> d.getValue()).collect(Collectors.toList())) {
         logger.debug("remove profile from  metadata ret: "
-            + deviceProfileClient.delete(deviceProfile.getId()));
-      } catch (Exception e) {
-        logger.debug("Could not remove profile from metadata msg: " + e.getMessage());
+            + deviceProfileClient.delete(device.getProfile().getId()));
       }
+    } catch (Exception e) {
+      logger.debug("Could not remove profile from metadata msg: " + e.getMessage());
     }
   }
 
   /**
-   * Delete Addressable in metadata <br>
-   * Use {@link org.edgexfoundry.controller.AddressableClient#delete(String)} to delete Addressable
+   * Delete DeviceService in metadata <br>
+   * Use {@link org.edgexfoundry.controller.DeviceServiceClient#deleteByName(String)} to delete DeviceService
    */
-  private void deleteAddressable() {
-    List<Addressable> addressableList = null;
-    addressableList = addressableClient.addressables();
-    for (Addressable addressable : addressableList) {
-      try {
-        logger.debug("remove addressable from  metadata ret: "
-            + addressableClient.delete(addressable.getId()));
-      } catch (Exception e) {
-        logger.debug("Could not remove addressable from metadata msg: " + e.getMessage());
-      }
+  private void deleteDeviceService() {
+    logger.info("serviceName : " + serviceName);
+    try {
+      logger.debug("remove deviceService from  metadata ret: "
+            + deviceServiceClient.deleteByName(serviceName));
+      logger.debug("remove addressable related with deviceservice from metadata ret: "
+            + addressableClient.deleteByName(serviceName));
+    } catch (Exception e) {
+      logger.debug("Could not remove addressable from metadata msg: " + e.getMessage());
     }
   }
 
   /**
    * Clean MetaData <br>
-   * Use {@link #deleteDevice()} to delete Device in metadata
-   * Use {@link #deleteDeviceProfile()} to delete DeviceProfile in metadata
-   * Use {@link #deleteAddressable()} to delete Addressable in metadata
-   * 
+   * Use {@link #deleteDevice()} to delete Device in metadata Use {@link #deleteDeviceProfile()} to
+   * delete DeviceProfile in metadata Use {@link #deleteAddressable()} to delete Addressable in
+   * metadata
+   *
    * @param type metadata clean type {@link MetaDataType}
    */
   public void cleanMetaData(MetaDataType type) {
@@ -261,19 +279,17 @@ public class DeviceEnroller {
       deleteDevice();
     } else if (MetaDataType.DEVICE_PROFILE == type) {
       deleteDeviceProfile();
-    } else if (MetaDataType.ADDRESSABLE == type) {
-      deleteAddressable();
     } else if (MetaDataType.ALL == type) {
       deleteDevice();
       deleteDeviceProfile();
-      deleteAddressable();
+      deleteDeviceService();
     }
   }
 
   /**
    * Clean CoreData <br>
-   * Use {@link #deleteEvent()} to delete Event in coredata
-   * Use {@link #deleteValueDescriptor()} to delete ValueDescriptor in coredata
+   * Use {@link #deleteEvent()} to delete Event in coredata Use {@link #deleteValueDescriptor()} to
+   * delete ValueDescriptor in coredata
    */
   public void cleanCoreData() {
     // TODO

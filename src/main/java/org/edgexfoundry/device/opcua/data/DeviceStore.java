@@ -71,7 +71,7 @@ public class DeviceStore {
     if (devices.containsKey(device.getName())) {
       devices.remove(device.getName());
       OPCUA.disconnectDevice(device);
-      deviceClient.updateOpState(device.getId(), OperatingState.disabled.name());
+      deviceClient.updateOpState(device.getId(), OperatingState.DISABLED.name());
       profiles.removeDevice(device);
     }
     return true;
@@ -107,7 +107,7 @@ public class DeviceStore {
       return false;
     }
 
-    if (metaDevice.getOperatingState().equals(OperatingState.enabled)) {
+    if (metaDevice.getOperatingState().equals(OperatingState.ENABLED)) {
       OPCUA.initializeDevice(metaDevice);
     }
 
@@ -187,7 +187,7 @@ public class DeviceStore {
     watchers.initialize(id);
     OPCUA.initialize();
     for (Device device : metaDevices) {
-      deviceClient.updateOpState(device.getId(), OperatingState.disabled.name());
+      deviceClient.updateOpState(device.getId(), OperatingState.DISABLED.name());
       add(device);
     }
 
@@ -249,8 +249,8 @@ public class DeviceStore {
       }
     }
 
-    return device.getAdminState().equals(AdminState.locked)
-        || device.getOperatingState().equals(OperatingState.disabled);
+    return device.getAdminState().equals(AdminState.LOCKED)
+        || device.getOperatingState().equals(OperatingState.DISABLED);
   }
 
   public void setDeviceOpState(String deviceName, OperatingState state) {
