@@ -100,7 +100,6 @@ public class OPCUADriver {
     String result = "";
 
     // using datamodel-command-java format for request value
-    // @author jeongin.kim@samsung.com
     result = processCommand(operation.getOperation(), device.getAddressable(),
         object.getAttributes(), edgeElement);
 

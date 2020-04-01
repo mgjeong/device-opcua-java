@@ -37,7 +37,6 @@ public class CommandController {
   private CommandHandler command;
 
   // using String (datamodel-command-java format) for result
-  // @author jeongin.kim@samsung.com
   @RequestMapping(value = "/{deviceId}/{cmd:.+}",
       method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET})
   public Callable<String> getCommand(@PathVariable String deviceId, @PathVariable String cmd,
@@ -53,7 +52,6 @@ public class CommandController {
   }
 
   // using String (datamodel-command-java format) for result
-  // @author jeongin.kim@samsung.com
   @RequestMapping(value = "/all/{cmd}",
       method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET})
   public Callable<String> getCommands(@PathVariable String cmd,

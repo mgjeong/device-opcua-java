@@ -16,7 +16,6 @@
 ###############################################################################
 
 # FROM java:8
-# MAINTAINER bg.chun@samsung.com
 # COPY target/device-opcua-java.jar /home/device-opcua-java.jar
 # COPY run.sh run.sh
 # EXPOSE 49997
@@ -24,7 +23,7 @@
 
 
 FROM alpine:3.4
-MAINTAINER jw_wonny.cha@samsung.com
+MAINTAINER master
 
 RUN apk --update add openjdk8-jre
 
