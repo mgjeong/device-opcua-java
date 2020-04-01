@@ -155,7 +155,6 @@ public class ProfileStore {
        * Add automatically create and update ValueDescriptor using ObjectDeviceName Because Use
        * ObjectDeviceName as a ValueDescriptor
        * 
-       * @Author jeongin.kim@samsung.com
        */
 
       ValueDescriptor descriptor = descriptors.stream()
@@ -194,7 +193,6 @@ public class ProfileStore {
      * Delete create ValueDescriptor using operation.parameter Because Not use operation.parameter
      * as a ValueDescriptor
      * 
-     * @Author jeongin.kim@samsung.com
      */
 
   }
